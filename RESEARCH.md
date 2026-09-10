@@ -19,7 +19,7 @@ Primary source: https://posh.vip/e/chinonegro-en-shipwreck-studios (read in brow
 - Address on event page: 202 C. San Agustín, San Juan, 00901, Puerto Rico. Flyer has 00918; the site omits the disputed postal code.
 - Flyer lineup: Muchachha, Pax Kotto, Mystico, Fadafunk (Eri Knix + Tamora), Chester Browne b2b Jonnsans. This is transcribed from the viewed original asset.
 - Ticket button showed from $17.49, but site links to live ticket pricing instead of freezing a changing value.
-- Flyer: https://images.posh.vip/originals/6a8dd0569016685827fe8cb4 . Downloaded and visually inspected; stored at dist/assets/chinonegro.jpg. Original artwork, not AI-generated or altered. No open reuse license found; included in private review concept for the event it promotes.
+- Flyer: https://images.posh.vip/originals/6a8dd0569016685827fe8cb4 . Downloaded and visually inspected; stored at docs/assets/chinonegro.jpg. Original artwork, not AI-generated or altered. No open reuse license found; included in private review concept for the event it promotes.
 - Organizer profile https://posh.vip/g/shipwreck-studios displayed only three older events although the direct upcoming page was active. Do not treat the organizer index as exhaustive.
 
 ## Recurring: NO SOLO — The B2B Series
