@@ -72,8 +72,6 @@
     if (hr && hr.bottom > 0) {
       const progress = clamp(-hr.top / hr.height, 0, 1);
       hero.style.setProperty('--title-drift', `${progress * -28}px`);
-      hero.style.setProperty('--emblem-y', `${progress * 70}px`);
-      hero.style.setProperty('--emblem-turn', `${-7 + progress * 22}deg`);
     }
     const rr = ribbon?.getBoundingClientRect();
     if (rr && rr.top < vh && rr.bottom > 0) ribbon.style.setProperty('--ribbon-x', `${-50 - clamp((vh - rr.top) / (vh + rr.height), 0, 1) * 260}px`);
