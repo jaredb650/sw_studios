@@ -92,7 +92,7 @@
   if (!paused && !read('shipwreck-intro') && !location.hash && window.scrollY < 100) {
     loader = document.createElement('div');
     loader.className = 'preloader';
-    loader.innerHTML = '<div class="preloader-logo" aria-hidden="true"><span class="brand-mark"></span><span class="brand-mark loader-fill"></span></div><p class="loader-wordmark">SHIPWRECK STUDIOS_</p><div class="loader-bottom"><span>SAN JUAN, PUERTO RICO</span><span class="loader-state" role="status">Cargando</span><button class="loader-skip" type="button">Saltar intro ↗</button></div>';
+    loader.innerHTML = '<div class="preloader-logo" aria-hidden="true"><span class="brand-mark"></span><span class="brand-mark loader-fill"></span></div><p class="loader-wordmark">SHIPWRECK STUDIOS_</p><div class="loader-bottom"><span>SAN JUAN, PUERTO RICO</span><span class="loader-state" role="status">Cargando</span><button class="loader-skip" type="button">Saltar intro <i class="icon icon-arrow" aria-hidden="true"></i></button></div>';
     document.body.append(loader);
     loaderTimer = setTimeout(finishLoader, 2600);
     loader.querySelector('button').addEventListener('click', finishLoader);
