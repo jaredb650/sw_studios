@@ -4,6 +4,7 @@ date: 2026-09-05
 lineup:
   - "FENIK"
   - "Mystico"
+type: musica
 admission: tickets
 ticketUrl: https://www.bandsintown.com/e/108775277-mystico-%28pr%29-at-shipwreck-studios
 source: https://www.bandsintown.com/e/108775277-mystico-%28pr%29-at-shipwreck-studios

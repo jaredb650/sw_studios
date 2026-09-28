@@ -19,7 +19,7 @@ bodyEn: |
   Bruma works at both ends of the night: ambient sets for quiet sessions and deep techno for the early hours. The common thread is atmosphere, with sounds that fill the room without rushing anyone.
 
   At Shipwreck Studios, Bruma provides the soundtrack for the live-drawing sessions and shares the booth with Faro Rojo on long nights. The selection includes field recordings, experimental Caribbean music, and techno from independent labels.
-order: 4
+order: 8
 placeholder: true
 ---
 

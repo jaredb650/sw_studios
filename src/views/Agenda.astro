@@ -17,6 +17,9 @@ const { upcoming, past, featured, rest } = await getAgenda();
 const jsonLd = await Promise.all(upcoming.filter((event) => !event.data.placeholder).map((event) => eventJsonLd(event, lang)));
 const years = [...new Set(upcoming.map((event) => year(event.startsAt)))];
 const follow = ui.home.followFirst('@shipwreckstudios_');
+// Type filters: one chip per event type on the agenda, in a fixed order.
+const TYPE_ORDER = ['musica', 'arte', 'taller', 'clase', 'bienestar', 'mercado', 'comunidad'] as const;
+const typeCounts = TYPE_ORDER.map((type) => ({ type, count: upcoming.filter((event) => event.data.type === type).length })).filter((entry) => entry.count > 0);
 ---
 
 <Base title={t.title} description={t.description} page="agenda" jsonLd={jsonLd} alternates={{ es: routePath('agenda', 'es'), en: routePath('agenda', 'en') }}>
@@ -28,6 +31,20 @@ const follow = ui.home.followFirst('@shipwreckstudios_');
       </div>
       <span class="label">{t.count(upcoming.length)}{years.length ? ` / ${years.join('–')}` : ''}</span>
     </div>
+    {
+      typeCounts.length > 1 && (
+        <div class="tag-filter agenda-filter" role="group" aria-label={t.filterLabel} data-type-filter>
+          <a class="tag-chip" href="?" data-type-chip="" aria-pressed="true">
+            {t.filterAll} <span class="tag-count">{upcoming.length}</span>
+          </a>
+          {typeCounts.map(({ type, count }) => (
+            <a class="tag-chip" href={`?tipo=${type}`} data-type-chip={type} aria-pressed="false">
+              {ui.event.types[type]} <span class="tag-count">{count}</span>
+            </a>
+          ))}
+        </div>
+      )
+    }
     {featured && <h2 class="visually-hidden">{t.featuredHidden}</h2>}
     {featured && <FeaturedEvent event={featured} />}
 
@@ -36,13 +53,14 @@ const follow = ui.home.followFirst('@shipwreckstudios_');
         rest.length > 0 && (
           <div class="agenda-head">
             <h2 class="agenda-title">{featured ? t.moreDates : t.dates}</h2>
-            <span class="label muted">{t.count(rest.length)}</span>
+            <span class="label muted" data-rest-count data-template={t.count(0)}>{t.count(rest.length)}</span>
           </div>
         )
       }
       <div class="event-grid">
         {rest.map((event) => <EventCard event={event} />)}
       </div>
+      <p class="row-empty" data-type-empty hidden>{t.noMatch}</p>
       <p class="row-empty" data-agenda-empty hidden={rest.length > 0}>
         {featured ? ui.home.noMore : ui.home.noEvents} {follow[0]} <a class="inline-link" href={site.socials.instagram} target="_blank" rel="noopener">{follow[1]}</a> {follow[2]}
       </p>
@@ -53,3 +71,58 @@ const follow = ui.home.followFirst('@shipwreckstudios_');
   </section>
   <Lightbox />
 </Base>
+
+<script>
+  // Multi-select type filter (Música, Taller, Clase…): shows events of any
+  // selected type, including the featured one. The selection is kept in the
+  // address (?tipo=taller,clase). Without JavaScript everything shows.
+  const filter = document.querySelector<HTMLElement>('[data-type-filter]');
+  if (filter) {
+    const allChip = filter.querySelector<HTMLAnchorElement>('[data-type-chip=""]')!;
+    const chips = [...filter.querySelectorAll<HTMLAnchorElement>('[data-type-chip]:not([data-type-chip=""])')];
+    const known = new Set(chips.map((chip) => chip.dataset.typeChip!));
+    const events = [...document.querySelectorAll<HTMLElement>('[data-upcoming] [data-type], [data-featured][data-type]')];
+    const empty = document.querySelector<HTMLElement>('[data-type-empty]')!;
+    let selected = new Set<string>();
+    const apply = (updateUrl = false) => {
+      allChip.setAttribute('aria-pressed', String(selected.size === 0));
+      chips.forEach((chip) => chip.setAttribute('aria-pressed', String(selected.has(chip.dataset.typeChip!))));
+      let shown = 0;
+      events.forEach((event) => {
+        // Rows already hidden because they ended stay hidden.
+        if (event.dataset.ended) return;
+        const match = selected.size === 0 || selected.has(event.dataset.type!);
+        event.classList.toggle('is-filtered-out', !match);
+        if (match) shown++;
+      });
+      empty.hidden = shown > 0;
+      // Keep the "N eventos" count above the grid in step with the filter.
+      const restCount = document.querySelector<HTMLElement>('[data-rest-count]');
+      if (restCount) {
+        const inGrid = events.filter((event) => !event.hasAttribute('data-featured') && !event.dataset.ended && !event.classList.contains('is-filtered-out')).length;
+        const one = restCount.dataset.template!.replace(/^0 /, '');
+        restCount.textContent = `${inGrid} ${inGrid === 1 ? one.replace(/s$/, '') : one}`;
+      }
+      if (updateUrl) {
+        const query = selected.size ? `?tipo=${[...selected].join(',')}` : '';
+        history.replaceState(null, '', location.pathname + query + location.hash);
+      }
+    };
+    allChip.addEventListener('click', (event) => {
+      event.preventDefault();
+      selected = new Set();
+      apply(true);
+    });
+    chips.forEach((chip) =>
+      chip.addEventListener('click', (event) => {
+        event.preventDefault();
+        const type = chip.dataset.typeChip!;
+        if (selected.has(type)) selected.delete(type);
+        else selected.add(type);
+        apply(true);
+      }),
+    );
+    selected = new Set((new URLSearchParams(location.search).get('tipo') ?? '').split(',').filter((type) => known.has(type)));
+    apply();
+  }
+</script>

@@ -6,10 +6,11 @@ end: "22:00"
 flyer: ../../assets/placeholders/flyers/2026-10-09-dibujo-en-vivo.jpg
 flyerAlt: "Flyer de ejemplo de Life Drawing, viernes 9 de octubre"
 flyerAltEn: "Sample flyer for Life Drawing, Friday, October 9"
-organizers: "Shipwreck Studios"
+organizers: "Oleaje Estudio, Shipwreck Studios"
 lineup:
   - "Oleaje Estudio"
   - "Bruma (ambient set)"
+type: clase
 admission: door
 price: "$10"
 bodyEn: |

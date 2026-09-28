@@ -14,6 +14,7 @@ lineup:
   - "Mystico"
   - "Fadafunk (Eri Knix + Tamora)"
   - "Chester Browne b2b Jonnsans"
+type: musica
 admission: tickets
 ticketUrl: https://posh.vip/e/chinonegro-en-shipwreck-studios
 price: "Desde $17.49"

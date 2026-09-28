@@ -4,6 +4,7 @@ date: 2025-09-12
 start: "22:00"
 end: "05:00"
 organizers: "Detour"
+type: musica
 admission: tickets
 ticketUrl: https://ra.co/events/2253842
 price: "$10"

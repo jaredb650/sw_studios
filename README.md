@@ -52,6 +52,7 @@ One file per event: `src/content/events/YYYY-MM-DD-name.md`. Copy `_plantilla.md
 (`"23:45"`), and an end time earlier than the start means the next morning.
 
 - **Every event uses the same fields**; the featured one is just shown larger.
+- **Type** (`type`): `musica`, `arte`, `taller`, `clase`, `bienestar`, `mercado` or `comunidad`. It shows as a label on each card and drives the multi-select filter on the agenda page (`?tipo=taller,clase`). Music events lead with their lineup; everything else leads with "Presentado por …" (the `organizers`), and classes and workshops label their organizers "Imparte".
 - **Featured Event** ("Evento destacado"): set `featured: true` on any event. If several upcoming events are marked, the soonest wins. If none is marked (or it has passed), the next upcoming event is shown.
 - **Other upcoming events** appear as flyer cards: 4 per row on large screens, 3 on tablets, 2 on phones. Opening a card spans the full row with all details, and only one card is open at a time.
 - **Organizers**: `organizers: "PromotoresPR, Shipwreck Studios, Radio Underground PR"`. Separate several with commas; they show as "Organiza"/"Organizan".

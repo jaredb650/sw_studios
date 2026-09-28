@@ -26,7 +26,7 @@ bodyEn: |
   Salitre is a disco, boogie, and edits project that plays almost exclusively on vinyl. The record bag mixes dance-floor classics with gems of 1970s and '80s Caribbean music, plus original edits that stretch out the best moments of each track.
 
   At Shipwreck Studios, Salitre runs the vinyl afternoons, the art markets, and the disco nights. The idea is simple: good music, no rush, for dancing together.
-order: 5
+order: 10
 placeholder: true
 ---
 

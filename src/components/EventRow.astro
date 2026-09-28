@@ -33,6 +33,7 @@ const ratio = data.flyer ? (data.flyer.width / data.flyer.height).toFixed(4) : '
       {meta && <p class="row-meta">{meta}</p>}
     </div>
     <div class="row-chips">
+      <span class="chip type-chip">{t.event.types[data.type]}</span>
       {hasRecap(event) && <span class="chip accent">{t.event.recap}</span>}
       <SampleChip show={data.placeholder} />
     </div>

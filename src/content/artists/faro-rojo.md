@@ -20,7 +20,7 @@ bodyEn: |
   Faro Rojo is a project of hypnotic, long-form techno. The sets favor tension and patience: steady kicks, industrial textures, and minimal melodies that appear and fade like a light in the distance.
 
   A regular presence in the small hours at Shipwreck Studios, Faro Rojo often plays extended sets and b2b sessions with other residents. Outside the booth, the project hosts meetups to share music and gear with DJs who are just starting out.
-order: 2
+order: 4
 placeholder: true
 ---
 

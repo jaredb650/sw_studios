@@ -24,7 +24,7 @@ bodyEn: |
   Oleaje Estudio is an illustration collective working in ink, gouache, and screen printing. Their pieces read like imaginary maps of the island: currents, bus routes, beaches, and streets drawn with humor and plenty of detail.
 
   The collective leads the live-drawing sessions at Shipwreck Studios and produces zines and prints for the venue's art markets. Their work invites everyone to draw together, whatever their experience.
-order: 8
+order: 5
 placeholder: true
 ---
 

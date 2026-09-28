@@ -1,6 +1,7 @@
 ---
 title: "All Aboard x Fast Lane"
 date: 2025-04-25
+type: musica
 admission: tickets
 ticketUrl: https://ra.co/events/2152738
 source: https://ra.co/events/2152738

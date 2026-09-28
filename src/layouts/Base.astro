@@ -28,7 +28,7 @@ interface Props {
 
 const { lang, t, path } = useLang(Astro.url);
 const { title, description = t.site.description, image, imageAlt, page = 'page', jsonLd, alternates, crumbs = [] } = Astro.props;
-const fullTitle = title ? `${title} — ${site.name}` : `${site.name} — ${t.site.tagline}`;
+const fullTitle = title ? `${title} — ${site.name}` : `${site.name} — ${t.site.intro}`;
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
 const shareImage = image ? new URL(image, Astro.site).href : absolute('/og-default.jpg');
 const placeholders = await getPlaceholders();

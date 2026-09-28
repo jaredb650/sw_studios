@@ -63,6 +63,8 @@ const events = defineCollection({
         restrictionsEn: en,
         // Any event can be the Featured Event at the top of the agenda. If several
         // upcoming events are marked, the soonest wins; if none is, the next event is shown.
+        // What kind of event it is: shown on the card and used by the agenda filters.
+        type: z.enum(['musica', 'arte', 'taller', 'clase', 'bienestar', 'mercado', 'comunidad']).default('musica'),
         featured: z.boolean().default(false),
         status: z.enum(['scheduled', 'cancelled', 'postponed']).default('scheduled'),
         statusNote: z.string().optional(),

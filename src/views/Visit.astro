@@ -23,7 +23,7 @@ const socialLinks = Object.entries({ Instagram: socials.instagram, Facebook: soc
 <Base title={t.title} description={t.description} page="visit" jsonLd={venueJsonLd(lang)} alternates={{ es: routePath('visit', 'es'), en: routePath('visit', 'en') }}>
   <VisitBlock heading="h1" showMore={false} />
 
-  <section class="section" aria-labelledby="contact-title">
+  <section class="section" id="contacto" aria-labelledby="contact-title">
     <div class="split">
       <div class="section-heading" style="display: block">
         <h2 id="contact-title"><span class="section-index">01 /</span>{t.contact}</h2>

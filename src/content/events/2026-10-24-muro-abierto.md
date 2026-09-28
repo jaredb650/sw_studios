@@ -11,6 +11,7 @@ lineup:
   - "Tinta Salada"
   - "Ancla"
   - "Coral Negro (live)"
+type: arte
 admission: free
 bodyEn: |
   An afternoon of live painting on the venue's walls. Tinta Salada and Ancla work on a new wall while the audience watches the process from start to finish. Coral Negro plays a live set as evening falls. Admission is free, and the finished wall stays on view for the weeks that follow.

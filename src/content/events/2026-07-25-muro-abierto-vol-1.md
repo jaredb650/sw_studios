@@ -11,6 +11,7 @@ lineup:
   - "Tinta Salada"
   - "Oleaje"
   - "Bruma (ambient set)"
+type: arte
 admission: free
 recap:
   summary: "Seis horas de pintura en vivo: una pared blanca al mediodía y un mural nuevo al anochecer."

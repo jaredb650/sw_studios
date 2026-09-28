@@ -15,7 +15,7 @@ bodyEn: |
   Ancla paints nocturnal scenes in oil: dark bays, ship lights, and figures that seem about to disappear. The work explores the stillness and weight of what stays in one place while everything else moves.
 
   At Shipwreck Studios, Ancla presents painting series that change with the seasons and takes part in the live-painting sessions. Some pieces are no longer on the walls but remain in the gallery archive.
-order: 7
+order: 3
 placeholder: true
 ---
 

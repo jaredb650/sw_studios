@@ -9,6 +9,7 @@ flyerAltEn: "Sample flyer for the introduction to music production workshop, Sat
 organizers: "Shipwreck Studios, Bruma"
 lineup:
   - "Bruma"
+type: taller
 admission: tickets
 ticketUrl: https://example.com/boletos/2026-11-07-taller-produccion-musical
 price: "$18"

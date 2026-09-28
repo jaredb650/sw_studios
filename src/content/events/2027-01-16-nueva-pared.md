@@ -14,6 +14,7 @@ lineup:
   - "Oleaje Estudio"
   - "Sirena Mecánica"
   - "Colectivo Manglar"
+type: arte
 admission: free
 bodyEn: |
   A group exhibition that premieres the venue's walls for the new year. Tinta Salada, Ancla, Oleaje Estudio, Sirena Mecánica, and Colectivo Manglar present new work made for Shipwreck, spanning murals, painting, illustration, and installation. Opening night includes music and a walkthrough with the artists. The exhibition can be visited during events through February 27.

@@ -22,7 +22,7 @@ bodyEn: |
   Sirena Mecánica builds sculptures and installations from salvaged metal, rope, fishing nets, and light. Each piece starts from objects found along the coast and turns them into creatures and structures that look like they washed up from a shipwreck.
 
   At Shipwreck Studios, these installations fill the patio and the corners of the space, and some come alive with light and sound during events. The work invites a second look at what the sea gives back.
-order: 10
+order: 9
 placeholder: true
 ---
 

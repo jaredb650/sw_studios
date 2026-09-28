@@ -12,6 +12,7 @@ lineup:
   - "Bruma"
   - "Ojo de Tormenta"
   - "Resaca Visual (visuales)"
+type: musica
 admission: tickets
 ticketUrl: https://example.com/boletos/2026-10-31-noche-de-naufragio
 price: "Desde $20"

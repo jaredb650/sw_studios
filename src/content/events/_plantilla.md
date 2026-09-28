@@ -14,6 +14,7 @@ organizers: "Promotor A, Colectivo B, Shipwreck Studios"   # Comma-separated; on
 lineup:
   - "Artista A b2b Artista B"   # Resident artists' names become links automatically.
   - "Artista C"
+type: taller                # musica | arte | taller | clase | bienestar | mercado | comunidad
 admission: tickets          # tickets | free | door | soon
 ticketUrl: https://posh.vip/e/...   # Required for tickets; optional otherwise.
 price: "Desde $15"          # Free text, optional.

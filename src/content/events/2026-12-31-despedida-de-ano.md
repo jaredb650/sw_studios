@@ -11,6 +11,7 @@ lineup:
   - "DJ Marejada"
   - "Faro Rojo b2b Bruma"
   - "Sorpresa a medianoche"
+type: musica
 admission: soon
 restrictions: "21+"
 bodyEn: |

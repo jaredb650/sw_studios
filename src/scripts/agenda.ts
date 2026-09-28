@@ -20,7 +20,10 @@ export function initAgenda(now = new Date()) {
   };
 
   document.querySelectorAll<HTMLElement>('[data-upcoming] [data-ends]').forEach((card) => {
-    if (new Date(card.dataset.ends!) <= now) card.hidden = true;
+    if (new Date(card.dataset.ends!) <= now) {
+      card.hidden = true;
+      card.dataset.ended = 'true';
+    }
     else mark(card, new Date(card.dataset.starts!));
   });
 

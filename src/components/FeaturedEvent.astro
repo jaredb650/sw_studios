@@ -23,7 +23,7 @@ const anchor = eventAnchor(event);
 const ratio = data.flyer ? (data.flyer.width / data.flyer.height).toFixed(4) : '0.8';
 ---
 
-<article class="featured" id={anchor} style={`--ratio: ${ratio}`} data-featured data-ends={event.endsAt.toISOString()} data-starts={event.startsAt.toISOString()}>
+<article class="featured" id={anchor} style={`--ratio: ${ratio}`} data-featured data-type={data.type} data-ends={event.endsAt.toISOString()} data-starts={event.startsAt.toISOString()}>
   {
     data.flyer && flyerLarge ? (
       <a class="poster ev-flyer" href={flyerLarge.src} data-lightbox={anchor} data-title={data.title} data-meta={longDate(event.startsAt, lang)} aria-label={t.viewFlyer(data.title)} data-label={t.flyerLabel}>
@@ -38,7 +38,7 @@ const ratio = data.flyer ? (data.flyer.width / data.flyer.height).toFixed(4) : '
   <div class="ev-head">
     <div class="event-top">
       <span class="label" data-event-status data-past-label={t.past} data-ended-label={t.eventEnded}>{data.status === 'cancelled' ? t.cancelled : t.featured}</span>
-      <span class="event-flags"><span class="chip solid" data-today hidden>{t.today}</span><SampleChip show={data.placeholder} /></span>
+      <span class="event-flags"><span class="chip type-chip">{t.types[data.type]}</span><span class="chip solid" data-today hidden>{t.today}</span><SampleChip show={data.placeholder} /></span>
     </div>
     <time class="date" datetime={isoLocal(data.date, data.start)}>
       <span>{dayNumber(event.startsAt)}</span>

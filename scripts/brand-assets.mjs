@@ -43,7 +43,7 @@ const og = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630">
   <rect width="1200" height="630" fill="${INK}"/>
   <text x="72" y="300" font-family="Impact, 'Arial Narrow', sans-serif" font-size="128" fill="${PAPER}">SHIPWRECK</text>
   <text x="72" y="440" font-family="Impact, 'Arial Narrow', sans-serif" font-size="128" fill="${LIME}">STUDIOS_</text>
-  <text x="76" y="540" font-family="Menlo, monospace" font-size="26" letter-spacing="4" fill="#a6a8a0">MÚSICA · ARTE · COMUNIDAD — SAN JUAN, PR</text>
+  <text x="76" y="540" font-family="Menlo, monospace" font-size="26" letter-spacing="4" fill="#a6a8a0">DONDE LAS IDEAS COBRAN VIDA — SAN JUAN, PR</text>
 </svg>`;
 await sharp(Buffer.from(og))
   .composite([{ input: mark, left: 760, top: 95 }])

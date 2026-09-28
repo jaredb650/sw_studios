@@ -9,6 +9,7 @@ flyerAltEn: "Sample flyer for Faro Rojo b2b Marejada, Saturday, August 15"
 organizers: "Shipwreck Studios"
 lineup:
   - "Faro Rojo b2b Marejada"
+type: musica
 admission: tickets
 ticketUrl: https://example.com/boletos/2026-08-15-faro-rojo-b2b-marejada
 price: "$15"

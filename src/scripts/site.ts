@@ -3,6 +3,7 @@
 import { initAgenda } from './agenda';
 import { initRules } from './rules';
 import { strings } from './strings';
+import { initTypewriter } from './typewriter';
 
 const root = document.documentElement;
 const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -180,12 +181,17 @@ function finishLoader() {
 }
 
 if (document.body.dataset.page === 'home' && !paused && !read('shipwreck-intro') && !location.hash && window.scrollY < 100) {
+  // Intro: the logo fills while the page loads, then the seven souls pop in
+  // and out one after another under it, then the home page is revealed.
+  // Skippable (button, Tab, Escape) and capped by a hard deadline.
+  const souls: string[] = JSON.parse(document.querySelector<HTMLElement>('[data-typewriter]')?.dataset.words ?? '[]');
+  const SOUL_MS = 300;
   loader = document.createElement('div');
   loader.className = 'preloader';
   loader.innerHTML =
-    `<div class="preloader-logo" aria-hidden="true"><span class="brand-mark"></span><span class="brand-mark loader-fill"></span></div><p class="loader-wordmark">SHIPWRECK STUDIOS_</p><div class="loader-bottom"><span>${strings.place}</span><span class="loader-state" role="status">${strings.loading}</span><button class="loader-skip" type="button">${strings.skip} <i class="icon icon-arrow" aria-hidden="true"></i></button></div>`;
+    `<div class="preloader-logo" aria-hidden="true"><span class="brand-mark"></span><span class="brand-mark loader-fill"></span></div><p class="loader-wordmark">SHIPWRECK STUDIOS_</p><p class="loader-souls" aria-hidden="true"><span></span></p><div class="loader-bottom"><span>${strings.place}</span><span class="loader-state" role="status">${strings.loading}</span><button class="loader-skip" type="button">${strings.skip} <i class="icon icon-arrow" aria-hidden="true"></i></button></div>`;
   document.body.append(loader);
-  loaderTimer = window.setTimeout(finishLoader, 2600);
+  loaderTimer = window.setTimeout(finishLoader, 900 + souls.length * SOUL_MS + 1600);
   loader.querySelector('button')!.addEventListener('click', finishLoader);
   const skipKey = (event: KeyboardEvent) => {
     if (event.key === 'Tab' || event.key === 'Escape') {
@@ -207,7 +213,21 @@ if (document.body.dataset.page === 'home' && !paused && !read('shipwreck-intro')
         if (ready === assets.length) active.querySelector('.loader-state')!.textContent = strings.ready;
       }),
   );
-  Promise.all([Promise.all(tracked), new Promise((resolve) => setTimeout(resolve, 1050))]).then(finishLoader);
+  const pause = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+  const soulSlot = active.querySelector<HTMLElement>('.loader-souls span')!;
+  Promise.all([Promise.all(tracked), pause(900)])
+    .then(async () => {
+      active.classList.add('is-souls');
+      for (const soul of souls) {
+        if (loaderEnded) return;
+        soulSlot.textContent = soul;
+        soulSlot.classList.remove('pop');
+        void soulSlot.offsetWidth; // restart the pop animation
+        soulSlot.classList.add('pop');
+        await pause(SOUL_MS);
+      }
+    })
+    .then(finishLoader);
 } else {
   loaderEnded = true;
 }
@@ -253,6 +273,7 @@ document.addEventListener('click', async (event) => {
 });
 
 initAgenda();
+initTypewriter();
 
 /* Seven values on the home page: when the two groups (4 + 3) wrap onto
    separate lines, hide the star between them so each line stands alone. */

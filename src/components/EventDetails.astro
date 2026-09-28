@@ -13,6 +13,7 @@ import { eventAnchor, hasRecap, type Event } from '../lib/events';
 import { href } from '../lib/urls';
 import { site } from '../data/site';
 import { pick, useLang } from '../i18n';
+import { isMusic, isTaught } from '../lib/event-kind';
 
 interface Props {
   event: Event;
@@ -91,7 +92,7 @@ const descriptionId = `${anchor}-descripcion`;
     <dl class="facts ev-people">
       {data.lineup.length > 0 && (
         <>
-          <dt>{t.lineup}</dt>
+          <dt>{isMusic(event) ? t.lineup : t.with}</dt>
           <dd>
             <Lineup lines={data.lineup} />
           </dd>
@@ -99,7 +100,7 @@ const descriptionId = `${anchor}-descripcion`;
       )}
       {data.organizers.length > 0 && (
         <>
-          <dt>{data.organizers.length > 1 ? t.organizers : t.organizer}</dt>
+          <dt>{isTaught(event) ? (data.organizers.length > 1 ? t.teachers : t.teacher) : data.organizers.length > 1 ? t.organizers : t.organizer}</dt>
           <dd>
             <ul class="inline-list">
               {data.organizers.map((name) => (

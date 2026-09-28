@@ -11,6 +11,7 @@ lineup:
   - "Marejada"
   - "Coral Negro Live"
   - "Salitre"
+type: musica
 admission: tickets
 ticketUrl: https://example.com/boletos/2026-06-20-solsticio
 price: "$15"

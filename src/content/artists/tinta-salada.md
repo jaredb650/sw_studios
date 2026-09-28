@@ -22,7 +22,7 @@ bodyEn: |
   Tinta Salada is a muralism project that turns large walls into landscapes of sea, neighborhood, and memory. The work combines acrylic, spray paint, and patterns inspired by the tiles and hand-painted signs of Old San Juan.
 
   Several of the walls at Shipwreck Studios bear Tinta Salada's signature. When a mural is repainted, it's documented in the site's gallery. Tinta Salada also paints live during Muro Abierto, where visitors can watch a new wall come to life in a single afternoon.
-order: 6
+order: 1
 placeholder: true
 ---
 

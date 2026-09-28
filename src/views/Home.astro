@@ -33,9 +33,6 @@ const { upcoming, featured, rest } = await getAgenda();
 const preview = rest.slice(0, HOME_CARDS);
 const allArtists = await getArtists();
 const manifesto = await getEntry('pages', 'manifiesto');
-// The manifesto's first line: "No creemos en espacios que simplemente se visitan…"
-const manifestoBody = manifesto ? (lang === 'en' ? (manifesto.data.bodyEn ?? manifesto.body) : manifesto.body) : '';
-const manifestoLine = (manifestoBody ?? '').trim().split(/\n\s*\n/)[0];
 const allCurrent = (await getCollection('artworks', ({ data }) => !data.draft && data.status === 'current')).sort(
   (a, b) => a.data.order - b.data.order,
 );
@@ -47,7 +44,9 @@ const years = [...new Set(upcoming.map((event) => year(event.startsAt)))];
 const seasonLabel = years.length ? `${t.agendaLabel} / ${years.join('–')}` : t.agendaLabel;
 const rules = await getRules();
 const follow = t.followFirst('@shipwreckstudios_');
-const ribbon = [...ui.site.ribbon, ...ui.site.ribbon];
+// The seven souls (manifesto) drive the hero typewriter, the preloader and the ribbon.
+const souls = (manifesto?.data.items ?? []).map((soul) => pick(soul, 'title', lang));
+const ribbon = [...souls, ...souls].map((soul) => soul.toUpperCase());
 // Faded venue photo behind the "El espacio" section.
 const spaceBg = await getImage({ src: spacePhoto, width: 1600, format: 'webp' });
 const rulesBg = await getImage({ src: rulesPhoto, width: 1600, format: 'webp' });
@@ -64,9 +63,19 @@ const rulesBg = await getImage({ src: rulesPhoto, width: 1600, format: 'webp' })
     </div>
     <div class="eyebrow"><span>{ui.site.city}</span><span>{ui.site.tagline}</span></div>
     <div class="hero-composition">
-      <h1 id="site-title" aria-label="Shipwreck Studios">
-        <span class="title-line"><span>SHIPWRECK</span></span>
-        <span class="title-line accent-line"><span>STUDIOS_</span></span>
+      <h1 id="site-title" class="hero-title">
+        <span class="visually-hidden">{souls.length ? ui.site.heroSentence(souls) : 'Shipwreck Studios'}</span>
+        <span aria-hidden="true">
+          <span class="title-line"><span>SHIPWRECK</span></span>
+          <span class="title-line"><span>STUDIOS</span></span>
+          <!-- "ES" then each soul is typed out and erased in turn (src/scripts/typewriter.ts). -->
+          <span class="title-line typed-line" data-typewriter data-words={JSON.stringify(souls.map((soul) => soul.toUpperCase()))}>
+            <span>
+              <span class="typed-is">{ui.site.heroIs.toUpperCase()}</span>{' '}
+              <span class="typed-word" data-typed>{souls[0]?.toUpperCase()}</span><span class="typed-cursor">_</span>
+            </span>
+          </span>
+        </span>
       </h1>
     </div>
     <div class="mast-bottom">
@@ -94,7 +103,7 @@ const rulesBg = await getImage({ src: rulesPhoto, width: 1600, format: 'webp' })
         {t.manifestoTitle.map((line) => <span class="culture-line">{line}</span>)}
       </h2>
       {manifesto && <p class="lead">{pick(manifesto.data, 'lead', lang)}</p>}
-      {manifestoLine && <p class="manifesto-line">{manifestoLine}</p>}
+      <p class="manifesto-line">{t.universe}</p>
       <Sevens variant="inline" label={t.sevens} />
       <SectionMore to={path('space')} label={t.knowSpace} detail={t.knowSpaceDetail} />
     </div>
@@ -106,7 +115,10 @@ const rulesBg = await getImage({ src: rulesPhoto, width: 1600, format: 'webp' })
   <div class="gated" data-gated>
     <section id="agenda" class="section events" aria-labelledby="events-title">
       <div class="section-heading">
-        <h2 id="events-title"><span class="section-index">02 /</span>{t.upcoming}</h2>
+        <div>
+          <h2 id="events-title"><span class="section-index">02 /</span>{t.upcoming}</h2>
+          <p class="page-sub">{t.upcomingSub}</p>
+        </div>
         <span class="label">{seasonLabel}</span>
       </div>
 
@@ -169,7 +181,7 @@ const rulesBg = await getImage({ src: rulesPhoto, width: 1600, format: 'webp' })
     <section id="membresias" class="section" aria-labelledby="club-title">
       <div class="club-band" data-reveal>
         <div class="club-head">
-          <span class="label muted">05 / {ui.nav.sections.membresias}</span>
+          <span class="label muted">05 / {t.clubLabel}</span>
           <h2 id="club-title">{t.clubTitle.join(' ')}</h2>
           <p class="club-sub">{t.clubSub}</p>
         </div>
@@ -178,6 +190,7 @@ const rulesBg = await getImage({ src: rulesPhoto, width: 1600, format: 'webp' })
             [
               { title: t.memberTitle, text: t.memberText, perks: t.memberPerks, more: t.memberMore, to: `${path('memberships')}#membresia` },
               { title: t.programTitle, text: t.programText, perks: t.programPerks, more: t.programMore, to: `${path('memberships')}#programa-de-artistas` },
+              { title: t.hostTitle, text: t.hostText, perks: t.hostPerks, more: t.hostMore, to: `${path('visit')}#contacto` },
             ].map((offer) => (
               <div class="club-offer">
                 <h3>{offer.title}</h3>

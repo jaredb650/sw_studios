@@ -32,7 +32,7 @@ bodyEn: |
   Coral Negro is a live electronic project built with synthesizers, drum machines, and processed vocals. Each performance is improvised over a foundation of original sequences, so no two sets sound alike.
 
   The music blends club electronics with slow ambient passages and sounds recorded along the coast. At Shipwreck Studios, Coral Negro debuts new material before its release and plays the live-painting afternoons, scoring the muralists at work.
-order: 3
+order: 6
 placeholder: true
 ---
 

@@ -2,6 +2,7 @@
 title: "RollerDisco Dreamland"
 date: 2026-09-06
 organizers: "WeSkatePR"
+type: comunidad
 admission: door
 source: https://www.instagram.com/weskatepr/p/DbizMQoRSiF/
 sourceLabel: "Instagram de WeSkatePR"

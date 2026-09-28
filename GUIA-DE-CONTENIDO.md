@@ -33,7 +33,7 @@ Shipwreck — Sitio web/
 
 ## Ficha de cada evento
 
-- **Nombre del evento**
+- **Nombre del evento** y **tipo**: música, arte/exposición, taller, clase, bienestar (sound healing, ecstatic dance…), mercado o comunidad
 - **Fecha** y **hora de inicio y de fin** (hora de Puerto Rico)
 - **Flyer** en alta resolución (JPG o PNG, mínimo 1080 px de ancho)
 - **Lineup**, en el orden en que debe aparecer

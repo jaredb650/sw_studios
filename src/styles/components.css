@@ -1194,3 +1194,39 @@ html.motion-paused .spotlight .spot-thumb.is-counting .spot-thumb-bar { animatio
   .spot-thumbs { --per-page: 10; }
   .spot-thumb-name { font-size: 10px; }
 }
+
+/* ------------------------------------------------------------------
+   Hero: SHIPWRECK / STUDIOS / ES + a typed soul and a blinking cursor
+   (src/scripts/typewriter.ts). Three lines, sized to fit the screen.
+   ------------------------------------------------------------------ */
+.masthead h1.hero-title { font-size: clamp(3.6rem, min(12.1vw, 18.5svh), 12.1rem); }
+.hero-title .title-line:nth-child(2) { color: var(--fg); }
+/* Same size as the title, shrinking only where the longest soul ("ES ESPIRITUALIDAD_") would not fit. */
+.typed-line { font-size: min(1em, calc(89vw / 7.2)); }
+.typed-is { color: var(--fg); }
+.typed-word, .typed-cursor { color: var(--accent); }
+.typed-cursor { display: inline-block; animation: cursor-blink 1.05s steps(1) infinite; }
+.typed-line.is-busy .typed-cursor { animation: none; opacity: 1; }
+@keyframes cursor-blink { 0%, 50% { opacity: 1; } 50.01%, 100% { opacity: 0; } }
+@media (max-width: 680px) {
+  .masthead h1.hero-title { font-size: 17vw; }
+}
+
+/* Event type label (Música, Taller, Clase…) on cards, rows, and the featured event. */
+.chip.type-chip { background: #ffffff14; border-color: transparent; color: var(--fg); }
+
+/* Súmate: three offers side by side (memberships, Artist Program, bring your class). */
+.club-offers { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.club-offer { padding: 28px 30px 4px 0; }
+.club-offer + .club-offer { padding: 28px 30px 4px 30px; }
+.club-offer:last-child { padding-right: 0; }
+@media (max-width: 1000px) {
+  .club-offers { grid-template-columns: 1fr; }
+  .club-offer, .club-offer + .club-offer, .club-offer:last-child { padding: 22px 0 6px; border-left: 0; }
+  .club-offer + .club-offer { border-top: 1px solid var(--line); }
+}
+
+/* Agenda page: filter by event type (same chips as the artist filters). */
+.agenda-filter { margin: 0 0 30px; }
+.agenda-filter + .featured { margin-top: 0; }
+.is-filtered-out { display: none !important; }
