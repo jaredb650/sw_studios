@@ -1,15 +1,13 @@
 ---
 // The seven souls (SEVENS) from the manifesto: src/content/pages/manifiesto.md → items.
 import { getEntry } from 'astro:content';
-import { pick, useLang } from '../i18n';
 
 interface Props {
   /** "inline" (names in a row) for the home page, "full" for the El espacio page. */
-  variant?: 'inline' | 'compact' | 'full';
+  variant?: 'inline' | 'full';
   label?: string;
 }
 const { variant = 'full', label } = Astro.props;
-const { lang } = useLang(Astro.url);
 const manifesto = await getEntry('pages', 'manifiesto');
 const souls = manifesto?.data.items ?? [];
 ---
@@ -24,8 +22,8 @@ const souls = manifesto?.data.items ?? [];
           {g > 0 && <span class="sevens-sep" aria-hidden="true" />}
           <span class="sevens-group" role="presentation">
             {group.map((soul) => (
-              <span class="seven" role="listitem" title={pick(soul, 'text', lang)}>
-                {pick(soul, 'title', lang)}
+              <span class="seven" role="listitem" title={soul.text}>
+                {soul.title}
               </span>
             ))}
           </span>
@@ -42,8 +40,8 @@ const souls = manifesto?.data.items ?? [];
           <span class="seven-index" aria-hidden="true">
             {String(i + 1).padStart(2, '0')}
           </span>
-          <span class="seven-name">{pick(soul, 'title', lang)}</span>
-          <span class="seven-verb">{pick(soul, 'text', lang)}</span>
+          <span class="seven-name">{soul.title}</span>
+          <span class="seven-verb">{soul.text}</span>
         </li>
       ))}
     </ol>

@@ -10,7 +10,7 @@ import { artistIndex, eventsForArtist, getArtists, type Artist } from '../lib/ar
 import { getAgenda, eventAnchor } from '../lib/events';
 import { shortDate } from '../lib/dates';
 import { href, absolute } from '../lib/urls';
-import { artistPath, pick, useLang } from '../i18n';
+import { artistPath, useLang } from '../i18n';
 
 interface Props {
   artist: Artist;
@@ -20,7 +20,7 @@ interface Props {
 
 const { artist, prev, next } = Astro.props;
 const { data } = artist;
-const { lang, t: ui, path } = useLang(Astro.url);
+const { t: ui, path } = useLang();
 const t = ui.artistsPage;
 const artists = await getArtists();
 const index = artistIndex(artists);
@@ -42,11 +42,11 @@ const SOCIAL_LABELS: Record<string, string> = {
   tiktok: 'TikTok',
   website: t.website,
 };
-const disciplines = pick(data, 'disciplines', lang);
-const photoAlt = pick(data, 'photoAlt', lang);
+const disciplines = data.disciplines;
+const photoAlt = data.photoAlt;
 const socials = Object.entries(data.socials).filter(([, url]) => url) as [string, string][];
 const share = await getImage({ src: data.photo, width: 1200, height: 630, fit: 'cover', format: 'jpg' });
-const bio = lang === 'en' ? (data.bodyEn ?? artist.body) : artist.body;
+const bio = artist.body;
 const description = (bio ?? '').replace(/\s+/g, ' ').trim().slice(0, 155) || `${data.name} — ${disciplines.join(', ')}.`;
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -54,7 +54,7 @@ const jsonLd = {
   name: data.name,
   description,
   image: new URL(share.src, import.meta.env.SITE).href,
-  url: absolute(artistPath(artist.id, lang)),
+  url: absolute(artistPath(artist.id)),
   jobTitle: disciplines.join(', '),
   sameAs: socials.map(([, url]) => url),
 };
@@ -67,7 +67,7 @@ const jsonLd = {
   imageAlt={photoAlt}
   page="artist"
   jsonLd={data.placeholder ? undefined : jsonLd}
-  alternates={{ es: artistPath(artist.id, 'es'), en: artistPath(artist.id, 'en') }}
+ 
   crumbs={[{ label: t.back, href: path('artists') }]}
 >
   <section class="section">
@@ -79,7 +79,7 @@ const jsonLd = {
       <div>
         <div class="disciplines">
           {disciplines.map((discipline) => <span class="chip accent">{discipline}</span>)}
-          {data.base && <span class="chip">{pick(data, 'base', lang)}</span>}
+          {data.base && <span class="chip">{data.base}</span>}
         </div>
         <h1>{data.name}</h1>
         <div class="prose"><EntryBody entry={artist} /></div>
@@ -111,7 +111,7 @@ const jsonLd = {
                   <li>
                     <a href={item.url} target="_blank" rel="noopener">
                       {item.title}
-                      {item.kind && <span class="kind">{pick(item, 'kind', lang)}</span>}
+                      {item.kind && <span class="kind">{item.kind}</span>}
                       <i class="icon icon-arrow" aria-hidden="true" />
                     </a>
                   </li>
@@ -129,7 +129,7 @@ const jsonLd = {
                 {upcomingEvents.map((event) => (
                   <li>
                     <a href={href(`${path('agenda')}#${eventAnchor(event)}`)}>
-                      <time datetime={event.data.date}>{shortDate(event.startsAt, lang)}</time>
+                      <time datetime={event.data.date}>{shortDate(event.startsAt)}</time>
                       <strong>{event.data.title}</strong>
                       <i class="icon icon-arrow" aria-hidden="true" />
                     </a>
@@ -148,7 +148,7 @@ const jsonLd = {
                 {pastEvents.map((event) => (
                   <li>
                     <a href={href(`${path('archive')}#${eventAnchor(event)}`)}>
-                      <time datetime={event.data.date}>{shortDate(event.startsAt, lang)}</time>
+                      <time datetime={event.data.date}>{shortDate(event.startsAt)}</time>
                       <strong>{event.data.title}</strong>
                       <i class="icon icon-arrow" aria-hidden="true" />
                     </a>
@@ -175,8 +175,8 @@ const jsonLd = {
     }
 
     <nav class="pager" aria-label={t.more}>
-      <a href={href(artistPath(prev.id, lang))}><span>{t.prev}</span><strong>{prev.data.name}</strong></a>
-      <a href={href(artistPath(next.id, lang))}><span>{t.next}</span><strong>{next.data.name}</strong></a>
+      <a href={href(artistPath(prev.id))}><span>{t.prev}</span><strong>{prev.data.name}</strong></a>
+      <a href={href(artistPath(next.id))}><span>{t.next}</span><strong>{next.data.name}</strong></a>
     </nav>
   </section>
   <Lightbox />

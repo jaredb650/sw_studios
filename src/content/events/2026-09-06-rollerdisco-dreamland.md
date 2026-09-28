@@ -6,8 +6,6 @@ type: comunidad
 admission: door
 source: https://www.instagram.com/weskatepr/p/DbizMQoRSiF/
 sourceLabel: "Instagram de WeSkatePR"
-bodyEn: |
-  A night of roller skating and disco presented by WeSkatePR at Shipwreck Studios. Details are based on the organizer's original post.
 placeholder: false
 ---
 

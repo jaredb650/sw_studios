@@ -3,7 +3,7 @@
 // opens here; arrows move within its group. Without JavaScript the links
 // simply open the full-size image.
 import { useLang } from '../i18n';
-const { t } = useLang(Astro.url);
+const { t } = useLang();
 ---
 
 <dialog class="lightbox" aria-label={t.lightbox.label}>

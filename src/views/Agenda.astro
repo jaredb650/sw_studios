@@ -9,20 +9,20 @@ import { getAgenda } from '../lib/events';
 import { site } from '../data/site';
 import { eventJsonLd } from '../lib/structured-data';
 import { year } from '../lib/dates';
-import { routePath, useLang } from '../i18n';
+import { useLang } from '../i18n';
 
-const { lang, t: ui, path } = useLang(Astro.url);
+const { t: ui, path } = useLang();
 const t = ui.agendaPage;
 const { upcoming, past, featured, rest } = await getAgenda();
-const jsonLd = await Promise.all(upcoming.filter((event) => !event.data.placeholder).map((event) => eventJsonLd(event, lang)));
+const jsonLd = await Promise.all(upcoming.filter((event) => !event.data.placeholder).map((event) => eventJsonLd(event)));
 const years = [...new Set(upcoming.map((event) => year(event.startsAt)))];
-const follow = ui.home.followFirst('@shipwreckstudios_');
+const follow = ui.home.followFirst(site.instagramHandle);
 // Type filters: one chip per event type on the agenda, in a fixed order.
 const TYPE_ORDER = ['musica', 'arte', 'taller', 'clase', 'bienestar', 'mercado', 'comunidad'] as const;
 const typeCounts = TYPE_ORDER.map((type) => ({ type, count: upcoming.filter((event) => event.data.type === type).length })).filter((entry) => entry.count > 0);
 ---
 
-<Base title={t.title} description={t.description} page="agenda" jsonLd={jsonLd} alternates={{ es: routePath('agenda', 'es'), en: routePath('agenda', 'en') }}>
+<Base title={t.title} description={t.description} page="agenda" jsonLd={jsonLd}>
   <section class="section events" aria-labelledby="agenda-title">
     <div class="section-heading page-heading">
       <div>

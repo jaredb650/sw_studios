@@ -10,7 +10,7 @@ import { absolute, href } from '../lib/urls';
 import { getPlaceholders } from '../lib/placeholders';
 import RulesGate from '../components/RulesGate.astro';
 import { getRules, rulesVersion } from '../lib/rules';
-import { ENGLISH_ENABLED, LANGS, useLang, type Lang } from '../i18n';
+import { useLang } from '../i18n';
 
 interface Props {
   title?: string;
@@ -20,14 +20,12 @@ interface Props {
   imageAlt?: string;
   page?: string;
   jsonLd?: Record<string, unknown> | Record<string, unknown>[];
-  /** This page in each language (paths without the deploy base), for the ES/EN switch and hreflang. */
-  alternates?: Record<Lang, string>;
   /** Extra breadcrumb links after "← Inicio", e.g. the artists index on a profile. */
   crumbs?: { label: string; href: string }[];
 }
 
-const { lang, t, path } = useLang(Astro.url);
-const { title, description = t.site.description, image, imageAlt, page = 'page', jsonLd, alternates, crumbs = [] } = Astro.props;
+const { t, path } = useLang();
+const { title, description = t.site.description, image, imageAlt, page = 'page', jsonLd, crumbs = [] } = Astro.props;
 const fullTitle = title ? `${title} — ${site.name}` : `${site.name} — ${t.site.intro}`;
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
 const shareImage = image ? new URL(image, Astro.site).href : absolute('/og-default.jpg');
@@ -41,15 +39,13 @@ const gate = rules && page !== 'not-found' && page !== 'space' ? (page === 'home
 ---
 
 <!doctype html>
-<html lang={lang} data-rules-version={gate ? rulesVersion(rules!.data.items) : undefined}>
+<html lang="es" data-rules-version={gate ? rulesVersion(rules!.data.items) : undefined}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
-    {ENGLISH_ENABLED && alternates && LANGS.map((code) => <link rel="alternate" hreflang={code} href={absolute(alternates[code])} />)}
-    {ENGLISH_ENABLED && alternates && <link rel="alternate" hreflang="x-default" href={absolute(alternates.es)} />}
     {isSample && <meta name="robots" content="noindex, nofollow" />}
     <meta name="theme-color" content="#111211" />
     <link rel="icon" type="image/png" href={href('/favicon.png')} />
@@ -135,7 +131,7 @@ const gate = rules && page !== 'not-found' && page !== 'space' ? (page === 'home
         </aside>
       )
     }
-    <Header alternates={alternates} />
+    <Header />
     <main id="contenido">
       {
         page !== 'home' && (

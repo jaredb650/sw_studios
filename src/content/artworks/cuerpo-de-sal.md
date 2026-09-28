@@ -3,18 +3,12 @@ title: "Cuerpo de sal"
 artist: sirena-mecanica
 year: 2026
 medium: "Metal recuperado, cuerda y luz LED"
-mediumEn: "Salvaged metal, rope, and LED light"
 dimensions: "2.4 m de altura"
-dimensionsEn: "2.4 m tall"
 location: "Patio"
-locationEn: "Patio"
 status: current
 image: ../../assets/placeholders/artworks/cuerpo-de-sal.jpg
 alt: "Imagen de ejemplo: escultura vertical de metal oxidado y cuerda iluminada desde adentro"
-altEn: "Sample image: vertical sculpture of rusted metal and rope, lit from within"
 order: 4
-bodyEn: |
-  A figure assembled from pieces the sea returned to the shore. At night, it lights up from within.
 placeholder: true
 ---
 

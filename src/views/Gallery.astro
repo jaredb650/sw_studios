@@ -5,9 +5,9 @@ import PageHero from '../components/PageHero.astro';
 import ArtworkItem from '../components/ArtworkItem.astro';
 import Lightbox from '../components/Lightbox.astro';
 import { getArtists } from '../lib/artists';
-import { routePath, useLang } from '../i18n';
+import { useLang } from '../i18n';
 
-const { t: ui } = useLang(Astro.url);
+const { t: ui } = useLang();
 const t = ui.galleryPage;
 const works = (await getCollection('artworks', ({ data }) => !data.draft)).sort((a, b) => a.data.order - b.data.order);
 const current = works.filter((work) => work.data.status === 'current');
@@ -15,7 +15,7 @@ const archived = works.filter((work) => work.data.status === 'archived');
 const artists = await getArtists();
 ---
 
-<Base title={t.title} description={t.description} page="gallery" alternates={{ es: routePath('gallery', 'es'), en: routePath('gallery', 'en') }}>
+<Base title={t.title} description={t.description} page="gallery">
   <PageHero index={t.index} label={t.label} title={t.heading} accent={t.accent} lead={t.lead} />
 
   <section class="section" aria-labelledby="current-title">

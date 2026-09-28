@@ -3,7 +3,7 @@ import { pages, site } from '../data/site';
 import { href } from '../lib/urls';
 import { useLang } from '../i18n';
 
-const { t, path } = useLang(Astro.url);
+const { t, path } = useLang();
 const socials = [
   ['Instagram', site.socials.instagram],
   ['Facebook', site.socials.facebook],

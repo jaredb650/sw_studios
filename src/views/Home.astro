@@ -22,12 +22,12 @@ import { site } from '../data/site';
 import { href } from '../lib/urls';
 import { venueJsonLd } from '../lib/structured-data';
 import { getRules } from '../lib/rules';
-import { pick, routePath, useLang } from '../i18n';
+import { useLang } from '../i18n';
 
 // How many event cards follow the Featured Event on the home page; the rest are on the agenda page.
 const HOME_CARDS = 4;
 
-const { lang, t: ui, path } = useLang(Astro.url);
+const { t: ui, path } = useLang();
 const t = ui.home;
 const { upcoming, featured, rest } = await getAgenda();
 const preview = rest.slice(0, HOME_CARDS);
@@ -43,16 +43,16 @@ const mosaicWorks = [...allCurrent, ...works.filter((w) => w.data.status === 'ar
 const years = [...new Set(upcoming.map((event) => year(event.startsAt)))];
 const seasonLabel = years.length ? `${t.agendaLabel} / ${years.join('–')}` : t.agendaLabel;
 const rules = await getRules();
-const follow = t.followFirst('@shipwreckstudios_');
+const follow = t.followFirst(site.instagramHandle);
 // The seven souls (manifesto) drive the hero typewriter, the preloader and the ribbon.
-const souls = (manifesto?.data.items ?? []).map((soul) => pick(soul, 'title', lang));
+const souls = (manifesto?.data.items ?? []).map((soul) => soul.title);
 const ribbon = [...souls, ...souls].map((soul) => soul.toUpperCase());
 // Faded venue photo behind the "El espacio" section.
 const spaceBg = await getImage({ src: spacePhoto, width: 1600, format: 'webp' });
 const rulesBg = await getImage({ src: rulesPhoto, width: 1600, format: 'webp' });
 ---
 
-<Base page="home" jsonLd={venueJsonLd(lang)} alternates={{ es: routePath('home', 'es'), en: routePath('home', 'en') }}>
+<Base page="home" jsonLd={venueJsonLd()}>
   <section id="inicio" class="masthead" aria-labelledby="site-title">
     <!-- Looping background video: a wide crop for desktop, a tall one for phones (public/media). -->
     <div class="hero-media" aria-hidden="true" style={`--hero-poster: url(${href('/media/hero-wide.jpg')})`}>
@@ -102,7 +102,7 @@ const rulesBg = await getImage({ src: rulesPhoto, width: 1600, format: 'webp' })
       <h2 id="about-title" class="manifesto-title">
         {t.manifestoTitle.map((line) => <span class="culture-line">{line}</span>)}
       </h2>
-      {manifesto && <p class="lead">{pick(manifesto.data, 'lead', lang)}</p>}
+      {manifesto && <p class="lead">{manifesto.data.lead}</p>}
       <p class="manifesto-line">{t.universe}</p>
       <Sevens variant="inline" label={t.sevens} />
       <SectionMore to={path('space')} label={t.knowSpace} detail={t.knowSpaceDetail} />
@@ -163,10 +163,10 @@ const rulesBg = await getImage({ src: rulesPhoto, width: 1600, format: 'webp' })
           <div class:list={['art-mosaic', `count-${mosaicWorks.length}`]} data-reveal>
             {mosaicWorks.map((work, i) => (
               <a class="art-tile" href={href(`${path('gallery')}#obra-${work.id}`)}>
-                <Image src={work.data.image} alt={pick(work.data, 'alt', lang)} width={i === 0 ? 1200 : 640} sizes={i === 0 ? '(max-width: 680px) 90vw, 50vw' : '(max-width: 680px) 45vw, 25vw'} />
+                <Image src={work.data.image} alt={work.data.alt} width={i === 0 ? 1200 : 640} sizes={i === 0 ? '(max-width: 680px) 90vw, 50vw' : '(max-width: 680px) 45vw, 25vw'} />
                 <span class="art-tile-caption">
                   <strong>{work.data.title}</strong>
-                  <span>{work.data.status === 'current' ? (pick(work.data, 'location', lang) ?? t.onTheWall) : t.archivedWork}</span>
+                  <span>{work.data.status === 'current' ? (work.data.location ?? t.onTheWall) : t.archivedWork}</span>
                 </span>
               </a>
             ))}
@@ -178,25 +178,25 @@ const rulesBg = await getImage({ src: rulesPhoto, width: 1600, format: 'webp' })
       <SectionMore to={path('gallery')} label={t.seeGallery} detail={t.workCount(works.length)} />
     </section>
 
-    <section id="participa" class="section" aria-labelledby="club-title">
-      <div class="club-band" data-reveal>
-        <div class="club-head">
-          <span class="label muted">05 / {t.clubLabel}</span>
-          <h2 id="club-title">{t.clubTitle.join(' ')}</h2>
-          <p class="club-sub">{t.clubSub}</p>
+    <section id="participa" class="section" aria-labelledby="participa-title">
+      <div class="participa-band" data-reveal>
+        <div class="participa-head">
+          <span class="label muted">05 / {t.participaLabel}</span>
+          <h2 id="participa-title">{t.participaTitle.join(' ')}</h2>
+          <p class="participa-sub">{t.participaSub}</p>
         </div>
-        <div class="club-offers">
+        <div class="participa-offers">
           {
             [
-              { title: t.memberTitle, text: t.memberText, perks: t.memberPerks, more: t.memberMore, to: `${path('memberships')}#membresia` },
-              { title: t.programTitle, text: t.programText, perks: t.programPerks, more: t.programMore, to: `${path('memberships')}#programa-de-artistas` },
-              { title: t.hostTitle, text: t.hostText, perks: t.hostPerks, more: t.hostMore, to: `${path('memberships')}#propon-un-evento` },
+              { title: t.memberTitle, text: t.memberText, perks: t.memberPerks, more: t.memberMore, to: `${path('participate')}#membresia` },
+              { title: t.programTitle, text: t.programText, perks: t.programPerks, more: t.programMore, to: `${path('participate')}#programa-de-artistas` },
+              { title: t.hostTitle, text: t.hostText, perks: t.hostPerks, more: t.hostMore, to: `${path('participate')}#propon-un-evento` },
             ].map((offer, i) => (
-              <div class="club-offer">
-                <span class="club-kicker">{t.offerKickers[i]}</span>
+              <div class="participa-offer">
+                <span class="participa-kicker">{t.offerKickers[i]}</span>
                 <h3>{offer.title}</h3>
                 <p>{offer.text}</p>
-                <ul class="club-perks">
+                <ul class="participa-perks">
                   {offer.perks.map((perk) => (
                     <li>
                       <i class="icon icon-star" aria-hidden="true" />
@@ -211,9 +211,9 @@ const rulesBg = await getImage({ src: rulesPhoto, width: 1600, format: 'webp' })
             ))
           }
         </div>
-        <p class="club-note">{t.perksNote}</p>
-        <div class="club-cta">
-          <a class="button" href={href(path('memberships'))}>
+        <p class="participa-note">{t.perksNote}</p>
+        <div class="participa-cta">
+          <a class="button" href={href(path('participate'))}>
             <span>{t.learnMore}</span>
             <i class="icon icon-arrow" aria-hidden="true"></i>
           </a>
@@ -227,13 +227,13 @@ const rulesBg = await getImage({ src: rulesPhoto, width: 1600, format: 'webp' })
           <div class="section-heading">
             <h2 id="rules-title">
               <span class="section-index">06 /</span>
-              {pick(rules.data, 'title', lang)}
+              {rules.data.title}
             </h2>
             <SampleChip show={rules.data.placeholder} />
           </div>
           {rules.data.lead && (
-            <p class="prose" style="margin-bottom: 30px">
-              {pick(rules.data, 'lead', lang)}
+            <p class="prose">
+              {rules.data.lead}
             </p>
           )}
           <RulesList items={rules.data.items} />

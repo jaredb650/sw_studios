@@ -2,8 +2,7 @@
 export const TIME_ZONE = 'America/Puerto_Rico';
 const OFFSET = '-04:00';
 
-type Lang = 'es' | 'en';
-const LOCALES: Record<Lang, string> = { es: 'es-PR', en: 'en-US' };
+const LOCALE = 'es-PR';
 
 /** Builds a Date from a local YYYY-MM-DD day and optional "HH:MM" time. */
 export function localDate(day: string, time = '00:00'): Date {
@@ -16,18 +15,18 @@ export function addDays(day: string, days: number): string {
   return date.toISOString().slice(0, 10);
 }
 
-function part(date: Date, options: Intl.DateTimeFormatOptions, lang: Lang = 'es'): string {
-  return new Intl.DateTimeFormat(LOCALES[lang], { timeZone: TIME_ZONE, ...options }).format(date);
+function part(date: Date, options: Intl.DateTimeFormatOptions): string {
+  return new Intl.DateTimeFormat(LOCALE, { timeZone: TIME_ZONE, ...options }).format(date);
 }
 
 export const dayNumber = (date: Date) => part(date, { day: '2-digit' });
-export const monthLong = (date: Date, lang: Lang = 'es') => part(date, { month: 'long' }, lang);
-export const monthShort = (date: Date, lang: Lang = 'es') => part(date, { month: 'short' }, lang).replace('.', '');
-export const weekday = (date: Date, lang: Lang = 'es') => part(date, { weekday: 'long' }, lang);
-export const weekdayShort = (date: Date, lang: Lang = 'es') => part(date, { weekday: 'short' }, lang).replace('.', '');
+export const monthLong = (date: Date) => part(date, { month: 'long' });
+export const monthShort = (date: Date) => part(date, { month: 'short' }).replace('.', '');
+export const weekday = (date: Date) => part(date, { weekday: 'long' });
+export const weekdayShort = (date: Date) => part(date, { weekday: 'short' }).replace('.', '');
 export const year = (date: Date) => part(date, { year: 'numeric' });
 
-/** "11:45 PM" — the 12-hour style used on local flyers, in both languages. */
+/** "11:45 PM" — the 12-hour style used on local flyers. */
 export function clock(date: Date): string {
   const parts = new Intl.DateTimeFormat('en-US', {
     timeZone: TIME_ZONE,
@@ -39,19 +38,15 @@ export function clock(date: Date): string {
   return `${get('hour')}:${get('minute')} ${get('dayPeriod').toUpperCase()}`;
 }
 
-/** "sábado, 17 de octubre de 2026" / "Saturday, October 17, 2026" */
-export const longDate = (date: Date, lang: Lang = 'es') =>
-  part(date, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }, lang);
+/** "sábado, 17 de octubre de 2026" */
+export const longDate = (date: Date) =>
+  part(date, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
 
-/** "sáb 17 oct 2026" / "Sat Oct 17 2026" — for tight spaces on phones. */
-export const compactDate = (date: Date, lang: Lang = 'es') =>
-  lang === 'en'
-    ? `${weekdayShort(date, lang)} ${monthShort(date, lang)} ${Number(dayNumber(date))} ${year(date)}`
-    : `${weekdayShort(date)} ${Number(dayNumber(date))} ${monthShort(date)} ${year(date)}`;
+/** "sáb 17 oct 2026" — for tight spaces on phones. */
+export const compactDate = (date: Date) => `${weekdayShort(date)} ${Number(dayNumber(date))} ${monthShort(date)} ${year(date)}`;
 
-/** "17 oct 2026" / "Oct 17 2026" */
-export const shortDate = (date: Date, lang: Lang = 'es') =>
-  lang === 'en' ? `${monthShort(date, lang)} ${dayNumber(date)} ${year(date)}` : `${dayNumber(date)} ${monthShort(date)} ${year(date)}`;
+/** "17 oct 2026" */
+export const shortDate = (date: Date) => `${dayNumber(date)} ${monthShort(date)} ${year(date)}`;
 
 /** ISO 8601 with the Puerto Rico offset, for <time datetime> and structured data. */
 export function isoLocal(day: string, time?: string): string {

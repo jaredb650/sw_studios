@@ -5,7 +5,7 @@ import { absolute } from './urls';
 import { isoLocal, toLocalIso } from './dates';
 import type { Event } from './events';
 import { ui } from '../i18n/ui';
-import { routePath, type Lang } from '../i18n';
+import { routePath } from '../i18n';
 
 const address = {
   '@type': 'PostalAddress',
@@ -16,13 +16,13 @@ const address = {
   ...(site.address.postalCode ? { postalCode: site.address.postalCode } : {}),
 };
 
-export function venueJsonLd(lang: Lang = 'es') {
+export function venueJsonLd() {
   return {
     '@context': 'https://schema.org',
     '@type': ['MusicVenue', 'ArtGallery'],
     name: site.name,
-    description: ui[lang].site.description,
-    url: absolute(routePath('home', lang)),
+    description: ui.site.description,
+    url: absolute(routePath('home')),
     image: absolute('/og-default.jpg'),
     logo: absolute('/favicon.png'),
     address,
@@ -39,7 +39,7 @@ const STATUS = {
 } as const;
 
 /** Event data for real (non-sample) events only. */
-export async function eventJsonLd(event: Event, lang: Lang = 'es') {
+export async function eventJsonLd(event: Event) {
   const { data } = event;
   const image = data.flyer ? new URL((await getImage({ src: data.flyer, width: 1200 })).src, import.meta.env.SITE).href : undefined;
   const performers = data.lineup.flatMap((line) =>
@@ -50,7 +50,7 @@ export async function eventJsonLd(event: Event, lang: Lang = 'es') {
       .map((name) => ({ '@type': 'PerformingGroup', name })),
   );
   const offerUrl = data.ticketUrl;
-  const description = lang === 'en' ? (data.bodyEn ?? event.body) : event.body;
+  const description = event.body;
   return {
     '@context': 'https://schema.org',
     '@type': data.lineup.length ? 'MusicEvent' : 'Event',
@@ -60,8 +60,8 @@ export async function eventJsonLd(event: Event, lang: Lang = 'es') {
     eventStatus: STATUS[data.status],
     eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
     location: { '@type': 'Place', name: site.name, address },
-    url: absolute(`${routePath('agenda', lang)}#evento-${event.id}`),
-    inLanguage: lang,
+    url: absolute(`${routePath('agenda')}#evento-${event.id}`),
+    inLanguage: 'es',
     ...(image ? { image: [image] } : {}),
     ...(description ? { description: description.replace(/\s+/g, ' ').trim().slice(0, 300) } : {}),
     ...(performers.length ? { performer: performers } : {}),

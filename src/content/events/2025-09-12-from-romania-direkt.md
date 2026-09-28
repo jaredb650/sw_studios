@@ -11,8 +11,6 @@ price: "$10"
 restrictions: "18+"
 source: https://ra.co/events/2253842
 sourceLabel: "Resident Advisor"
-bodyEn: |
-  An extended set from Direkt, presented by Detour at Shipwreck Studios. The price and minimum age apply to this event only, as listed on Resident Advisor.
 placeholder: false
 ---
 

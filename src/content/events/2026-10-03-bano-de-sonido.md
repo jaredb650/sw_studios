@@ -5,14 +5,11 @@ start: "18:00"
 end: "19:30"
 flyer: ../../assets/placeholders/flyers/2026-10-03-bano-de-sonido.jpg
 flyerAlt: "Flyer de ejemplo del baño de sonido, sábado 3 de octubre"
-flyerAltEn: "Sample flyer for the sound bath, Saturday, October 3"
 organizers: "Estudio Marea Alta"
 type: bienestar
 admission: tickets
 ticketUrl: https://example.com/boletos/2026-10-03-bano-de-sonido
 price: "$25"
-bodyEn: |
-  An hour and a half of sound healing with singing bowls, gongs, and voice, led by Estudio Marea Alta. Lie down, breathe, and let the vibrations do the rest. Bring a mat and a blanket; we provide cushions. Limited spots.
 placeholder: true
 ---
 

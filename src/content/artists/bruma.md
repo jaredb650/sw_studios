@@ -6,7 +6,6 @@ disciplines:
   - "Techno"
 photo: ../../assets/placeholders/artists/bruma.jpg
 photoAlt: "Retrato de ejemplo de Bruma entre humo y luz tenue"
-photoAltEn: "Sample portrait of Bruma amid smoke and dim light"
 base: "San Juan, PR"
 socials:
   instagram: https://example.com/instagram/bruma
@@ -15,10 +14,6 @@ work:
   - title: "Mix para dibujar"
     url: https://example.com/mixes/bruma-para-dibujar
     kind: "Mix"
-bodyEn: |
-  Bruma works at both ends of the night: ambient sets for quiet sessions and deep techno for the early hours. The common thread is atmosphere, with sounds that fill the room without rushing anyone.
-
-  At Shipwreck Studios, Bruma provides the soundtrack for the live-drawing sessions and shares the booth with Faro Rojo on long nights. The selection includes field recordings, experimental Caribbean music, and techno from independent labels.
 order: 8
 placeholder: true
 ---

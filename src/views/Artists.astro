@@ -2,16 +2,16 @@
 import Base from '../layouts/Base.astro';
 import ArtistCard from '../components/ArtistCard.astro';
 import { artistFilterSlugs, artistFilterTags, getArtists } from '../lib/artists';
-import { routePath, useLang } from '../i18n';
+import { useLang } from '../i18n';
 
-const { lang, t: ui } = useLang(Astro.url);
+const { t: ui } = useLang();
 const t = ui.artistsPage;
 const artists = await getArtists();
 // Every tag the artists use is a filter (src/lib/artists.ts → artistFilterTags).
 const tags = artistFilterTags(artists, t.categories);
 ---
 
-<Base title={t.title} description={t.description} page="artists" alternates={{ es: routePath('artists', 'es'), en: routePath('artists', 'en') }}>
+<Base title={t.title} description={t.description} page="artists">
   <section class="section artists-page" aria-labelledby="artist-list-title">
     <div class="section-heading page-heading compact-heading">
       <div>
@@ -29,7 +29,7 @@ const tags = artistFilterTags(artists, t.categories);
             <>
               {tag.kind === 'role' && tags[i - 1]?.kind === 'category' && <span class="tag-sep" aria-hidden="true" />}
               <a class:list={['tag-chip', { 'is-category': tag.kind === 'category' }]} href={`?tag=${tag.slug}`} data-tag={tag.slug} aria-pressed="false">
-                {lang === 'en' ? tag.labelEn : tag.label} <span class="tag-count">{tag.count}</span>
+                {tag.label} <span class="tag-count">{tag.count}</span>
               </a>
             </>
           ))}
@@ -62,7 +62,6 @@ const tags = artistFilterTags(artists, t.categories);
     const chips = [...filter.querySelectorAll<HTMLAnchorElement>('[data-tag]:not([data-tag=""])')];
     const known = new Set(chips.map((chip) => chip.dataset.tag!));
     const items = [...grid.querySelectorAll<HTMLElement>('[data-tags]')];
-    const lang = document.documentElement.lang;
     let selected = new Set<string>();
 
     const apply = (updateUrl = false) => {
@@ -77,9 +76,7 @@ const tags = artistFilterTags(artists, t.categories);
       status.textContent =
         shown === items.length
           ? status.dataset.templateAll!
-          : lang === 'en'
-            ? `Showing ${shown} of ${items.length} artists`
-            : `Mostrando ${shown} de ${items.length} artistas`;
+          : `Mostrando ${shown} de ${items.length} artistas`;
       if (updateUrl) {
         // Tags are plain slugs, so the commas can stay readable (?tag=dj,pintura).
         const query = selected.size ? `?tag=${[...selected].join(',')}` : '';

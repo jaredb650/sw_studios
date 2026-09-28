@@ -1,5 +1,8 @@
 import type { Route } from '../i18n';
 
+/** The Instagram account, without the @. Every Instagram link and mention uses it. */
+const INSTAGRAM = 'shipwreckstudios_';
+
 // Venue-wide settings. Leave a value as null to hide it on the site.
 
 export type PatreonTier = {
@@ -8,9 +11,7 @@ export type PatreonTier = {
   /** Monthly price in USD. */
   price: number;
   summary?: string;
-  summaryEn?: string;
   benefits: string[];
-  benefitsEn?: string[];
   /** Tier-specific join link; falls back to patreon.url. */
   url?: string;
   highlight?: boolean;
@@ -19,7 +20,8 @@ export type PatreonTier = {
 export const site = {
   name: 'Shipwreck Studios',
   // Tagline, intro, and the site description are interface copy: see src/i18n/ui.ts.
-  timezone: 'America/Puerto_Rico',
+  // Dates and times use Puerto Rico time: see src/lib/dates.ts.
+  instagramHandle: `@${INSTAGRAM}`,
 
   address: {
     venue: 'Shipwreck Studios',
@@ -40,14 +42,14 @@ export const site = {
     email: null as string | null,
     phone: null as string | null,
     whatsapp: null as string | null,
-    instagramDm: 'https://ig.me/m/shipwreckstudios_',
+    instagramDm: `https://ig.me/m/${INSTAGRAM}`,
   },
 
   // General opening hours are not established; events list their own times.
   hours: null as string | null,
 
   socials: {
-    instagram: 'https://www.instagram.com/shipwreckstudios_/',
+    instagram: `https://www.instagram.com/${INSTAGRAM}/`,
     facebook: null as string | null,
     tiktok: null as string | null,
     youtube: null as string | null,
@@ -65,34 +67,28 @@ export const site = {
         name: 'Tripulación',
         price: 5,
         summary: 'Para quienes quieren apoyar el espacio y enterarse primero.',
-        summaryEn: 'For those who want to support the space and hear first.',
         benefits: ['Contenido exclusivo y anuncios antes que nadie', 'Descuento en talleres y clases', 'Tu nombre en el muro de la tripulación'],
-        benefitsEn: ['Exclusive content and announcements before anyone else', 'Discounts on workshops and classes', 'Your name on the crew wall'],
       },
       {
         name: 'Cubierta',
         price: 15,
         summary: 'Para quienes vienen a aprender, crear y compartir.',
-        summaryEn: 'For those who come to learn, create, and share.',
         benefits: [
           'Todo lo de Tripulación',
           'Inscripción anticipada y cupos reservados en talleres',
           'Sesiones y encuentros exclusivos para miembros',
         ],
-        benefitsEn: ['Everything in Tripulación', 'Early registration and reserved spots in workshops', 'Members-only sessions and gatherings'],
         highlight: true,
       },
       {
         name: 'Capitanía',
         price: 40,
         summary: 'Para quienes sostienen el barco.',
-        summaryEn: 'For those who keep the ship afloat.',
         benefits: [
           'Todo lo de Cubierta',
           'Entrada gratuita a eventos, talleres y clases seleccionados',
           'Invitación al encuentro anual de la comunidad',
         ],
-        benefitsEn: ['Everything in Cubierta', 'Free entry to select events, workshops, and classes', 'An invitation to the annual community gathering'],
       },
     ] as PatreonTier[],
   },
@@ -107,10 +103,10 @@ export const nav: { section: 'inicio' | 'agenda' | 'espacio' | 'artistas' | 'gal
   { section: 'agenda', pages: ['agenda', 'archive'] },
   { section: 'artistas', pages: ['artists'] },
   { section: 'galeria', pages: ['gallery'] },
-  { section: 'participa', pages: ['memberships'] },
+  { section: 'participa', pages: ['participate'] },
   { section: 'reglas', pages: [] },
   { section: 'visita', pages: ['visit'] },
 ];
 
 // Full pages, listed in the footer (labels in src/i18n/ui.ts → footer.pages).
-export const pages: Exclude<Route, 'home'>[] = ['space', 'agenda', 'archive', 'artists', 'gallery', 'memberships', 'visit'];
+export const pages: Exclude<Route, 'home'>[] = ['space', 'agenda', 'archive', 'artists', 'gallery', 'participate', 'visit'];

@@ -4,7 +4,7 @@ import type { CollectionEntry } from 'astro:content';
 import SampleChip from './SampleChip.astro';
 import type { Artist } from '../lib/artists';
 import { href } from '../lib/urls';
-import { pick, useLang } from '../i18n';
+import { useLang } from '../i18n';
 
 interface Props {
   work: CollectionEntry<'artworks'>;
@@ -14,21 +14,21 @@ interface Props {
 
 const { work, artists, group = 'galeria' } = Astro.props;
 const { data } = work;
-const { lang, t: ui, artist: artistPath } = useLang(Astro.url);
+const { t: ui, artist: artistPath } = useLang();
 const t = ui.galleryPage;
 const artist = data.artist ? artists.find((a) => a.id === data.artist!.id) : undefined;
 const credit = artist?.data.name ?? data.artistName ?? '';
 const large = await getImage({ src: data.image, width: 2000 });
 const ratio = (data.image.width / data.image.height).toFixed(4);
-const meta = [data.year, pick(data, 'medium', lang), pick(data, 'dimensions', lang)].filter(Boolean).join(' · ');
-const location = pick(data, 'location', lang);
-const archivedNote = pick(data, 'archivedNote', lang);
+const meta = [data.year, data.medium, data.dimensions].filter(Boolean).join(' · ');
+const location = data.location;
+const archivedNote = data.archivedNote;
 const caption = [credit, meta, data.status === 'current' ? location : archivedNote].filter(Boolean).join(' — ');
 ---
 
 <figure class="art-item" style={`--ratio: ${ratio}`} id={`obra-${work.id}`} data-reveal>
   <a href={large.src} data-lightbox={group} data-title={data.title} data-meta={caption} data-enlarge={t.enlarge}>
-    <Image src={data.image} alt={pick(data, 'alt', lang)} width={1200} sizes="(max-width: 680px) 90vw, 40vw" />
+    <Image src={data.image} alt={data.alt} width={1200} sizes="(max-width: 680px) 90vw, 40vw" />
   </a>
   <figcaption>
     <h3>{data.title}</h3>

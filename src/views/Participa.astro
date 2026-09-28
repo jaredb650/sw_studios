@@ -6,17 +6,17 @@ import PatreonTiers from '../components/PatreonTiers.astro';
 import ComingSoon from '../components/ComingSoon.astro';
 import SampleChip from '../components/SampleChip.astro';
 import EntryBody from '../components/EntryBody.astro';
-import { pick, routePath, useLang } from '../i18n';
+import { useLang } from '../i18n';
 import { site } from '../data/site';
 
-const { lang, t: ui } = useLang(Astro.url);
-const t = ui.clubPage;
+const { t: ui } = useLang();
+const t = ui.participaPage;
 const program = await getEntry('pages', 'programa-de-artistas');
 const published = program?.data.status === 'published';
-const programLead = program ? pick(program.data, 'lead', lang) : undefined;
+const programLead = program ? program.data.lead : undefined;
 ---
 
-<Base title={t.title} description={t.description} page="memberships" alternates={{ es: routePath('memberships', 'es'), en: routePath('memberships', 'en') }}>
+<Base title={t.title} description={t.description} page="participate">
   <PageHero index={t.index} label={t.label} title={t.heading} accent={t.accent} lead={t.lead} />
 
   <section class="section" aria-label={t.options}>
@@ -81,7 +81,7 @@ const programLead = program ? pick(program.data, 'lead', lang) : undefined;
         <p class="pitch-how">{t.pitchHow}</p>
       </div>
       <div class="pitch-side">
-        <ul class="club-perks">
+        <ul class="participa-perks">
           {t.pitchPerks.map((perk) => (
             <li>
               <i class="icon icon-star" aria-hidden="true" />
@@ -93,7 +93,7 @@ const programLead = program ? pick(program.data, 'lead', lang) : undefined;
           <span>{t.pitchCta}</span>
           <i class="icon icon-arrow" aria-hidden="true"></i>
         </a>
-        <p class="pitch-handle">@shipwreckstudios_</p>
+        <p class="pitch-handle">{site.instagramHandle}</p>
       </div>
     </div>
   </section>

@@ -22,7 +22,6 @@
 }
 .title-line { display: block; overflow: clip; padding: 0 0 .09em; margin-bottom: -.025em; }
 .title-line > span { display: block; transform: translate3d(var(--title-drift, 0px), 0, 0); }
-.title-line.accent-line { color: var(--accent); }
 .mast-bottom { display: flex; justify-content: space-between; align-items: end; gap: 25px; font-size: 15px; }
 .mast-bottom p { max-width: 330px; }
 .agenda-jump { display: flex; align-items: center; gap: 25px; }
@@ -56,7 +55,6 @@
 .section-more.inverse:hover .round-arrow { background: var(--accent-ink); color: var(--accent); }
 .section-more.inverse .section-more-detail { color: var(--accent-muted); }
 .about .section-more { margin-top: 34px; }
-.page-actions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 30px; }
 
 /* "← Inicio" at the top of every page except home */
 .crumbs {
@@ -81,16 +79,10 @@
 .about .section-more .round-arrow { grid-column: 2; grid-row: 1 / span 2; }
 .about h2.manifesto-title { font-size: clamp(2.2rem, min(4vw, 6.4svh), 4.2rem); }
 
-
-
 /* SEVENS: the seven souls of the manifesto */
 .sevens { list-style: none; margin: 0; padding: 0; }
 .seven-index { font-family: var(--mono); font-size: 11px; letter-spacing: 1px; color: var(--muted); }
 .seven-name { font-family: var(--display); font-weight: 700; text-transform: uppercase; line-height: 1; }
-.sevens.compact { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); margin-top: 30px; border-top: 1px solid var(--line); }
-.sevens.compact li { display: grid; gap: 3px; padding: 12px 12px 12px 0; border-bottom: 1px solid var(--line); }
-.sevens.compact .seven-name { font-size: 22px; }
-.sevens.compact .seven-verb { font-size: 13px; color: var(--muted); }
 .sevens.full { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin: 44px auto; text-align: left; border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
 .sevens.full li {
   display: grid; align-content: space-between; gap: 18px; min-height: 190px;
@@ -268,7 +260,7 @@ a.poster:hover::after, a.poster:focus-visible::after { transform: translateY(0);
 .row-date { display: flex; align-items: baseline; gap: 10px; }
 .row-day { font-family: var(--display); font-weight: 700; font-size: 58px; line-height: .9; color: var(--accent); }
 .row-month { font-family: var(--mono); font-size: 12px; letter-spacing: 1px; text-transform: uppercase; line-height: 1.4; color: var(--muted); }
-.row-title h3, .row-title h4 {
+.row-title h3 {
   font-family: var(--display); font-weight: 600; text-transform: uppercase;
   font-size: 34px; line-height: 1.02; letter-spacing: -.01em;
   overflow-wrap: anywhere;
@@ -282,8 +274,6 @@ a.poster:hover::after, a.poster:focus-visible::after { transform: translateY(0);
 }
 .event-row[open] .row-toggle { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
 .event-row[open] .icon-plus::after { transform: rotate(0deg); }
-.event-row.is-cancelled .row-title h3 { text-decoration: line-through; text-decoration-thickness: 3px; color: var(--muted); }
-
 
 .recap-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; }
 .recap-grid a { display: block; overflow: hidden; background: var(--bg-raised); aspect-ratio: 3 / 2; }
@@ -321,7 +311,6 @@ a.poster:hover::after, a.poster:focus-visible::after { transform: translateY(0);
 .about .text-link { margin-top: 26px; }
 
 /* Home teasers */
-.teaser-row { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px; }
 
 /* Visit block */
 .visit {
@@ -346,7 +335,6 @@ a.poster:hover::after, a.poster:focus-visible::after { transform: translateY(0);
 .visit-venue { font-size: 23px; font-weight: 600; margin-bottom: 15px; }
 .visit-info p { margin-bottom: 22px; }
 .visit .text-link { border-color: var(--accent-line); }
-.visit .source-note { color: var(--accent-muted); }
 .visit :focus-visible { outline-color: var(--accent-ink); }
 
 /* Artists */
@@ -386,7 +374,6 @@ a.poster:hover::after, a.poster:focus-visible::after { transform: translateY(0);
 .pager a + a { text-align: right; border-left: 1px solid var(--line); }
 .pager span { font-family: var(--mono); font-size: 12px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; }
 .pager strong { font-family: var(--display); font-weight: 700; font-size: clamp(28px, 4vw, 48px); text-transform: uppercase; line-height: 1; }
-.back-link { display: inline-flex; gap: 12px; align-items: center; font-family: var(--mono); font-size: 12px; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); }
 
 /* Gallery: justified rows keep each work's proportions without cropping. */
 .art-grid { display: flex; flex-wrap: wrap; gap: 40px 24px; }
@@ -449,7 +436,6 @@ a.poster:hover::after, a.poster:focus-visible::after { transform: translateY(0);
 
 /* Espacio */
 .mission { font-family: var(--display); font-weight: 600; text-transform: uppercase; font-size: clamp(2.6rem, 5.4vw, 5.2rem); line-height: .98; letter-spacing: -.01em; max-width: 1200px; }
-.mission em { font-style: normal; color: var(--accent); }
 .mosaic { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); grid-auto-rows: clamp(150px, 16vw, 250px); gap: 12px; }
 .mosaic a { display: block; overflow: hidden; background: var(--bg-raised); position: relative; grid-column: span var(--span, 1); }
 .mosaic a:first-child { grid-column: span 2; grid-row: span 2; }
@@ -461,7 +447,6 @@ a.poster:hover::after, a.poster:focus-visible::after { transform: translateY(0);
 .founder h3 { font-family: var(--display); font-weight: 700; text-transform: uppercase; font-size: clamp(3rem, 6vw, 5.5rem); line-height: .9; margin: 14px 0 6px; }
 
 /* Rules */
-
 
 /* Rules checkpoint: everything after it on the home page stays locked until
    the visitor accepts (src/scripts/rules.ts). */
@@ -483,21 +468,19 @@ html.rules-pending body[data-page="home"] .site-footer { display: none; }
   width: min(1040px, calc(100% - 32px)); max-width: none;
   max-height: calc(100dvh - 32px);
   padding: 0; border: 1px solid var(--line-strong); border-top: 3px solid var(--accent);
-  background: var(--bg); color: var(--fg);
-  overscroll-behavior: contain;
-}
-html:has(.rules-dialog[open]) { overflow: hidden; }
-.rules-dialog h2:focus { outline: none; }
-.rules-dialog {
   /* The faded photo sits on the dialog itself so it stays put while the rules scroll. */
   background:
     linear-gradient(rgba(17, 18, 17, .91), rgba(17, 18, 17, .94)),
     var(--bg-photo) var(--bg-pos, center) / cover no-repeat,
     var(--bg);
+  color: var(--fg);
+  overscroll-behavior: contain;
 }
+html:has(.rules-dialog[open]) { overflow: hidden; }
+.rules-dialog h2:focus { outline: none; }
 .rules-dialog::backdrop { background: rgba(9, 10, 9, .82); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
 
-/* Club */
+/* Participa */
 .offers { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--line); }
 .offer { padding: 40px; display: grid; gap: 14px; align-content: start; }
 .offer + .offer { border-left: 1px solid var(--line); }
@@ -550,7 +533,6 @@ html:has(.rules-dialog[open]) { overflow: hidden; }
   .about { grid-template-columns: .6fr 1.4fr; }
   .about h2 { font-size: 9vw; }
   .about h2.manifesto-title { font-size: clamp(2.2rem, 5.4vw, 3.4rem); }
-  .teaser-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .year-group { grid-template-columns: 1fr; gap: 10px; }
   .year-label { position: static; font-size: 80px; }
   .profile { grid-template-columns: 1fr; gap: 36px; }
@@ -596,7 +578,7 @@ html:has(.rules-dialog[open]) { overflow: hidden; }
   .row-toggle { grid-column: 3; grid-row: 1; width: 40px; height: 40px; font-size: 15px; }
   .row-date { flex-direction: column; gap: 4px; }
   .row-day { font-size: 46px; }
-  .row-title h3, .row-title h4 { font-size: 27px; }
+  .row-title h3 { font-size: 27px; }
   .event-row:not([open]) > summary:hover { padding-left: 0; padding-right: 0; color: inherit; }
   .event-row:not([open]) > summary:hover::before { transform: scaleY(0); }
   .event-row:not([open]) > summary:hover :is(.row-day) { color: var(--accent); }
@@ -610,11 +592,9 @@ html:has(.rules-dialog[open]) { overflow: hidden; }
   .about .lead { font-size: 15.5px; margin-top: 12px; }
   .manifesto-line { font-size: 17px; margin-top: 10px; }
   .sevens.inline { margin-top: 14px; padding: 9px 0; }
-  .sevens.inline li { font-size: 16px; }
   .about .section-more { margin-top: 16px; padding: 14px 0; }
   .about .section-more-label { font-size: 24px; }
   .type-ribbon { padding: 18px 0; margin-top: 0; }
-  .teaser-row { gap: 30px 14px; }
   .artist-card h3 { font-size: 26px; }
   .visit-inner { grid-template-columns: 1fr; gap: 35px; padding-top: 50px; padding-bottom: 50px; }
   .visit-title { font-size: 18vw; }
@@ -771,7 +751,6 @@ html:has(.rules-dialog[open]) { overflow: hidden; }
   .about .lead { font-size: 14px; line-height: 1.45; margin-top: 8px; }
   .manifesto-line { font-size: 15px; margin-top: 8px; }
   .sevens.inline { margin-top: 10px; padding: 6px 0; }
-  .sevens.inline li { font-size: 14px; }
   .about .section-more { margin-top: 10px; padding: 10px 0; }
   .featured { --flyer-w: 30%; }
   .event-panel { --flyer-w: 28%; }
@@ -811,7 +790,6 @@ html:has(.rules-dialog[open]) { overflow: hidden; }
   .about .lead { font-size: 16px; margin-top: 12px; max-width: 600px; }
   .manifesto-line { margin-top: 10px; }
   .sevens.inline { margin-top: 14px; padding: 8px 0; }
-  .sevens.inline li { font-size: 17px; }
   .about .section-more { margin-top: 16px; padding: 12px 0; }
   .about-mark { width: min(100%, 190px); }
 }
@@ -848,28 +826,28 @@ html:has(.rules-dialog[open]) { overflow: hidden; }
 .page-hero-side .lead { margin-top: 0; }
 
 /* Membresías band on the home page */
-.club-band {
+.participa-band {
   display: grid; gap: 30px;
   border: 1px solid var(--line); padding: 44px 50px;
   background: linear-gradient(110deg, #d5ff5109, transparent 55%);
   position: relative;
 }
-.club-band::before { content: ""; position: absolute; left: -1px; top: -1px; bottom: -1px; width: 3px; background: var(--accent); }
-.club-head { text-align: center; display: grid; gap: 12px; justify-items: center; }
-.club-head h2 { font-family: var(--display); font-weight: 700; text-transform: uppercase; font-size: clamp(2.6rem, 5vw, 4.8rem); line-height: .95; }
-.club-sub { color: var(--fg); font-size: 18px; max-width: 620px; }
-.club-offers { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border-top: 1px solid var(--line); }
-.club-offer { display: flex; flex-direction: column; gap: 14px; padding: 28px 40px 4px 0; }
-.club-offer + .club-offer { padding: 28px 0 4px 40px; border-left: 1px solid var(--line); }
-.club-offer h3 { font-family: var(--display); font-weight: 700; text-transform: uppercase; font-size: clamp(26px, 2.4vw, 34px); line-height: 1; color: var(--accent); }
-.club-offer p { color: var(--muted); font-size: 16px; line-height: 1.6; }
-.club-perks { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
-.club-perks li { display: grid; grid-template-columns: 18px minmax(0, 1fr); gap: 10px; font-size: 15px; line-height: 1.45; }
-.club-perks .icon { color: var(--accent); margin-top: 3px; font-size: 13px; }
-.club-offer .text-link { margin-top: auto; max-width: none; }
-.club-note { text-align: center; font-size: 12px; color: var(--muted); margin-top: -8px; }
-.club-cta { display: flex; justify-content: center; }
-.club-cta .button { min-width: 280px; font-size: 18px; padding: 20px 24px; }
+.participa-band::before { content: ""; position: absolute; left: -1px; top: -1px; bottom: -1px; width: 3px; background: var(--accent); }
+.participa-head { text-align: center; display: grid; gap: 12px; justify-items: center; }
+.participa-head h2 { font-family: var(--display); font-weight: 700; text-transform: uppercase; font-size: clamp(2.6rem, 5vw, 4.8rem); line-height: .95; }
+.participa-sub { color: var(--fg); font-size: 18px; max-width: 620px; }
+.participa-offers { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border-top: 1px solid var(--line); }
+.participa-offer { display: flex; flex-direction: column; gap: 14px; padding: 28px 40px 4px 0; }
+.participa-offer + .participa-offer { padding: 28px 0 4px 40px; border-left: 1px solid var(--line); }
+.participa-offer h3 { font-family: var(--display); font-weight: 700; text-transform: uppercase; font-size: clamp(26px, 2.4vw, 34px); line-height: 1; color: var(--accent); }
+.participa-offer p { color: var(--muted); font-size: 16px; line-height: 1.6; }
+.participa-perks { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.participa-perks li { display: grid; grid-template-columns: 18px minmax(0, 1fr); gap: 10px; font-size: 15px; line-height: 1.45; }
+.participa-perks .icon { color: var(--accent); margin-top: 3px; font-size: 13px; }
+.participa-offer .text-link { margin-top: auto; max-width: none; }
+.participa-note { text-align: center; font-size: 12px; color: var(--muted); margin-top: -8px; }
+.participa-cta { display: flex; justify-content: center; }
+.participa-cta .button { min-width: 280px; font-size: 18px; padding: 20px 24px; }
 
 /* Galería mosaic on the home page: one large tile and up to four smaller ones. */
 .art-mosaic { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); grid-auto-rows: clamp(150px, 15vw, 250px); gap: 12px; }
@@ -911,14 +889,14 @@ html:has(.rules-dialog[open]) { overflow: hidden; }
 .rules-dialog .rules-gate-inner { padding: clamp(22px, 3.4vw, 40px); }
 .rules-dialog h2 { font-size: clamp(2rem, 3.4vw, 3.2rem); }
 #reglas .section-heading { margin-bottom: 14px; }
-#reglas .prose { font-size: 16px; margin-bottom: 18px !important; }
+#reglas .prose { font-size: 16px; margin-bottom: 18px; }
 
 @media (max-width: 1100px) {
   .rules { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 1000px) {
   .page-hero-grid { grid-template-columns: 1fr; gap: 20px; }
-  .club-band { padding: 34px; }
+  .participa-band { padding: 34px; }
 }
 @media (max-width: 680px) {
   .sevens.inline .seven, .sevens-sep { font-size: 16px; }
@@ -928,16 +906,16 @@ html:has(.rules-dialog[open]) { overflow: hidden; }
   .sevens.full li { align-content: start; gap: 10px; }
   .page-hero.is-split { padding-bottom: 36px; }
   .page-hero-side .mission { font-size: 26px; }
-  .club-band { padding: 26px 22px; gap: 20px; }
-  .club-head h2 { font-size: clamp(32px, 10vw, 44px); }
-  .club-sub { font-size: 15.5px; }
-  .club-offers { grid-template-columns: 1fr; }
-  .club-offer, .club-offer + .club-offer { padding: 22px 0 6px; border-left: 0; }
-  .club-offer + .club-offer { border-top: 1px solid var(--line); }
-  .club-offer p { font-size: 15px; }
-  .club-perks li { font-size: 14px; }
-  .club-note { margin-top: -4px; }
-  .club-cta .button { width: 100%; min-width: 0; }
+  .participa-band { padding: 26px 22px; gap: 20px; }
+  .participa-head h2 { font-size: clamp(32px, 10vw, 44px); }
+  .participa-sub { font-size: 15.5px; }
+  .participa-offers { grid-template-columns: 1fr; }
+  .participa-offer, .participa-offer + .participa-offer { padding: 22px 0 6px; border-left: 0; }
+  .participa-offer + .participa-offer { border-top: 1px solid var(--line); }
+  .participa-offer p { font-size: 15px; }
+  .participa-perks li { font-size: 14px; }
+  .participa-note { margin-top: -4px; }
+  .participa-cta .button { width: 100%; min-width: 0; }
   /* Mosaic on phones: large tile across the top, four small tiles below, all in one screen. */
   .art-mosaic { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: min(26vw, 16svh); gap: 8px; }
   .art-mosaic .art-tile:first-child { grid-column: span 2; grid-row: span 2; }
@@ -1206,14 +1184,14 @@ html:has(.rules-dialog[open]) { overflow: hidden; }
 .chip.type-chip { background: #ffffff14; border-color: transparent; color: var(--fg); }
 
 /* Súmate: three offers side by side (memberships, Artist Program, bring your class). */
-.club-offers { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-.club-offer { padding: 28px 30px 4px 0; }
-.club-offer + .club-offer { padding: 28px 30px 4px 30px; }
-.club-offer:last-child { padding-right: 0; }
+.participa-offers { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.participa-offer { padding: 28px 30px 4px 0; }
+.participa-offer + .participa-offer { padding: 28px 30px 4px 30px; }
+.participa-offer:last-child { padding-right: 0; }
 @media (max-width: 1000px) {
-  .club-offers { grid-template-columns: 1fr; }
-  .club-offer, .club-offer + .club-offer, .club-offer:last-child { padding: 22px 0 6px; border-left: 0; }
-  .club-offer + .club-offer { border-top: 1px solid var(--line); }
+  .participa-offers { grid-template-columns: 1fr; }
+  .participa-offer, .participa-offer + .participa-offer, .participa-offer:last-child { padding: 22px 0 6px; border-left: 0; }
+  .participa-offer + .participa-offer { border-top: 1px solid var(--line); }
 }
 
 /* Agenda page: filter by event type (same chips as the artist filters). */
@@ -1222,7 +1200,7 @@ html:has(.rules-dialog[open]) { overflow: hidden; }
 .is-filtered-out { display: none !important; }
 
 /* Participa: kicker above each offer (Apoya / Contribuye / Propón). */
-.club-kicker { font-family: var(--mono); font-size: 11px; letter-spacing: 1.2px; text-transform: uppercase; color: var(--muted); margin-bottom: -6px; }
+.participa-kicker { font-family: var(--mono); font-size: 11px; letter-spacing: 1.2px; text-transform: uppercase; color: var(--muted); margin-bottom: -6px; }
 .offers { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 @media (max-width: 1000px) { .offers { grid-template-columns: 1fr; } }
 

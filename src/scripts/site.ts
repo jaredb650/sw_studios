@@ -44,15 +44,6 @@ menu?.addEventListener('click', (event) => {
   if ((event.target as Element).closest('a')) setMenu(false);
 });
 
-// Switching language keeps your place: same page, and on the home page the same section.
-document.addEventListener('click', (event) => {
-  const link = (event.target as Element).closest<HTMLAnchorElement>('a[data-lang-switch]');
-  if (!link) return;
-  const section = document.querySelector<HTMLAnchorElement>('.site-nav a[aria-current="location"]')?.dataset.section;
-  const hash = location.hash || (section && section !== 'inicio' ? `#${section}` : '');
-  if (hash) link.href = link.href.split('#')[0] + hash;
-});
-
 // "Inicio" returns to the very top of the page rather than the hero's anchor offset.
 document.addEventListener('click', (event) => {
   const link = (event.target as Element).closest<HTMLAnchorElement>('a[href="#inicio"]');
@@ -245,7 +236,7 @@ if ('IntersectionObserver' in window) {
     },
     { threshold: 0.08, rootMargin: '0px 0px -25px 0px' },
   );
-  document.querySelectorAll<HTMLElement>('.section-heading, .event-info, .about h2, .visit-info, [data-reveal]').forEach((element, i) => {
+  document.querySelectorAll<HTMLElement>('.section-heading, .about h2, .visit-info, [data-reveal]').forEach((element, i) => {
     element.setAttribute('data-reveal', '');
     element.style.setProperty('--reveal-delay', `${(i % 4) * 60}ms`);
     observer.observe(element);

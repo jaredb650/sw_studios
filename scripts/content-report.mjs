@@ -85,24 +85,6 @@ console.log(`\nSample content still in use: ${samples.length} entries, ${placeho
 const grouped = Object.groupBy(samples, (id) => id.split('/')[0]);
 for (const [group, ids] of Object.entries(grouped)) console.log(`  ${group.padEnd(9)} ${ids.map((id) => id.split('/').slice(1).join('/')).join(', ')}`);
 
-// English coverage: text fields whose English version (`xEn`) is missing show Spanish on the English site.
-const TRANSLATABLE = {
-  events: ['flyerAlt', 'timeNote', 'statusNote'],
-  artists: ['photoAlt'],
-  artworks: ['alt', 'medium', 'location', 'archivedNote'],
-  pages: ['title', 'lead', 'role', 'photoAlt'],
-};
-const untranslated = [];
-for (const [name, list] of [['events', events], ['artists', artists], ['artworks', artworks], ['pages', pages]]) {
-  for (const entry of list) {
-    const missing = TRANSLATABLE[name].filter((key) => entry.data[key] && !entry.data[`${key}En`]);
-    if (entry.body.trim() && !entry.data.bodyEn) missing.push('bodyEn');
-    if (missing.length) untranslated.push(`${name}/${entry.id}: ${missing.join(', ')}`);
-  }
-}
-console.log(`\nEnglish translation: ${untranslated.length ? `${untranslated.length} entries missing fields (Spanish shows instead)` : 'complete'}`);
-for (const line of untranslated) console.log(`  · ${line}`);
-
 console.log('\nPending from the client');
 const pending = [
   [/status:\s*'coming-soon'/.test(siteSource.match(/patreon:[\s\S]*?tiers/)?.[0] ?? ''), 'Patreon account (section shows "Próximamente")'],

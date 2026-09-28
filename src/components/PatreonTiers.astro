@@ -2,12 +2,12 @@
 import SampleChip from './SampleChip.astro';
 import ComingSoon from './ComingSoon.astro';
 import { site } from '../data/site';
-import { pick, useLang } from '../i18n';
+import { useLang } from '../i18n';
 
 const { patreon } = site;
 const tiers = patreon.tiers.slice(0, 3);
-const { lang, t: ui } = useLang(Astro.url);
-const t = ui.clubPage;
+const { t: ui } = useLang();
+const t = ui.participaPage;
 ---
 
 {
@@ -23,9 +23,9 @@ const t = ui.clubPage;
               {tier.price}
             </p>
             <p class="per">{t.perMonth}</p>
-            {tier.summary && <p>{pick(tier, 'summary', lang)}</p>}
+            {tier.summary && <p>{tier.summary}</p>}
             <ul>
-              {(pick(tier, 'benefits', lang) ?? tier.benefits).map((benefit) => (
+              {(tier.benefits ?? tier.benefits).map((benefit) => (
                 <li>
                   <i class="icon icon-star" aria-hidden="true" />
                   <span>{benefit}</span>

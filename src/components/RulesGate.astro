@@ -1,5 +1,5 @@
 ---
-// Visitors confirm the club rules once before exploring the site.
+// Visitors confirm the space rules once before exploring the site.
 // "inline": the home page, between the hero and the agenda; everything after
 //   it stays locked until the visitor accepts.
 // "dialog": every other page, shown on arrival to visitors who haven't accepted yet.
@@ -10,7 +10,7 @@ import SampleChip from './SampleChip.astro';
 import { getImage } from 'astro:assets';
 import { getRules } from '../lib/rules';
 import rulesPhoto from '../assets/venue/rules-bg.jpg';
-import { pick, useLang } from '../i18n';
+import { useLang } from '../i18n';
 
 interface Props {
   mode: 'inline' | 'dialog';
@@ -18,9 +18,9 @@ interface Props {
 const { mode } = Astro.props;
 const rules = await getRules();
 const titleId = mode === 'inline' ? 'gate-title' : 'gate-dialog-title';
-const { lang, t: ui } = useLang(Astro.url);
+const { t: ui } = useLang();
 const t = ui.rules;
-const lead = rules ? pick(rules.data, 'lead', lang) : undefined;
+const lead = rules ? rules.data.lead : undefined;
 // Faded photo behind the rules (the booth, from the crowd).
 const rulesBg = await getImage({ src: rulesPhoto, width: 1600, format: 'webp' });
 const bgStyle = `--bg-photo: url(${rulesBg.src}); --bg-pos: center 58%; --bg-opacity: .12`;

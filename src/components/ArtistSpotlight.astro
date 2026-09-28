@@ -11,12 +11,12 @@ import { artistIndex, bioPreview, eventsForArtist, getArtists } from '../lib/art
 import { getAgenda } from '../lib/events';
 import { dayNumber, monthShort, weekdayShort } from '../lib/dates';
 import { href } from '../lib/urls';
-import { pick, useLang } from '../i18n';
+import { useLang } from '../i18n';
 
 /** Seconds each artist stays in the spotlight. */
 const SECONDS = 7;
 
-const { lang, t: ui, artist: artistPath } = useLang(Astro.url);
+const { t: ui, artist: artistPath } = useLang();
 const t = ui.home;
 const artists = await getArtists();
 const index = artistIndex(artists);
@@ -26,9 +26,9 @@ const slides = artists.map((artist) => {
   return {
     artist,
     url: href(artistPath(artist.id)),
-    tags: pick(artist.data, 'disciplines', lang) ?? artist.data.disciplines,
-    bio: bioPreview(lang === 'en' ? (artist.data.bodyEn ?? artist.body) : artist.body),
-    next: next ? `${next.data.title} · ${weekdayShort(next.startsAt, lang)} ${Number(dayNumber(next.startsAt))} ${monthShort(next.startsAt, lang)}` : undefined,
+    tags: artist.data.disciplines ?? artist.data.disciplines,
+    bio: bioPreview(artist.body),
+    next: next ? `${next.data.title} · ${weekdayShort(next.startsAt)} ${Number(dayNumber(next.startsAt))} ${monthShort(next.startsAt)}` : undefined,
   };
 });
 const pad = (n: number) => String(n).padStart(2, '0');
@@ -41,7 +41,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
         {slides.map((slide, i) => (
           <a class="spot-card" href={slide.url} hidden={i > 0 ? true : undefined} data-spot-card aria-label={`${slide.artist.data.name} — ${t.viewProfile}`}>
             <div class="spot-photo">
-              <Image src={slide.artist.data.photo} alt={pick(slide.artist.data, 'photoAlt', lang)} width={900} sizes="(max-width: 680px) 90vw, 40vw" loading={i === 0 ? 'eager' : 'lazy'} />
+              <Image src={slide.artist.data.photo} alt={slide.artist.data.photoAlt} width={900} sizes="(max-width: 680px) 90vw, 40vw" loading={i === 0 ? 'eager' : 'lazy'} />
             </div>
             <div class="spot-body">
               <p class="label spot-label">

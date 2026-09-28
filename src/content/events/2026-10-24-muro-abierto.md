@@ -5,7 +5,6 @@ start: "16:00"
 end: "22:00"
 flyer: ../../assets/placeholders/flyers/2026-10-24-muro-abierto.jpg
 flyerAlt: "Flyer de ejemplo de Muro Abierto, sábado 24 de octubre"
-flyerAltEn: "Sample flyer for Muro Abierto, Saturday, October 24"
 organizers: "Shipwreck Studios"
 lineup:
   - "Tinta Salada"
@@ -13,8 +12,6 @@ lineup:
   - "Coral Negro (live)"
 type: arte
 admission: free
-bodyEn: |
-  An afternoon of live painting on the venue's walls. Tinta Salada and Ancla work on a new wall while the audience watches the process from start to finish. Coral Negro plays a live set as evening falls. Admission is free, and the finished wall stays on view for the weeks that follow.
 placeholder: true
 ---
 

@@ -3,9 +3,9 @@
 // for events that have ended, relabels an ended Featured Event, and marks
 // today's events.
 
+import { TIME_ZONE } from '../lib/dates';
 import { strings } from './strings';
 
-const TIME_ZONE = 'America/Puerto_Rico';
 const dayKey = (date: Date) => date.toLocaleDateString('en-CA', { timeZone: TIME_ZONE });
 
 export function initAgenda(now = new Date()) {

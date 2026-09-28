@@ -1,4 +1,5 @@
 ---
+import { markdown } from '../lib/markdown';
 // El espacio: intro, virtual tour, manifesto (with the SEVENS), venue photos,
 // founder, and links to everything else about the venue. Readable before
 // accepting the rules; the events pages are the ones behind them.
@@ -13,15 +14,15 @@ import Sevens from '../components/Sevens.astro';
 import Lightbox from '../components/Lightbox.astro';
 import spacePhoto from '../assets/venue/the-space-bg.jpg';
 import { href } from '../lib/urls';
-import { markdown, pick, routePath, useLang } from '../i18n';
+import { useLang } from '../i18n';
 
-const { lang, t: ui, path } = useLang(Astro.url);
+const { t: ui, path } = useLang();
 const t = ui.spacePage;
 const espacio = (await getEntry('pages', 'espacio'))!;
 const manifesto = await getEntry('pages', 'manifiesto');
 const founder = await getEntry('pages', 'fundador');
-const lead = pick(espacio.data, 'lead', lang);
-const outro = manifesto ? pick(manifesto.data, 'outro', lang) : undefined;
+const lead = espacio.data.lead;
+const outro = manifesto ? manifesto.data.outro : undefined;
 const spaceBg = await getImage({ src: spacePhoto, width: 1600, format: 'webp' });
 const photos = await Promise.all(
   espacio.data.photos.map(async (photo) => ({ ...photo, large: await getImage({ src: photo.src, width: 2000 }) })),
@@ -39,13 +40,13 @@ const spanFor = (i: number) => {
 const explore = [
   { label: t.exploreLinks.artists, href: path('artists') },
   { label: t.exploreLinks.gallery, href: path('gallery') },
-  { label: t.exploreLinks.memberships, href: path('memberships') },
+  { label: t.exploreLinks.participate, href: path('participate') },
   { label: t.exploreLinks.rules, href: `${path('home')}#reglas` },
   { label: t.exploreLinks.visit, href: path('visit') },
 ];
 ---
 
-<Base title={t.label} description={lead ?? t.description} page="space" alternates={{ es: routePath('space', 'es'), en: routePath('space', 'en') }}>
+<Base title={t.label} description={lead ?? t.description} page="space">
   <PageHero index={t.index} label={t.label} title={t.heading} accent={t.accent} bg={spaceBg.src} split>
     {lead && <p class="mission">{lead}</p>}
   </PageHero>
@@ -62,7 +63,7 @@ const explore = [
         </div>
         <div class={espacio.data.videos.length > 1 ? 'video-grid' : 'tour-player'}>
           {espacio.data.videos.map((video) => (
-            <YouTube id={video.youtube} title={pick(video, 'title', lang)} />
+            <YouTube id={video.youtube} title={video.title} />
           ))}
         </div>
       </section>
@@ -75,11 +76,11 @@ const explore = [
         <div class="section-heading">
           <h2 id="manifesto-title">
             <span class="section-index">02 /</span>
-            {pick(manifesto.data, 'title', lang)}
+            {manifesto.data.title}
           </h2>
         </div>
         <div class="manifesto-body">
-          <p class="manifesto-lead">{pick(manifesto.data, 'lead', lang)}</p>
+          <p class="manifesto-lead">{manifesto.data.lead}</p>
           <div class="prose">
             <EntryBody entry={manifesto} />
           </div>
@@ -102,8 +103,8 @@ const explore = [
         </div>
         <div class="mosaic">
           {photos.map((photo, i) => (
-            <a href={photo.large.src} data-lightbox="espacio" data-title="Shipwreck Studios" data-meta={pick(photo, 'caption', lang) ?? ''} style={spanFor(i)}>
-              <Image src={photo.src} alt={pick(photo, 'alt', lang)} width={i === 0 ? 1400 : 700} sizes={i === 0 ? '(max-width: 680px) 100vw, 50vw' : '(max-width: 680px) 50vw, 25vw'} />
+            <a href={photo.large.src} data-lightbox="espacio" data-title="Shipwreck Studios" data-meta={photo.caption ?? ''} style={spanFor(i)}>
+              <Image src={photo.src} alt={photo.alt} width={i === 0 ? 1400 : 700} sizes={i === 0 ? '(max-width: 680px) 100vw, 50vw' : '(max-width: 680px) 50vw, 25vw'} />
             </a>
           ))}
         </div>
@@ -117,18 +118,18 @@ const explore = [
         <div class="section-heading">
           <h2 id="founder-title">
             <span class="section-index">04 /</span>
-            {pick(founder.data, 'title', lang)}
+            {founder.data.title}
           </h2>
         </div>
         <div class="split">
           {founder.data.photo && (
             <div class="founder-photo">
-              <Image src={founder.data.photo} alt={pick(founder.data, 'photoAlt', lang) ?? founder.data.name ?? ''} width={800} sizes="(max-width: 1000px) 90vw, 35vw" />
+              <Image src={founder.data.photo} alt={founder.data.photoAlt ?? founder.data.name ?? ''} width={800} sizes="(max-width: 1000px) 90vw, 35vw" />
             </div>
           )}
           <div>
-            {founder.data.role && <p class="label muted">{pick(founder.data, 'role', lang)}</p>}
-            {founder.data.name && <h3>{pick(founder.data, 'name', lang)}</h3>}
+            {founder.data.role && <p class="label muted">{founder.data.role}</p>}
+            {founder.data.name && <h3>{founder.data.name}</h3>}
             <SampleChip show={founder.data.placeholder} />
             <div class="prose" style="margin-top: 22px">
               <EntryBody entry={founder} />

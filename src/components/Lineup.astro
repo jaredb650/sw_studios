@@ -11,7 +11,7 @@ interface Props {
 // Names run inline, separated by the star used in the ribbon, instead of one per line.
 const { lines, class: className = 'lineup inline-list' } = Astro.props;
 const index = artistIndex(await getArtists());
-const { artist: artistPath } = useLang(Astro.url);
+const { artist: artistPath } = useLang();
 ---
 
 <ul class={className}>

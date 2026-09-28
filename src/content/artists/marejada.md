@@ -7,7 +7,6 @@ disciplines:
   - "House"
 photo: ../../assets/placeholders/artists/marejada.jpg
 photoAlt: "Retrato de ejemplo de Marejada en el escenario"
-photoAltEn: "Sample portrait of Marejada in the DJ booth"
 base: "San Juan, PR"
 socials:
   instagram: https://example.com/instagram/marejada
@@ -20,10 +19,6 @@ work:
   - title: "Sesión en vivo: Marea Baja"
     url: https://example.com/videos/marejada-marea-baja
     kind: "Video"
-bodyEn: |
-  Marejada is a house project that moves between deep house, disco, and Caribbean percussion. The sets start unhurried and build like the tide: layers of groove, soulful vocals, and a steady pulse that keeps the floor moving to the very end.
-
-  As a Shipwreck Studios resident, Marejada opens and closes many of the venue's nights and shares the booth with other residents in b2b sets. The work seeks to connect the house tradition with the rhythms of the island.
 order: 2
 placeholder: true
 ---

@@ -3,7 +3,7 @@ import { Image } from 'astro:assets';
 import SampleChip from './SampleChip.astro';
 import type { Artist } from '../lib/artists';
 import { href } from '../lib/urls';
-import { pick, useLang } from '../i18n';
+import { useLang } from '../i18n';
 
 interface Props {
   artist: Artist;
@@ -11,16 +11,16 @@ interface Props {
 }
 const { artist, sizes = '(max-width: 680px) 45vw, (max-width: 1000px) 45vw, 25vw' } = Astro.props;
 const { data } = artist;
-const { lang, artist: artistPath } = useLang(Astro.url);
+const { artist: artistPath } = useLang();
 ---
 
 <article class="artist-card" data-reveal>
   <a href={href(artistPath(artist.id))}>
     <div class="frame">
-      <Image src={data.photo} alt={pick(data, 'photoAlt', lang)} width={640} sizes={sizes} />
+      <Image src={data.photo} alt={data.photoAlt} width={640} sizes={sizes} />
     </div>
     <h3>{data.name}<i class="icon icon-arrow" aria-hidden="true"></i></h3>
-    <p>{pick(data, 'disciplines', lang).join(' · ')}</p>
+    <p>{data.disciplines.join(' · ')}</p>
   </a>
   <SampleChip show={data.placeholder} />
 </article>

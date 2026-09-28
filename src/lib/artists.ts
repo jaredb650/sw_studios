@@ -39,7 +39,7 @@ export function eventsForArtist(artist: Artist, events: Event[], index: Map<stri
   );
 }
 
-/** Static paths for artist profile pages (shared by the Spanish and English routes). */
+/** Static paths for artist profile pages. */
 export async function artistPaths() {
   const artists = await getArtists();
   return artists.map((artist, i) => ({
@@ -49,7 +49,7 @@ export async function artistPaths() {
 }
 
 
-export type ArtistTag = { slug: string; label: string; labelEn: string; count: number; kind: 'category' | 'role' };
+export type ArtistTag = { slug: string; label: string; count: number; kind: 'category' | 'role' };
 
 const tagSlug = (text: string) => normalize(text).replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 
@@ -65,24 +65,24 @@ export function artistFilterSlugs(artist: Artist): string[] {
 }
 
 /** Filter chips for the Artistas page: the two broad categories, then every tag by how many artists have it. */
-export function artistFilterTags(artists: Artist[], categoryLabels: Record<ArtistCategory, { es: string; en: string }>): ArtistTag[] {
+export function artistFilterTags(artists: Artist[], categoryLabels: Record<ArtistCategory, string>): ArtistTag[] {
   const roles = new Map<string, ArtistTag>();
   const categories = new Map<ArtistCategory, number>();
   for (const artist of artists) {
     const seenCategories = new Set<ArtistCategory>();
-    artist.data.disciplines.forEach((tag, i) => {
+    artist.data.disciplines.forEach((tag) => {
       const category = ROLE_CATEGORIES[normalize(tag)];
       if (category) seenCategories.add(category);
       const slug = tagSlug(tag);
       const existing = roles.get(slug);
       if (existing) existing.count++;
-      else roles.set(slug, { slug, label: tag, labelEn: artist.data.disciplinesEn?.[i] ?? tag, count: 1, kind: 'role' });
+      else roles.set(slug, { slug, label: tag, count: 1, kind: 'role' });
     });
     seenCategories.forEach((category) => categories.set(category, (categories.get(category) ?? 0) + 1));
   }
   const categoryTags: ArtistTag[] = (['musica', 'arte'] as ArtistCategory[])
     .filter((category) => categories.has(category))
-    .map((category) => ({ slug: category, label: categoryLabels[category].es, labelEn: categoryLabels[category].en, count: categories.get(category)!, kind: 'category' }));
+    .map((category) => ({ slug: category, label: categoryLabels[category], count: categories.get(category)!, kind: 'category' }));
   const roleTags = [...roles.values()].sort((a, b) => b.count - a.count || a.label.localeCompare(b.label, 'es'));
   return [...categoryTags, ...roleTags];
 }

@@ -6,7 +6,6 @@ start: "19:00"
 end: "23:00"
 flyer: ../../assets/placeholders/flyers/2027-01-16-nueva-pared.jpg
 flyerAlt: "Flyer de ejemplo de Nueva Pared, exposición colectiva desde el 16 de enero"
-flyerAltEn: "Sample flyer for Nueva Pared, a group exhibition opening January 16"
 organizers: "Shipwreck Studios"
 lineup:
   - "Tinta Salada"
@@ -16,8 +15,6 @@ lineup:
   - "Colectivo Manglar"
 type: arte
 admission: free
-bodyEn: |
-  A group exhibition that premieres the venue's walls for the new year. Tinta Salada, Ancla, Oleaje Estudio, Sirena Mecánica, and Colectivo Manglar present new work made for Shipwreck, spanning murals, painting, illustration, and installation. Opening night includes music and a walkthrough with the artists. The exhibition can be visited during events through February 27.
 placeholder: true
 ---
 

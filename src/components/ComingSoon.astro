@@ -6,7 +6,7 @@ interface Props {
   lead: string;
 }
 const { lead } = Astro.props;
-const { t } = useLang(Astro.url);
+const { t } = useLang();
 ---
 
 <div class="coming-soon">

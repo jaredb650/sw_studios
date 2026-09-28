@@ -1,7 +1,6 @@
 import type { Event } from './events';
 import { platformName } from './urls';
 import { ui } from '../i18n/ui';
-import { pick, type Lang } from '../i18n';
 
 export type AdmissionInfo = {
   /** Short badge text for agenda cards. */
@@ -16,10 +15,10 @@ export type AdmissionInfo = {
   primary: { label: string; url?: string };
 };
 
-export function admissionInfo(event: Event, { past = false, lang = 'es' as Lang } = {}): AdmissionInfo {
-  const t = ui[lang].event;
+export function admissionInfo(event: Event, { past = false } = {}): AdmissionInfo {
+  const t = ui.event;
   const { admission, ticketUrl, status } = event.data;
-  const price = pick(event.data, 'price', lang);
+  const price = event.data.price;
   const platform = ticketUrl ? platformName(ticketUrl) : undefined;
   const info = ((): AdmissionInfo => {
     switch (admission) {

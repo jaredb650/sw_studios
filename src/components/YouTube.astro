@@ -9,7 +9,7 @@ interface Props {
   caption?: string;
 }
 const { id, title, caption } = Astro.props;
-const { t } = useLang(Astro.url);
+const { t } = useLang();
 ---
 
 <figure style="margin: 0">

@@ -7,7 +7,6 @@ disciplines:
   - "Techno"
 photo: ../../assets/placeholders/artists/faro-rojo.jpg
 photoAlt: "Retrato de ejemplo de Faro Rojo iluminado con luz roja"
-photoAltEn: "Sample portrait of Faro Rojo lit in red"
 base: "Santurce, PR"
 socials:
   instagram: https://example.com/instagram/faro-rojo
@@ -16,10 +15,6 @@ work:
   - title: "Podcast 014: Señales"
     url: https://example.com/mixes/faro-rojo-senales
     kind: "Mix"
-bodyEn: |
-  Faro Rojo is a project of hypnotic, long-form techno. The sets favor tension and patience: steady kicks, industrial textures, and minimal melodies that appear and fade like a light in the distance.
-
-  A regular presence in the small hours at Shipwreck Studios, Faro Rojo often plays extended sets and b2b sessions with other residents. Outside the booth, the project hosts meetups to share music and gear with DJs who are just starting out.
 order: 4
 placeholder: true
 ---

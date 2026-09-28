@@ -7,7 +7,7 @@ import EventDetails from './EventDetails.astro';
 import SampleChip from './SampleChip.astro';
 import { dayNumber, isoLocal, longDate, monthLong, weekday, year } from '../lib/dates';
 import { eventAnchor, type Event } from '../lib/events';
-import { pick, useLang } from '../i18n';
+import { useLang } from '../i18n';
 
 interface Props {
   event: Event;
@@ -15,9 +15,9 @@ interface Props {
 
 const { event } = Astro.props;
 const { data } = event;
-const { lang, t: ui } = useLang(Astro.url);
+const { t: ui } = useLang();
 const t = ui.event;
-const flyerAlt = pick(data, 'flyerAlt', lang) ?? t.flyerOf(data.title);
+const flyerAlt = data.flyerAlt ?? t.flyerOf(data.title);
 const flyerLarge = data.flyer ? await getImage({ src: data.flyer, width: 1600 }) : undefined;
 const anchor = eventAnchor(event);
 const ratio = data.flyer ? (data.flyer.width / data.flyer.height).toFixed(4) : '0.8';
@@ -26,7 +26,7 @@ const ratio = data.flyer ? (data.flyer.width / data.flyer.height).toFixed(4) : '
 <article class="featured" id={anchor} style={`--ratio: ${ratio}`} data-featured data-type={data.type} data-ends={event.endsAt.toISOString()} data-starts={event.startsAt.toISOString()}>
   {
     data.flyer && flyerLarge ? (
-      <a class="poster ev-flyer" href={flyerLarge.src} data-lightbox={anchor} data-title={data.title} data-meta={longDate(event.startsAt, lang)} aria-label={t.viewFlyer(data.title)} data-label={t.flyerLabel}>
+      <a class="poster ev-flyer" href={flyerLarge.src} data-lightbox={anchor} data-title={data.title} data-meta={longDate(event.startsAt)} aria-label={t.viewFlyer(data.title)} data-label={t.flyerLabel}>
         <Image src={data.flyer} alt={flyerAlt} width={1080} sizes="(max-width: 680px) 36vw, 46vw" loading="eager" fetchpriority="high" />
       </a>
     ) : (
@@ -43,7 +43,7 @@ const ratio = data.flyer ? (data.flyer.width / data.flyer.height).toFixed(4) : '
     <time class="date" datetime={isoLocal(data.date, data.start)}>
       <span>{dayNumber(event.startsAt)}</span>
       <div>
-        {monthLong(event.startsAt, lang)}<br />{weekday(event.startsAt, lang)} · {year(event.startsAt)}
+        {monthLong(event.startsAt)}<br />{weekday(event.startsAt)} · {year(event.startsAt)}
       </div>
     </time>
     <h3>{data.title}</h3>

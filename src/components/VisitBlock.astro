@@ -10,7 +10,7 @@ interface Props {
 const { heading: Heading = 'h2', showMore = true } = Astro.props;
 const { address, contact } = site;
 const Venue = Heading === 'h1' ? 'h2' : 'h3';
-const { t: ui, path } = useLang(Astro.url);
+const { t: ui, path } = useLang();
 const t = ui.visit;
 ---
 

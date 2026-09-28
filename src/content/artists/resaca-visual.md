@@ -5,12 +5,8 @@ aliases:
 disciplines:
   - "Visuales"
   - "VJ"
-disciplinesEn:
-  - "Visuals"
-  - "VJ"
 photo: ../../assets/placeholders/artists/resaca-visual.jpg
 photoAlt: "Retrato de ejemplo de Resaca Visual detrás de un proyector"
-photoAltEn: "Sample portrait of Resaca Visual behind a projector"
 base: "San Juan, PR"
 socials:
   instagram: https://example.com/instagram/resaca-visual
@@ -19,10 +15,6 @@ work:
   - title: "Visuales para Noche de Naufragio"
     url: https://example.com/videos/resaca-naufragio
     kind: "Video"
-bodyEn: |
-  Resaca Visual is a live visuals project that projects onto murals, fabric, and smoke. The work blends analog video, generative graphics, and archival footage of the Puerto Rican coast, responding in real time to the music in the booth.
-
-  At Shipwreck Studios, Resaca Visual accompanies the longest nights and collaborates with the venue's muralists so the painted walls change shape as the party goes on.
 order: 7
 placeholder: true
 ---

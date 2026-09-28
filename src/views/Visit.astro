@@ -4,23 +4,23 @@ import VisitBlock from '../components/VisitBlock.astro';
 import { site } from '../data/site';
 import { href } from '../lib/urls';
 import { venueJsonLd } from '../lib/structured-data';
-import { routePath, useLang } from '../i18n';
+import { useLang } from '../i18n';
 
-const { lang, t: ui, path } = useLang(Astro.url);
+const { t: ui, path } = useLang();
 const t = ui.visit;
 const { contact, socials } = site;
 const channels = [
   contact.email && { label: t.email, value: contact.email, url: `mailto:${contact.email}` },
   contact.phone && { label: t.phone, value: contact.phone, url: `tel:${contact.phone.replace(/[^\d+]/g, '')}` },
   contact.whatsapp && { label: 'WhatsApp', value: contact.whatsapp, url: `https://wa.me/${contact.whatsapp.replace(/\D/g, '')}` },
-  { label: 'Instagram', value: t.dm, url: contact.instagramDm },
+  { label: 'Instagram', value: t.dm(site.instagramHandle), url: contact.instagramDm },
 ].filter((channel): channel is { label: string; value: string; url: string } => Boolean(channel));
 const socialLinks = Object.entries({ Instagram: socials.instagram, Facebook: socials.facebook, TikTok: socials.tiktok, YouTube: socials.youtube, SoundCloud: socials.soundcloud }).filter(
   (entry): entry is [string, string] => Boolean(entry[1]),
 );
 ---
 
-<Base title={t.title} description={t.description} page="visit" jsonLd={venueJsonLd(lang)} alternates={{ es: routePath('visit', 'es'), en: routePath('visit', 'en') }}>
+<Base title={t.title} description={t.description} page="visit" jsonLd={venueJsonLd()}>
   <VisitBlock heading="h1" showMore={false} />
 
   <section class="section" id="contacto" aria-labelledby="contact-title">
