@@ -20,6 +20,8 @@ export default defineConfig({
     sitemap({ filter: (page) => !page.includes('/404') && !page.includes('/membresias') }),
   ],
   image: {
+    // YouTube thumbnails are fetched at build time and served from the site.
+    domains: ['i.ytimg.com'],
     layout: 'constrained',
     responsiveStyles: true,
   },

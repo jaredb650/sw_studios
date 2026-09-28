@@ -5,7 +5,7 @@ start: "23:45"
 end: "08:00"
 flyer: ../../assets/events/chinonegro.jpg
 flyerAlt: "Flyer oficial de CHINONEGRO en Shipwreck Studios, sábado 17 de octubre"
-organizers: "PromotoresPR, Shipwreck Studios, Creative Society, Radio Underground PR"
+organizers: "PromotoresPR, Shipwreck Studios, Cre8tive Society, Radio Underground PR"
 lineup:
   - "CHINONEGRO"
   - "Muchachha"

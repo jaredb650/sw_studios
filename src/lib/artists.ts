@@ -13,7 +13,7 @@ export async function getArtists(): Promise<Artist[]> {
 // Lineup lines combine names with connectors ("A b2b B", "A + B", "Colectivo (A + B)").
 const SEPARATORS = /(\s+b2b\s+|\s+x\s+|\s*\+\s*|\s*&\s*|\s*,\s*|\s*·\s*|\s*\(\s*|\s*\)\s*)/i;
 
-const normalize = (name: string) =>
+export const normalize = (name: string) =>
   name.normalize('NFD').replace(/\p{Diacritic}/gu, '').trim().toLowerCase();
 
 export function artistIndex(artists: Artist[]): Map<string, Artist> {

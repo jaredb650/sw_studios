@@ -11,7 +11,8 @@ lineup:
 type: bienestar
 admission: door
 price: "$15"
+restrictions: "Todas las edades"
 placeholder: true
 ---
 
-Movimiento sin reglas, sin palabras y sin juicios. Colectivo Cuerpo Libre guía un breve círculo de apertura y luego Bruma construye un recorrido musical que va de la calma a la intensidad y de vuelta. Ven con ropa cómoda; la sesión es libre de alcohol y descalza.
+Movimiento sin reglas, sin palabras y sin juicios. Colectivo Cuerpo Libre guía un breve círculo de apertura y luego Bruma construye un recorrido musical que va de la calma a la intensidad y de vuelta. Ven con ropa cómoda; la sesión es libre de alcohol y se baila descalzo.

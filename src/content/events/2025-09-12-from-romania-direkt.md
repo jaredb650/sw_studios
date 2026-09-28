@@ -4,6 +4,14 @@ date: 2025-09-12
 start: "22:00"
 end: "05:00"
 organizers: "Detour"
+lineup:
+  - "Direkt"
+  - "Carlos Rivera"
+  - "Rosamalia"
+  - "Mehr"
+  - "Luxxes"
+  - "Roldan"
+  - "Roots Never Die"
 type: musica
 admission: tickets
 ticketUrl: https://ra.co/events/2253842
@@ -14,4 +22,4 @@ sourceLabel: "Resident Advisor"
 placeholder: false
 ---
 
-Set extendido de Direkt presentado por Detour en Shipwreck Studios. Precio y edad mínima corresponden solo a este evento, según su ficha en Resident Advisor.
+Primera visita de Direkt a Puerto Rico: un set extendido presentado por Detour en Shipwreck Studios.

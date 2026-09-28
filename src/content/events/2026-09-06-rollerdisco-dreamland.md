@@ -1,12 +1,18 @@
 ---
-title: "RollerDisco Dreamland"
+title: "Roller Disco: Dreamland Edition Vol. II"
 date: 2026-09-06
+start: "13:00"
+end: "00:00"
 organizers: "WeSkatePR"
+lineup:
+  - "Pax Kotto"
+  - "Chester Browne"
 type: comunidad
-admission: door
+admission: tickets
+ticketUrl: https://www.instagram.com/weskatepr/
 source: https://www.instagram.com/weskatepr/p/DbizMQoRSiF/
 sourceLabel: "Instagram de WeSkatePR"
 placeholder: false
 ---
 
-Evento de patinaje y música disco presentado por WeSkatePR en Shipwreck Studios. Detalles según la publicación original del organizador.
+WeSkatePR convirtió Shipwreck Studios en una pista de patinaje por un día completo: patines de alquiler, música para bailar sobre ruedas, un mercado de vendedores locales y retos con premios.

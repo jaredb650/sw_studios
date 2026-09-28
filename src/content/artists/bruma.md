@@ -18,6 +18,6 @@ order: 8
 placeholder: true
 ---
 
-Bruma trabaja en dos extremos: sets ambient para sesiones tranquilas y techno profundo para los momentos más intensos. El hilo común es la atmósfera, con sonidos que llenan el espacio sin apurar a nadie.
+Bruma trabaja en dos extremos: sets ambient para sesiones tranquilas, como meditar o dibujar, y sets más densos para bailar. El hilo común es la atmósfera, con sonidos que llenan el espacio sin apurar a nadie.
 
 En Shipwreck Studios, Bruma musicaliza las sesiones de dibujo en vivo, da talleres de producción y comparte sets con Faro Rojo. Su selección incluye grabaciones de campo, música experimental caribeña y techno de sellos independientes.

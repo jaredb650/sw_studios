@@ -1,6 +1,8 @@
 ---
-// Click-to-load YouTube player: no YouTube requests until the visitor presses
-// play. Without an id it shows a "video coming soon" frame.
+// Click-to-load YouTube player: the thumbnail is downloaded at build time and
+// served from this site, so YouTube receives no requests until the visitor
+// presses play. Without an id it shows a "video coming soon" frame.
+import { Image } from 'astro:assets';
 import { useLang } from '../i18n';
 
 interface Props {
@@ -17,7 +19,7 @@ const { t } = useLang();
     id ? (
       <div class="video" data-youtube={id}>
         <a class="video-trigger" href={`https://www.youtube.com/watch?v=${id}`} target="_blank" rel="noopener">
-          <img src={`https://i.ytimg.com/vi/${id}/hqdefault.jpg`} alt="" loading="lazy" width="480" height="360" />
+          <Image src={`https://i.ytimg.com/vi/${id}/hqdefault.jpg`} alt="" width={480} height={360} />
           <span class="video-play" aria-hidden="true">
             <i class="icon icon-play" />
           </span>

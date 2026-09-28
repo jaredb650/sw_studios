@@ -5,13 +5,12 @@ start: "15:00"
 end: "18:00"
 flyer: ../../assets/placeholders/flyers/2026-10-25-taller-de-dj.jpg
 flyerAlt: "Flyer de ejemplo del taller de DJ, domingo 25 de octubre"
-organizers: "Marejada, Shipwreck Studios"
-lineup:
-  - "Marejada"
+organizers: "Marejada"
 type: taller
 admission: tickets
 ticketUrl: https://example.com/boletos/2026-10-25-taller-de-dj
 price: "$35"
+restrictions: "Todas las edades"
 placeholder: true
 ---
 

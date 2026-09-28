@@ -9,9 +9,10 @@ organizers: "Shipwreck Studios"
 lineup:
   - "Tinta Salada"
   - "Ancla"
-  - "Coral Negro (live)"
+  - "Coral Negro (en vivo)"
 type: arte
 admission: free
+restrictions: "Todas las edades"
 placeholder: true
 ---
 

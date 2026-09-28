@@ -14,7 +14,9 @@ lineup:
   - "Sirena Mecánica"
   - "Colectivo Manglar"
 type: arte
+timeNote: "Horario de la inauguración."
 admission: free
+restrictions: "Todas las edades"
 placeholder: true
 ---
 

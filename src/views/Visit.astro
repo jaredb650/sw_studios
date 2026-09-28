@@ -23,6 +23,26 @@ const socialLinks = Object.entries({ Instagram: socials.instagram, Facebook: soc
 <Base title={t.title} description={t.description} page="visit" jsonLd={venueJsonLd()}>
   <VisitBlock heading="h1" showMore={false} />
 
+  {
+    site.visitNotes.length > 0 && (
+      <section class="section" id="antes-de-venir" aria-labelledby="before-title">
+        <div class="split">
+          <div class="section-heading" style="display: block">
+            <h2 id="before-title">{t.before}</h2>
+          </div>
+          <dl class="facts">
+            {site.visitNotes.map((note) => (
+              <>
+                <dt>{note.title}</dt>
+                <dd>{note.text}</dd>
+              </>
+            ))}
+          </dl>
+        </div>
+      </section>
+    )
+  }
+
   <section class="section" id="contacto" aria-labelledby="contact-title">
     <div class="split">
       <div class="section-heading" style="display: block">

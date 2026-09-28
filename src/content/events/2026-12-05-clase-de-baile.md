@@ -9,6 +9,7 @@ organizers: "Academia Son del Muelle"
 type: clase
 admission: door
 price: "$12"
+restrictions: "Todas las edades"
 placeholder: true
 ---
 

@@ -17,6 +17,6 @@ order: 1
 placeholder: true
 ---
 
-Tinta Salada es un proyecto de muralismo que convierte paredes grandes en paisajes de mar, barrio y memoria. Su trabajo combina acrílico, aerosol y patrones inspirados en los azulejos y rótulos del viejo San Juan.
+Tinta Salada es un proyecto de muralismo que convierte paredes grandes en paisajes de mar, barrio y memoria. Su trabajo combina acrílico, aerosol y patrones inspirados en los azulejos y rótulos del Viejo San Juan.
 
 Varias de las paredes de Shipwreck Studios llevan su firma. Cuando un mural se repinta, queda documentado en la galería del sitio. Tinta Salada también pinta en vivo durante Muro Abierto, donde el público puede ver una pared nueva nacer en una sola tarde.

@@ -1,4 +1,5 @@
 ---
+import { isMusic } from '../lib/event-kind';
 // Past event as an expandable archive row (native <details>).
 import { Image, getImage } from 'astro:assets';
 import EventDetails from './EventDetails.astro';
@@ -15,7 +16,9 @@ const { event } = Astro.props;
 const { data } = event;
 const { t } = useLang();
 const anchor = eventAnchor(event);
-const meta = [data.start && clock(event.startsAt), data.organizers.join(' · ') || data.lineup.slice(0, 2).join(' · ')]
+// Like the agenda cards: music leads with the lineup, everything else with who presents it.
+const people = isMusic(event) && data.lineup.length ? data.lineup.slice(0, 2).join(' · ') : data.organizers.join(' · ') || data.lineup.slice(0, 2).join(' · ');
+const meta = [data.start && clock(event.startsAt), people]
   .filter(Boolean)
   .join(' · ');
 const flyerLarge = data.flyer ? await getImage({ src: data.flyer, width: 1600 }) : undefined;

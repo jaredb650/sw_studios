@@ -10,7 +10,7 @@ const es = {
     tagline: 'Siete almas · Un espacio',
     intro: 'Donde las ideas cobran vida',
     description:
-      'Shipwreck Studios es donde las ideas cobran vida: un espacio creativo y de eventos en San Juan, Puerto Rico, con música, arte, talleres, clases y comunidad. Agenda, artistas residentes y cómo llegar.',
+      'Shipwreck Studios es donde las ideas cobran vida: un espacio creativo y de eventos en San Juan, Puerto Rico, con música, arte, talleres, clases y comunidad.',
     city: 'San Juan, Puerto Rico',
     // Hero: "Shipwreck Studios es_" then each of the seven souls is typed out in turn.
     heroIs: 'es',
@@ -80,7 +80,7 @@ const es = {
     walls: 'En las paredes',
     currentCount: (n: number) => plural(n, 'obra actual', 'obras actuales'),
     wallsEmpty: 'Las paredes se están preparando.',
-    seeGallery: 'Galería de arte virtual',
+    seeGallery: 'Ver la galería',
     archivedWork: 'Archivada',
     workCount: (n: number) => plural(n, 'obra', 'obras'),
     onTheWall: 'En la pared',
@@ -118,7 +118,7 @@ const es = {
     featuredHidden: 'Evento destacado',
     moreDates: 'Más fechas',
     dates: 'Fechas',
-    promoterNote: 'Los boletos se venden a través de cada promotor, que gestiona compras, reembolsos y atención al comprador.',
+    promoterNote: 'Los boletos se venden a través de quien organiza cada evento, que gestiona compras, reembolsos y atención al comprador.',
     seePast: 'Ver eventos anteriores',
     inArchive: (n: number) => `${n} en el archivo`,
   },
@@ -129,7 +129,7 @@ const es = {
     index: '02 / Agenda / Archivo',
     heading: 'Eventos anteriores',
     sub: 'Cada evento deja algo en las paredes. Aquí quedan los eventos anteriores, con sus flyers, lineups y, cuando los hay, fotos y videos.',
-    count: (n: number, recaps: number) => `${plural(n, 'evento', 'eventos')} · ${recaps} con recap`,
+    count: (n: number, recaps: number) => `${plural(n, 'evento', 'eventos')} · ${recaps} con fotos o video`,
     empty: 'Todavía no hay eventos en el archivo.',
     seeAgenda: 'Ver la agenda',
     seeUpcoming: 'Ver próximos eventos',
@@ -141,7 +141,7 @@ const es = {
     cancelled: 'Cancelado',
     postponed: 'Pospuesto',
     today: 'Hoy',
-    recap: 'Recap',
+    recap: 'Fotos y video',
     until: (date: string) => `Hasta ${date}`,
     viewDetails: (title: string) => `Ver detalles de ${title}`,
     viewFlyer: (title: string) => `Ver el flyer de ${title}`,
@@ -152,12 +152,9 @@ const es = {
     lineup: 'Lineup',
     admission: 'Admisión',
     access: 'Acceso',
-    organizer: 'Organiza',
-    organizers: 'Organizan',
-    teacher: 'Imparte',
-    teachers: 'Imparten',
+    // Credit for `organizers` (src/lib/event-kind.ts → hostRole): [one, several].
+    hosts: { teach: ['Imparte', 'Imparten'], guide: ['Guía', 'Guían'], present: ['Presenta', 'Presentan'] },
     with: 'Con',
-    presentedBy: (names: string) => `Presentado por ${names}`,
     types: { musica: 'Música', arte: 'Arte', taller: 'Taller', clase: 'Clase', bienestar: 'Bienestar', mercado: 'Mercado', comunidad: 'Comunidad' },
     readMore: 'Leer más',
     readLess: 'Leer menos',
@@ -202,7 +199,7 @@ const es = {
 
   artistsPage: {
     title: 'Artistas residentes',
-    description: 'Artistas residentes de Shipwreck Studios: DJs, músicos, muralistas y artistas visuales de San Juan, Puerto Rico.',
+    description: 'Artistas residentes de Shipwreck Studios: artistas visuales, muralistas, músicos y DJs de San Juan, Puerto Rico.',
     index: '03',
     label: 'Artistas',
     heading: 'Artistas',
@@ -244,7 +241,7 @@ const es = {
   },
 
   spacePage: {
-    description: 'Shipwreck Studios: espacio de música y galería de arte viva en Puerta de Tierra, San Juan.',
+    description: 'Shipwreck Studios: espacio creativo y de eventos, y galería de arte viva, en Puerta de Tierra, San Juan.',
     index: '01',
     label: 'El espacio',
     heading: 'El',
@@ -252,7 +249,7 @@ const es = {
     tour: 'Recorrido virtual',
     photos: 'Fotos del espacio',
     explore: 'Sigue explorando',
-    exploreLinks: { artists: 'Nuestros artistas', gallery: 'Galería virtual', participate: 'Participa', rules: 'Reglas', visit: 'Visítanos' },
+    exploreLinks: { artists: 'Nuestros artistas', gallery: 'Galería', participate: 'Participa', rules: 'Reglas', visit: 'Visítanos' },
   },
 
   participaPage: {
@@ -304,7 +301,8 @@ const es = {
     email: 'Correo',
     phone: 'Teléfono',
     dm: (handle: string) => `Mensaje directo a ${handle}`,
-    hoursNote: 'Los horarios cambian según el evento. Consulta la agenda para ver la hora de cada uno.',
+    hoursNote: 'Los horarios cambian según el evento.',
+    before: 'Antes de venir',
     seeAgenda: 'Ver la agenda',
     rulesNote: ['Antes de venir, repasa las', 'reglas del espacio'],
     socials: 'Redes',

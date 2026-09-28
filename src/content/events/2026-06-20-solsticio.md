@@ -8,12 +8,13 @@ flyerAlt: "Flyer de ejemplo de Solsticio, sábado 20 de junio"
 organizers: "Shipwreck Studios"
 lineup:
   - "Marejada"
-  - "Coral Negro Live"
+  - "Coral Negro (en vivo)"
   - "Salitre"
 type: musica
 admission: tickets
 ticketUrl: https://example.com/boletos/2026-06-20-solsticio
 price: "$15"
+restrictions: "18+"
 recap:
   summary: "Celebramos el solsticio de verano con ocho horas de música, arte y comunidad."
   photos:

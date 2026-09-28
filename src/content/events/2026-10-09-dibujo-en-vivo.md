@@ -1,17 +1,17 @@
 ---
-title: "Life Drawing: dibujo en vivo"
+title: "Life Drawing: dibujo con modelo vivo"
 date: 2026-10-09
 start: "19:00"
 end: "22:00"
 flyer: ../../assets/placeholders/flyers/2026-10-09-dibujo-en-vivo.jpg
 flyerAlt: "Flyer de ejemplo de Life Drawing, viernes 9 de octubre"
-organizers: "Oleaje Estudio, Shipwreck Studios"
+organizers: "Oleaje Estudio"
 lineup:
-  - "Oleaje Estudio"
-  - "Bruma (ambient set)"
+  - "Bruma (set ambient)"
 type: clase
 admission: door
 price: "$10"
+restrictions: "18+"
 placeholder: true
 ---
 

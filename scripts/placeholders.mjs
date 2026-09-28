@@ -1,7 +1,10 @@
 #!/usr/bin/env node
 // Generates branded mock images for every `placeholders/` path referenced in
-// src/content. Each image is clearly marked EJEMPLO. When real media arrives,
-// point the content file at the real image and the placeholder is no longer used.
+// src/content. The site marks them with an EJEMPLO tag (every sample entry has
+// `placeholder: true`), so the images themselves carry no stamp. Venue and
+// recap samples are daylight scenes of a creative space, not a dance floor.
+// When real media arrives, point the content file at the real image and the
+// placeholder is no longer used.
 //
 //   npm run placeholders            # create missing images
 //   npm run placeholders -- --force # regenerate all of them
@@ -71,14 +74,6 @@ function stack(title, width, maxSize, maxLines = 4) {
   return { lines, size };
 }
 
-function stamp(width, height, label, color, background, top = false) {
-  const w = Math.round(label.length * 18.5 + 44);
-  return `<g transform="translate(${width - w - 36} ${top ? 36 : height - 92})">
-    <rect width="${w}" height="56" fill="${background}" stroke="${color}" stroke-width="3"/>
-    <text x="${w / 2}" y="37" text-anchor="middle" font-family="${MONO}" font-size="24" font-weight="bold" letter-spacing="4" fill="${color}">${esc(label)}</text>
-  </g>`;
-}
-
 function halftone(width, height, color, random, opacity = 0.18) {
   const step = 28;
   const cx = random() * width;
@@ -101,7 +96,10 @@ async function flyer({ title, date, lineup = [], organizers }, seed) {
   const random = rng(seed);
   const p = pick(random, PALETTES);
   const d = date ? new Date(`${date}T12:00:00Z`) : null;
-  const { lines, size } = stack(title, W - 140, 230);
+  const stacked = stack(title, W - 140, 230);
+  const lines = stacked.lines;
+  // Leave room below the title for the lineup.
+  const size = Math.min(stacked.size, (860 - 330) / (lines.length * 0.92));
   const titleTop = 330 + random() * 60;
   const titleSvg = lines
     .map((line, i) => `<text x="70" y="${titleTop + (i + 1) * size * 0.92}" font-family="${DISPLAY}" font-size="${size.toFixed(0)}" fill="${i % 2 ? p.accent : p.fg}">${esc(line)}</text>`)
@@ -110,9 +108,10 @@ async function flyer({ title, date, lineup = [], organizers }, seed) {
   let decoration = '';
   if (shape === 'circle') decoration = `<circle cx="${760 + random() * 200}" cy="${200 + random() * 80}" r="${170 + random() * 60}" fill="${p.extra}" opacity=".85"/>`;
   if (shape === 'waves') {
-    for (let i = 0; i < 7; i++) {
-      const y = 170 + i * 34;
-      decoration += `<path d="M0 ${y} Q 135 ${y - 40} 270 ${y} T 540 ${y} T 810 ${y} T 1080 ${y}" stroke="${p.extra}" stroke-width="12" fill="none"/>`;
+    // A band between the date (top) and the title, so the waves never cross text.
+    for (let i = 0; i < 3; i++) {
+      const y = 245 + i * 28;
+      decoration += `<path d="M0 ${y} Q 135 ${y - 22} 270 ${y} T 540 ${y} T 810 ${y} T 1080 ${y}" stroke="${p.extra}" stroke-width="10" fill="none"/>`;
     }
   }
   if (shape === 'bars') {
@@ -121,9 +120,13 @@ async function flyer({ title, date, lineup = [], organizers }, seed) {
       decoration += `<rect x="${520 + i * 50}" y="${y}" width="28" height="${Math.max(60, titleTop - 40 - y - random() * 120)}" fill="${p.extra}"/>`;
     }
   }
-  const lineupSvg = lineup
-    .slice(0, 5)
-    .map((name, i) => `<text x="70" y="${1080 + i * 44}" font-family="${DISPLAY}" font-size="36" fill="${p.fg}">${esc(name.toUpperCase())}</text>`)
+  // The lineup starts below the title, however many lines the title takes.
+  const titleBottom = titleTop + lines.length * size * 0.92;
+  const shown = lineup.slice(0, 5);
+  const ruleY = Math.max(titleBottom + 40, 900);
+  const lineupSize = Math.min(36, (1250 - ruleY - 40) / Math.max(shown.length, 1) / 1.22);
+  const lineupSvg = shown
+    .map((name, i) => `<text x="70" y="${ruleY + 50 + i * lineupSize * 1.22}" font-family="${DISPLAY}" font-size="${lineupSize.toFixed(0)}" fill="${p.fg}">${esc(name.toUpperCase())}</text>`)
     .join('');
   const mark = await logo(p.fg);
   return {
@@ -134,42 +137,41 @@ async function flyer({ title, date, lineup = [], organizers }, seed) {
       ${d ? `<text x="70" y="140" font-family="${DISPLAY}" font-size="120" fill="${p.accent}">${String(d.getUTCDate()).padStart(2, '0')}</text>
       <text x="70" y="200" font-family="${MONO}" font-size="30" font-weight="bold" letter-spacing="3" fill="${p.fg}">${DAYS[d.getUTCDay()]} · ${MONTHS[d.getUTCMonth()]} · ${d.getUTCFullYear()}</text>` : ''}
       ${titleSvg}
-      <rect x="70" y="1030" width="${W - 140}" height="3" fill="${p.fg}" opacity=".6"/>
+      <rect x="70" y="${ruleY}" width="${W - 140}" height="3" fill="${p.fg}" opacity=".6"/>
       ${lineupSvg}
-      ${presenter ? `<text x="70" y="1300" font-family="${MONO}" font-size="22" letter-spacing="2" fill="${p.fg}" opacity=".75">${esc(presenter.toUpperCase())}</text>` : ''}
-      ${stamp(W, H, 'FLYER · EJEMPLO', p.fg, p.bg)}`,
+      ${presenter ? `<text x="70" y="1300" font-family="${MONO}" font-size="22" letter-spacing="2" fill="${p.fg}" opacity=".75">${esc(presenter.toUpperCase())}</text>` : ''}`,
   };
 }
 
-function crowd(label, seed, { width = 1500, height = 1000 } = {}) {
+// Recap sample: people gathered in a bright room (a workshop, a talk, an
+// opening), with art on the wall behind them.
+function gathering(label, seed, { width = 1500, height = 1000 } = {}) {
   const random = rng(seed);
-  const hues = [LIME, '#ff5fa2', '#4f7cff', '#ffb347', '#9b6bff'];
-  let lights = '';
-  for (let i = 0; i < 26; i++) {
-    lights += `<circle cx="${random() * width}" cy="${random() * height * 0.65}" r="${30 + random() * 110}" fill="${pick(random, hues)}" opacity="${0.18 + random() * 0.4}"/>`;
+  const wall = pick(random, ['#e9e5da', '#ece2d0', '#dfe4dc']);
+  const art = ['#ff6b4a', '#4f7cff', '#1d3b36', '#ffcf3d', '#c2502d', '#363595'];
+  let frames = '';
+  for (let x = 90; x < width - 200; x += 260 + random() * 120) {
+    const w = 140 + random() * 120;
+    const h = 110 + random() * 150;
+    frames += `<rect x="${x}" y="${120 + random() * 60}" width="${w}" height="${h}" fill="${pick(random, art)}" stroke="#2b2b27" stroke-width="6"/>`;
   }
-  let beams = '';
-  for (let i = 0; i < 5; i++) {
-    const x = random() * width;
-    beams += `<polygon points="${x},0 ${x + 30},0 ${x + 260 - random() * 520},${height} ${x - 120},${height}" fill="${pick(random, hues)}" opacity=".12"/>`;
-  }
-  let heads = '';
-  for (let row = 0; row < 3; row++) {
-    for (let x = -40; x < width + 40; x += 70 + random() * 60) {
-      const y = height - 250 + row * 95 + random() * 40;
-      const r = 36 + row * 10 + random() * 10;
-      heads += `<circle cx="${x}" cy="${y}" r="${r}"/><rect x="${x - r * 1.5}" y="${y + r * 0.7}" width="${r * 3}" height="400" rx="${r}"/>`;
+  let people = '';
+  const tones = ['#3b3a36', '#57534b', '#6d665a', '#2f3b39', '#4a3f38'];
+  for (let row = 0; row < 2; row++) {
+    for (let x = 40 + row * 60; x < width; x += 150 + random() * 90) {
+      const y = height - 330 + row * 120 + random() * 30;
+      const r = 42 + row * 10;
+      people += `<g fill="${pick(random, tones)}"><circle cx="${x}" cy="${y}" r="${r}"/><rect x="${x - r * 1.4}" y="${y + r * 0.8}" width="${r * 2.8}" height="420" rx="${r}"/></g>`;
     }
   }
   return {
     width,
     height,
-    svg: `<defs><filter id="b"><feGaussianBlur stdDeviation="28"/></filter></defs>
-      <rect width="${width}" height="${height}" fill="#0b0c0b"/>
-      <g filter="url(#b)">${lights}</g>${beams}
-      <g fill="#050505">${heads}</g>
-      <text x="44" y="70" font-family="${MONO}" font-size="26" font-weight="bold" letter-spacing="3" fill="${PAPER}" opacity=".8">${esc(label)}</text>
-      ${stamp(width, height, 'FOTO · EJEMPLO', PAPER, '#0b0c0b')}`,
+    svg: `<rect width="${width}" height="${height}" fill="${wall}"/>
+      <rect y="${height * 0.62}" width="${width}" height="${height * 0.38}" fill="#b9a98f"/>
+      <polygon points="${width * 0.7},0 ${width},0 ${width},${height * 0.62} ${width * 0.55},${height * 0.62}" fill="#fff" opacity=".35"/>
+      ${frames}${people}
+      <text x="44" y="70" font-family="${MONO}" font-size="26" font-weight="bold" letter-spacing="3" fill="#2b2b27" opacity=".8">${esc(label)}</text>`,
   };
 }
 
@@ -193,8 +195,7 @@ function portrait(name, discipline, seed) {
         <path d="M ${cx - 430} ${H} C ${cx - 420} ${headY + 330} ${cx - 250} ${headY + 250} ${cx} ${headY + 250} C ${cx + 250} ${headY + 250} ${cx + 420} ${headY + 330} ${cx + 430} ${H} Z"/>
       </g>
       <text x="60" y="110" font-family="${DISPLAY}" font-size="92" fill="${p.fg}">${esc(name.toUpperCase())}</text>
-      <text x="62" y="160" font-family="${MONO}" font-size="26" letter-spacing="3" fill="${p.fg}" opacity=".85">${esc(discipline.toUpperCase())}</text>
-      ${stamp(W, H, 'RETRATO · EJEMPLO', PAPER, INK)}`,
+      <text x="62" y="160" font-family="${MONO}" font-size="26" letter-spacing="3" fill="${p.fg}" opacity=".85">${esc(discipline.toUpperCase())}</text>`,
   };
 }
 
@@ -224,43 +225,41 @@ function artwork(title, seed) {
     width,
     height,
     svg: `<rect width="${width}" height="${height}" fill="${p.bg}"/>${shapes}
-      ${halftone(width, height, INK, random, 0.12)}
-      <text x="44" y="${height - 44}" font-family="${MONO}" font-size="26" font-weight="bold" letter-spacing="3" fill="${p.fg}" stroke="${p.bg}" stroke-width="6" paint-order="stroke">${esc(title.toUpperCase().slice(0, 42))}</text>
-      ${stamp(width, height, 'OBRA · EJEMPLO', p.fg, p.bg, true)}`,
+      ${halftone(width, height, INK, random, 0.12)}`,
   };
 }
 
+// Venue sample: the space by day, with murals, easels and big windows.
 function room(label, seed) {
   const W = 1500;
   const H = 1000;
   const random = rng(seed);
   const vx = W / 2 + (random() - 0.5) * 500;
-  const vy = H * (0.4 + random() * 0.1);
+  const vy = H * (0.45 + random() * 0.08);
+  const wall = pick(random, ['#ebe7dc', '#e4ddcf', '#dde3dc']);
   let floor = '';
-  for (let i = -8; i <= 8; i++) floor += `<line x1="${vx}" y1="${vy}" x2="${vx + i * 220}" y2="${H}" stroke="#2d3029" stroke-width="3"/>`;
-  for (let i = 1; i < 7; i++) {
-    const y = vy + (H - vy) * (i / 7) ** 1.6;
-    floor += `<line x1="0" y1="${y}" x2="${W}" y2="${y}" stroke="#2d3029" stroke-width="2"/>`;
-  }
-  const muralColors = [LIME, '#ff6b4a', '#4f7cff', '#ff9ecb', '#ffcf3d', PAPER];
+  for (let i = -8; i <= 8; i++) floor += `<line x1="${vx}" y1="${vy}" x2="${vx + i * 220}" y2="${H}" stroke="#a8977c" stroke-width="3"/>`;
+  const muralColors = ['#ff6b4a', '#4f7cff', '#1d3b36', '#ffcf3d', '#363595', '#c2502d'];
   let murals = '';
-  for (let i = 0; i < 5; i++) {
-    const x = random() * (W - 300);
-    const y = 80 + random() * (vy - 200);
-    murals += `<rect x="${x}" y="${y}" width="${120 + random() * 260}" height="${80 + random() * 160}" fill="${pick(random, muralColors)}" opacity="${0.55 + random() * 0.35}" transform="skewY(${(x < vx ? 1 : -1) * 6})"/>`;
-  }
-  let beams = '';
   for (let i = 0; i < 4; i++) {
-    const x = 150 + random() * (W - 300);
-    beams += `<polygon points="${x - 10},0 ${x + 10},0 ${x + 180},${H} ${x - 180},${H}" fill="${LIME}" opacity=".07"/>`;
+    const x = random() * (W - 360);
+    const y = 90 + random() * (vy - 260);
+    murals += `<rect x="${x}" y="${y}" width="${160 + random() * 260}" height="${90 + random() * 150}" fill="${pick(random, muralColors)}" opacity=".85" transform="skewY(${(x < vx ? 1 : -1) * 5})"/>`;
+  }
+  let windows = '';
+  for (let i = 0; i < 3; i++) windows += `<rect x="${W - 120 - i * 150}" y="60" width="110" height="${vy - 120}" fill="#f7f6f0" stroke="#8c8373" stroke-width="6"/>`;
+  let easels = '';
+  for (let i = 0; i < 3; i++) {
+    const x = 140 + random() * (W - 400);
+    const y = vy + 60 + random() * 120;
+    easels += `<g stroke="#5b4a36" stroke-width="10"><line x1="${x}" y1="${y}" x2="${x - 60}" y2="${y + 260}"/><line x1="${x}" y1="${y}" x2="${x + 60}" y2="${y + 260}"/></g><rect x="${x - 70}" y="${y - 40}" width="140" height="170" fill="${pick(random, muralColors)}" stroke="#2b2b27" stroke-width="5"/>`;
   }
   return {
     width: W,
     height: H,
-    svg: `<rect width="${W}" height="${H}" fill="#161815"/>
-      <rect y="${vy}" width="${W}" height="${H - vy}" fill="#0d0e0c"/>${floor}${murals}${beams}
-      <text x="44" y="70" font-family="${MONO}" font-size="26" font-weight="bold" letter-spacing="3" fill="${PAPER}" opacity=".85">${esc(label)}</text>
-      ${stamp(W, H, 'FOTO · EJEMPLO', PAPER, '#161815')}`,
+    svg: `<rect width="${W}" height="${H}" fill="${wall}"/>
+      <rect y="${vy}" width="${W}" height="${H - vy}" fill="#c9b99c"/>${floor}${windows}${murals}${easels}
+      <text x="44" y="70" font-family="${MONO}" font-size="26" font-weight="bold" letter-spacing="3" fill="#2b2b27" opacity=".85">${esc(label)}</text>`,
   };
 }
 
@@ -298,7 +297,7 @@ async function render(target, data) {
     case 'flyers':
       return flyer(data, name);
     case 'recaps':
-      return crowd(`${(data.title ?? 'RECAP').toUpperCase()} · ${index ?? ''}`, name);
+      return gathering(`${(data.title ?? 'RECAP').toUpperCase()} · ${index ?? ''}`, name);
     case 'artists':
       return portrait(data.name ?? name, data.disciplines?.[0] ?? 'Artista', name);
     case 'artworks':

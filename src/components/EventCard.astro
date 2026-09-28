@@ -9,7 +9,7 @@ import { admissionInfo } from '../lib/admission';
 import { clock, dayNumber, isoLocal, longDate, monthShort, weekdayShort } from '../lib/dates';
 import { eventAnchor, type Event } from '../lib/events';
 import { useLang } from '../i18n';
-import { isMusic, listNames } from '../lib/event-kind';
+import { hostRole, isMusic, listNames } from '../lib/event-kind';
 
 interface Props {
   event: Event;
@@ -26,9 +26,12 @@ const cancelled = data.status === 'cancelled';
 const postponed = data.status === 'postponed';
 const multiDay = data.endDate && data.endDate !== data.date;
 // Music leads with the lineup; workshops, classes and the rest with who presents them.
-const meta = isMusic(event) || !data.organizers.length
-  ? (data.lineup.length ? data.lineup.slice(0, 3).join(' · ') : data.organizers.join(' · '))
-  : t.presentedBy(listNames(data.organizers));
+const hostLabel = t.hosts[hostRole(event)][data.organizers.length > 1 ? 1 : 0];
+const meta = isMusic(event) && data.lineup.length
+  ? data.lineup.slice(0, 3).join(' · ')
+  : data.organizers.length
+    ? `${hostLabel} ${listNames(data.organizers)}`
+    : data.lineup.slice(0, 3).join(' · ');
 // The card and the open panel use identical image settings, so the flyer downloads once.
 const flyerSizes = '(max-width: 680px) 46vw, 380px';
 const flyerLarge = data.flyer ? await getImage({ src: data.flyer, width: 1600 }) : undefined;
@@ -48,23 +51,24 @@ const ratio = data.flyer ? (data.flyer.width / data.flyer.height).toFixed(4) : '
           </div>
         )
       }
+    </div>
+    <div class="card-body">
+      <!-- Status tags sit under the flyer, never on it (flyers put dates and logos in their corners). -->
       <div class="card-flags">
         {cancelled && <span class="chip danger solid-bg">{t.cancelled}</span>}
         {postponed && <span class="chip danger solid-bg">{t.postponed}</span>}
         <span class="chip solid" data-today hidden>{t.today}</span>
         <SampleChip show={data.placeholder} />
       </div>
-    </div>
-    <div class="card-body">
       <time class="card-date" datetime={isoLocal(data.date, data.start)}>
-        {`${weekdayShort(event.startsAt)} ${dayNumber(event.startsAt)} ${monthShort(event.startsAt)}`}
+        {`${weekdayShort(event.startsAt)} ${Number(dayNumber(event.startsAt))} ${monthShort(event.startsAt)}`}
         {data.start && <> · {clock(event.startsAt)}</>}
       </time>
       <h3>{data.title}</h3>
       {meta && <p class="card-meta">{meta}</p>}
       <div class="card-chips">
         <span class="chip type-chip">{t.types[data.type]}</span>
-        {multiDay && <span class="chip">{t.until(`${dayNumber(event.endsAt)} ${monthShort(event.endsAt)}`)}</span>}
+        {multiDay && <span class="chip">{t.until(`${Number(dayNumber(event.endsAt))} ${monthShort(event.endsAt)}`)}</span>}
         {!cancelled && <span class:list={['chip', { accent: data.admission === 'free' }]}>{admission.chip}</span>}
         {data.restrictions && <span class="chip">{data.restrictions}</span>}
       </div>

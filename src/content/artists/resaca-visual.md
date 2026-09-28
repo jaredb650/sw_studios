@@ -12,8 +12,8 @@ socials:
   instagram: https://example.com/instagram/resaca-visual
   youtube: https://example.com/youtube/resaca-visual
 work:
-  - title: "Visuales para Noche de Naufragio"
-    url: https://example.com/videos/resaca-naufragio
+  - title: "Reel de visuales en vivo"
+    url: https://example.com/videos/resaca-reel
     kind: "Video"
 order: 7
 placeholder: true

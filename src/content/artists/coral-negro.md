@@ -1,9 +1,9 @@
 ---
 name: "Coral Negro"
 aliases:
-  - "Coral Negro Live"
+  - "Coral Negro (en vivo)"
 disciplines:
-  - "Live act"
+  - "En vivo"
   - "Electrónica"
 photo: ../../assets/placeholders/artists/coral-negro.jpg
 photoAlt: "Retrato de ejemplo de Coral Negro junto a sus sintetizadores"

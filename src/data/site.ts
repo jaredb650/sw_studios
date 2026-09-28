@@ -34,7 +34,8 @@ export const site = {
     country: 'PR',
     mapsUrl:
       'https://www.google.com/maps/search/?api=1&query=Shipwreck+Studios+202+Calle+San+Agustin+San+Juan+Puerto+Rico',
-    appleMapsUrl: 'https://maps.apple.com/?q=Shipwreck+Studios&address=202+Calle+San+Agustin,+San+Juan,+Puerto+Rico',
+    // Shipwreck's own Apple Maps listing (not a bare address pin).
+    appleMapsUrl: 'https://maps.apple.com/place?place-id=I1DF188EEC3914351',
   },
 
   // Pending from the client. Each entry is hidden while null.
@@ -47,6 +48,11 @@ export const site = {
 
   // General opening hours are not established; events list their own times.
   hours: null as string | null,
+
+  // "Antes de venir" on /visita/: short answers visitors look for (parking,
+  // accessibility, age policy, what to bring…). Hidden while empty; the
+  // client supplies the text.
+  visitNotes: [] as { title: string; text: string }[],
 
   socials: {
     instagram: `https://www.instagram.com/${INSTAGRAM}/`,

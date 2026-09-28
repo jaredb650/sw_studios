@@ -5,7 +5,9 @@ import { absolute } from './urls';
 import { isoLocal, toLocalIso } from './dates';
 import type { Event } from './events';
 import { ui } from '../i18n/ui';
-import { routePath } from '../i18n';
+import { artistPath, routePath } from '../i18n';
+import { artistIndex, getArtists, normalize } from './artists';
+import { excerpt } from './text';
 
 const address = {
   '@type': 'PostalAddress',
@@ -19,7 +21,8 @@ const address = {
 export function venueJsonLd() {
   return {
     '@context': 'https://schema.org',
-    '@type': ['MusicVenue', 'ArtGallery'],
+    // An event space and gallery, not a music venue (see CLIENT notes on positioning).
+    '@type': ['EventVenue', 'ArtGallery'],
     name: site.name,
     description: ui.site.description,
     url: absolute(routePath('home')),
@@ -42,28 +45,36 @@ const STATUS = {
 export async function eventJsonLd(event: Event) {
   const { data } = event;
   const image = data.flyer ? new URL((await getImage({ src: data.flyer, width: 1200 })).src, import.meta.env.SITE).href : undefined;
+  // Resident artists are people with a profile page; other acts may be groups.
+  const residents = artistIndex(await getArtists());
   const performers = data.lineup.flatMap((line) =>
     line
       .split(/\s+b2b\s+|\s*\+\s*|\s*,\s*|\s*[()]\s*/i)
       .map((name) => name.trim())
       .filter(Boolean)
-      .map((name) => ({ '@type': 'PerformingGroup', name })),
+      .map((name) => {
+        const resident = residents.get(normalize(name));
+        return resident ? { '@type': 'Person', name: resident.data.name, url: absolute(artistPath(resident.id)) } : { '@type': 'PerformingGroup', name };
+      }),
   );
+  // The first amount in the free-text price, e.g. "Desde $17.49" → 17.49.
+  const amount = data.price?.match(/\$\s*(\d+(?:\.\d{1,2})?)/)?.[1];
   const offerUrl = data.ticketUrl;
   const description = event.body;
   return {
     '@context': 'https://schema.org',
-    '@type': data.lineup.length ? 'MusicEvent' : 'Event',
+    '@type': data.type === 'musica' ? 'MusicEvent' : 'Event',
     name: data.title,
     startDate: isoLocal(data.date, data.start),
-    endDate: toLocalIso(event.endsAt),
+    // Only when the end is actually known (the site otherwise assumes a length).
+    ...(data.end || data.endDate ? { endDate: toLocalIso(event.endsAt) } : {}),
     eventStatus: STATUS[data.status],
     eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
     location: { '@type': 'Place', name: site.name, address },
     url: absolute(`${routePath('agenda')}#evento-${event.id}`),
     inLanguage: 'es',
     ...(image ? { image: [image] } : {}),
-    ...(description ? { description: description.replace(/\s+/g, ' ').trim().slice(0, 300) } : {}),
+    ...(description ? { description: excerpt(description, 300) } : {}),
     ...(performers.length ? { performer: performers } : {}),
     organizer: (data.organizers.length ? data.organizers : [site.name]).map((name) => ({ '@type': 'Organization', name })),
     ...(offerUrl || data.admission === 'free'
@@ -71,7 +82,7 @@ export async function eventJsonLd(event: Event) {
           offers: {
             '@type': 'Offer',
             ...(offerUrl ? { url: offerUrl } : {}),
-            ...(data.admission === 'free' ? { price: 0, priceCurrency: 'USD' } : {}),
+            ...(data.admission === 'free' ? { price: 0, priceCurrency: 'USD' } : amount ? { price: Number(amount), priceCurrency: 'USD' } : {}),
             availability: 'https://schema.org/InStock',
           },
         }

@@ -46,7 +46,7 @@ export const longDate = (date: Date) =>
 export const compactDate = (date: Date) => `${weekdayShort(date)} ${Number(dayNumber(date))} ${monthShort(date)} ${year(date)}`;
 
 /** "17 oct 2026" */
-export const shortDate = (date: Date) => `${dayNumber(date)} ${monthShort(date)} ${year(date)}`;
+export const shortDate = (date: Date) => `${Number(dayNumber(date))} ${monthShort(date)} ${year(date)}`;
 
 /** ISO 8601 with the Puerto Rico offset, for <time datetime> and structured data. */
 export function isoLocal(day: string, time?: string): string {

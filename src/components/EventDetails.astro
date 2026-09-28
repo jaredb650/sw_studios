@@ -13,7 +13,7 @@ import { eventAnchor, hasRecap, type Event } from '../lib/events';
 import { href } from '../lib/urls';
 import { site } from '../data/site';
 import { useLang } from '../i18n';
-import { isMusic, isTaught } from '../lib/event-kind';
+import { hostRole, isMusic } from '../lib/event-kind';
 
 interface Props {
   event: Event;
@@ -70,19 +70,21 @@ const descriptionId = `${anchor}-descripcion`;
     )
   }
   {
-    upcoming && !cancelled && (
+    upcoming && !cancelled ? (
       <>
         <dt>{t.admission}</dt>
-        <dd>{admission.label}</dd>
+        <dd>
+          {admission.label}
+          {data.restrictions && <> · {data.restrictions}</>}
+        </dd>
       </>
-    )
-  }
-  {
-    data.restrictions && (
-      <>
-        <dt>{t.access}</dt>
-        <dd>{data.restrictions}</dd>
-      </>
+    ) : (
+      data.restrictions && (
+        <>
+          <dt>{t.access}</dt>
+          <dd>{data.restrictions}</dd>
+        </>
+      )
     )
   }
 </dl>
@@ -100,7 +102,7 @@ const descriptionId = `${anchor}-descripcion`;
       )}
       {data.organizers.length > 0 && (
         <>
-          <dt>{isTaught(event) ? (data.organizers.length > 1 ? t.teachers : t.teacher) : data.organizers.length > 1 ? t.organizers : t.organizer}</dt>
+          <dt>{t.hosts[hostRole(event)][data.organizers.length > 1 ? 1 : 0]}</dt>
           <dd>
             <ul class="inline-list">
               {data.organizers.map((name) => (

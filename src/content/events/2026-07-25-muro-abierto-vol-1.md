@@ -8,12 +8,13 @@ flyerAlt: "Flyer de ejemplo de Muro Abierto vol. 1, sábado 25 de julio"
 organizers: "Shipwreck Studios"
 lineup:
   - "Tinta Salada"
-  - "Oleaje"
+  - "Oleaje Estudio"
   - "Bruma (ambient set)"
 type: arte
 admission: free
+restrictions: "Todas las edades"
 recap:
-  summary: "Seis horas de pintura en vivo: una pared blanca al mediodía y un mural nuevo al anochecer."
+  summary: "Seis horas de pintura en vivo: una pared blanca a media tarde y un mural nuevo al anochecer."
   photos:
     - src: ../../assets/placeholders/recaps/2026-07-25-muro-abierto-vol-1-01.jpg
       alt: "Foto de ejemplo: Tinta Salada pinta sobre la pared norte"

@@ -1,8 +1,8 @@
 ---
 title: "Despedida de año"
 date: 2026-12-31
-start: "22:00"
-end: "06:00"
+start: "21:00"
+end: "02:00"
 flyer: ../../assets/placeholders/flyers/2026-12-31-despedida-de-ano.jpg
 flyerAlt: "Flyer de ejemplo de la Despedida de año, jueves 31 de diciembre"
 organizers: "Shipwreck Studios, Sonido Muelle"
@@ -12,8 +12,8 @@ lineup:
   - "Sorpresa a medianoche"
 type: musica
 admission: soon
-restrictions: "21+"
+restrictions: "18+"
 placeholder: true
 ---
 
-Cerramos el año juntos en el barco. DJ Marejada abre la programación y Faro Rojo b2b Bruma la continúan, con una sorpresa a medianoche. Los detalles de boletos se anunciarán pronto en Instagram. Evento para mayores de 21 años; se requiere identificación en la entrada.
+Cerramos el año juntos en el barco. DJ Marejada abre la programación y Faro Rojo b2b Bruma la continúan, con una sorpresa a medianoche. Los detalles de boletos se anunciarán pronto en Instagram.
