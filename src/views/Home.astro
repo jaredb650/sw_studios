@@ -178,7 +178,7 @@ const rulesBg = await getImage({ src: rulesPhoto, width: 1600, format: 'webp' })
       <SectionMore to={path('gallery')} label={t.seeGallery} detail={t.workCount(works.length)} />
     </section>
 
-    <section id="membresias" class="section" aria-labelledby="club-title">
+    <section id="participa" class="section" aria-labelledby="club-title">
       <div class="club-band" data-reveal>
         <div class="club-head">
           <span class="label muted">05 / {t.clubLabel}</span>
@@ -190,9 +190,10 @@ const rulesBg = await getImage({ src: rulesPhoto, width: 1600, format: 'webp' })
             [
               { title: t.memberTitle, text: t.memberText, perks: t.memberPerks, more: t.memberMore, to: `${path('memberships')}#membresia` },
               { title: t.programTitle, text: t.programText, perks: t.programPerks, more: t.programMore, to: `${path('memberships')}#programa-de-artistas` },
-              { title: t.hostTitle, text: t.hostText, perks: t.hostPerks, more: t.hostMore, to: `${path('visit')}#contacto` },
-            ].map((offer) => (
+              { title: t.hostTitle, text: t.hostText, perks: t.hostPerks, more: t.hostMore, to: `${path('memberships')}#propon-un-evento` },
+            ].map((offer, i) => (
               <div class="club-offer">
+                <span class="club-kicker">{t.offerKickers[i]}</span>
                 <h3>{offer.title}</h3>
                 <p>{offer.text}</p>
                 <ul class="club-perks">

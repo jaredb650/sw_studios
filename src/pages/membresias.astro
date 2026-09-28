@@ -1,6 +1,21 @@
 ---
-// Spanish page. The layout lives in src/views/Club.astro; the English version is src/pages/_en/memberships.astro.
-import Club from '../views/Club.astro';
+// The Membresías page moved to /participa/. This keeps old links working.
+import { href } from '../lib/urls';
+import { routePath } from '../i18n';
+const target = href(routePath('memberships', 'es'));
 ---
 
-<Club />
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="robots" content="noindex" />
+    <meta http-equiv="refresh" content={`0; url=${target}`} />
+    <link rel="canonical" href={new URL(target, Astro.site).href} />
+    <title>Participa — Shipwreck Studios</title>
+    <script is:inline define:vars={{ target }}>location.replace(target + location.hash);</script>
+  </head>
+  <body>
+    <p><a href={target}>Participa — Shipwreck Studios</a></p>
+  </body>
+</html>

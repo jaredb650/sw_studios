@@ -1230,3 +1230,18 @@ html.motion-paused .spotlight .spot-thumb.is-counting .spot-thumb-bar { animatio
 .agenda-filter { margin: 0 0 30px; }
 .agenda-filter + .featured { margin-top: 0; }
 .is-filtered-out { display: none !important; }
+
+/* Participa: kicker above each offer (Apoya / Contribuye / Propón). */
+.club-kicker { font-family: var(--mono); font-size: 11px; letter-spacing: 1.2px; text-transform: uppercase; color: var(--muted); margin-bottom: -6px; }
+.offers { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+@media (max-width: 1000px) { .offers { grid-template-columns: 1fr; } }
+
+/* Participa page: pitch an event */
+.pitch { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 50px; align-items: start; border-top: 1px solid var(--line); padding-top: 30px; }
+.pitch-lead { font-family: var(--display); font-weight: 600; text-transform: uppercase; font-size: clamp(1.8rem, 3vw, 2.8rem); line-height: 1.02; }
+.pitch-how { color: var(--muted); font-size: 17px; line-height: 1.6; margin-top: 18px; max-width: 620px; }
+.pitch-side { display: grid; gap: 20px; }
+.pitch-side .button { justify-self: start; min-width: 300px; }
+.pitch-handle { font-family: var(--mono); font-size: 12px; letter-spacing: 1px; color: var(--muted); margin-top: -8px; }
+@media (max-width: 1000px) { .pitch { grid-template-columns: 1fr; gap: 28px; } }
+@media (max-width: 680px) { .pitch-side .button { width: 100%; min-width: 0; } }

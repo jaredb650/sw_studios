@@ -20,7 +20,7 @@ npm run brand        # regenerate favicon, share image, logo mask from the maste
 ## How the site is organized
 
 The home page is an overview with one section per header nav item:
-Inicio, El espacio, Agenda, Artistas, Galería, Membresías, Reglas and Visítanos.
+Inicio, El espacio, Agenda, Artistas, Galería, Participa, Reglas and Visítanos.
 Order: hero → scrolling ribbon → El espacio (the manifesto in brief, open to everyone) → rules checkpoint → everything else.
 The nav only scrolls between these sections; from other pages it returns to the matching section.
 Each section ends in a "Ver…" link to its full page. The agenda goes one level deeper:
@@ -35,7 +35,7 @@ The footer links to every full page.
 | Resident artists + profile pages | `/artistas/`, `/artistas/<id>/` | `src/content/artists/*.md` |
 | Gallery: on the walls now / archived work | `/galeria/` | `src/content/artworks/*.md` |
 | Intro, virtual tour, manifesto + the SEVENS, venue photos, founder, links to the rest of the venue | `/espacio/` | `src/content/pages/espacio.md`, `manifiesto.md`, `fundador.md` |
-| Patreon memberships + Artist Program | `/membresias/` | `src/data/site.ts` (Patreon), `src/content/pages/programa-de-artistas.md` |
+| Participa: memberships (support), Artist Program (contribute), pitch an event (Instagram DM) | `/participa/` (old `/membresias/` redirects) | `src/data/site.ts` (Patreon), `src/content/pages/programa-de-artistas.md` |
 | Club rules (home section `#reglas`, plus the checkpoint) | `/#reglas` | `src/content/pages/reglas.md` |
 | Address, directions, contact | `/visita/` | `src/data/site.ts` |
 

@@ -17,7 +17,7 @@ export default defineConfig({
   // lines keep their spaces.
   compressHTML: true,
   integrations: [
-    sitemap({ filter: (page) => !page.includes('/404') }),
+    sitemap({ filter: (page) => !page.includes('/404') && !page.includes('/membresias') }),
   ],
   image: {
     layout: 'constrained',

@@ -7,6 +7,7 @@ import ComingSoon from '../components/ComingSoon.astro';
 import SampleChip from '../components/SampleChip.astro';
 import EntryBody from '../components/EntryBody.astro';
 import { pick, routePath, useLang } from '../i18n';
+import { site } from '../data/site';
 
 const { lang, t: ui } = useLang(Astro.url);
 const t = ui.clubPage;
@@ -31,6 +32,12 @@ const programLead = program ? pick(program.data, 'lead', lang) : undefined;
         <h2>{t.program}</h2>
         <p>{t.programText}</p>
         <a class="text-link" href="#programa-de-artistas">{t.seeProgram} <i class="icon icon-arrow icon-down" aria-hidden="true"></i></a>
+      </div>
+      <div class="offer">
+        <span class="index">{t.pitchIndex}</span>
+        <h2>{t.pitch}</h2>
+        <p>{t.pitchText}</p>
+        <a class="text-link" href="#propon-un-evento">{t.seePitch} <i class="icon icon-arrow icon-down" aria-hidden="true"></i></a>
       </div>
     </div>
   </section>
@@ -60,5 +67,34 @@ const programLead = program ? pick(program.data, 'lead', lang) : undefined;
         <ComingSoon lead={programLead ?? t.programSoon} />
       )
     }
+  </section>
+
+  <!-- Pitch an event: for now proposals come in by Instagram DM. -->
+  <section class="section" id="propon-un-evento" aria-labelledby="pitch-title">
+    <div class="section-heading">
+      <h2 id="pitch-title"><span class="section-index">03 /</span>{t.pitch}</h2>
+      <span class="label">Instagram</span>
+    </div>
+    <div class="pitch">
+      <div>
+        <p class="pitch-lead">{t.pitchLead}</p>
+        <p class="pitch-how">{t.pitchHow}</p>
+      </div>
+      <div class="pitch-side">
+        <ul class="club-perks">
+          {t.pitchPerks.map((perk) => (
+            <li>
+              <i class="icon icon-star" aria-hidden="true" />
+              <span>{perk}</span>
+            </li>
+          ))}
+        </ul>
+        <a class="button" href={site.contact.instagramDm} target="_blank" rel="noopener">
+          <span>{t.pitchCta}</span>
+          <i class="icon icon-arrow" aria-hidden="true"></i>
+        </a>
+        <p class="pitch-handle">@shipwreckstudios_</p>
+      </div>
+    </div>
   </section>
 </Base>

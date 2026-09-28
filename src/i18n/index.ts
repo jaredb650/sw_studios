@@ -18,7 +18,7 @@ const PATHS = {
   artists: { es: '/artistas/', en: '/en/artists/' },
   gallery: { es: '/galeria/', en: '/en/gallery/' },
   space: { es: '/espacio/', en: '/en/space/' },
-  memberships: { es: '/membresias/', en: '/en/memberships/' },
+  memberships: { es: '/participa/', en: '/en/participate/' },
   visit: { es: '/visita/', en: '/en/visit/' },
 } as const;
 
