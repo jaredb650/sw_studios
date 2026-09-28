@@ -113,6 +113,8 @@ const pad = (n: number) => String(n).padStart(2, '0');
   const root = document.documentElement;
   /** After browsing another row with the arrows or a swipe, resume after this long without interaction. */
   const BROWSE_RESUME_MS = 6000;
+  /** A mouse resting on the card holds it only this long after it last moved. */
+  const READ_HOLD_MS = 8000;
 
   document.querySelectorAll<HTMLElement>('[data-spotlight]').forEach((carousel) => {
     const stage = carousel.querySelector<HTMLElement>('[data-spot-stage]')!;
@@ -137,7 +139,9 @@ const pad = (n: number) => String(n).padStart(2, '0');
     // Whether the site-wide motion toggle (not the carousel's own button) stopped it.
     let stoppedByMotion = stopped;
     // Temporary holds; all are cleared whenever the page is shown again.
-    let reading = false; // a mouse is over the card, or it has keyboard focus
+    let hovering = false; // a mouse is moving over the card
+    let lastMove = 0;
+    let focused = false; // the card has keyboard focus
     let browsing = false; // another row of the strip is being looked at
     let browseTimer = 0;
 
@@ -160,7 +164,8 @@ const pad = (n: number) => String(n).padStart(2, '0');
       return atEnd ? pages() - 1 : Math.round(list.scrollLeft / (list.clientWidth + gap()));
     };
 
-    const running = () => !stopped && !reading && !browsing && !root.classList.contains('rules-pending') && onScreen(stage, 0.35);
+    const reading = () => focused || (hovering && performance.now() - lastMove < READ_HOLD_MS);
+    const running = () => !stopped && !reading() && !browsing && !root.classList.contains('rules-pending') && onScreen(stage, 0.35);
 
     const paint = () => {
       const progress = Math.min(1, elapsed / duration());
@@ -272,24 +277,26 @@ const pad = (n: number) => String(n).padStart(2, '0');
       setStopped(!stopped);
     });
 
-    // Hold while someone reads the card: a real mouse over it, or keyboard focus.
-    // Touch taps and mouse clicks don't hold it (they'd leave it "focused" forever).
+    // Hold while someone reads the card: a mouse actually moving over it (a
+    // pointer left resting there stops holding after READ_HOLD_MS), or keyboard
+    // focus. Touch taps and mouse clicks don't hold it.
     cards.forEach((card) => {
-      card.addEventListener('pointerenter', (event) => {
+      card.addEventListener('pointermove', (event) => {
         if (event.pointerType !== 'mouse') return;
-        reading = true;
+        hovering = true;
+        lastMove = performance.now();
         kick();
       });
       card.addEventListener('pointerleave', () => {
-        reading = false;
+        hovering = false;
         kick();
       });
       card.addEventListener('focus', () => {
-        reading = card.matches(':focus-visible');
+        focused = card.matches(':focus-visible');
         kick();
       });
       card.addEventListener('blur', () => {
-        reading = false;
+        focused = false;
         kick();
       });
     });
@@ -312,7 +319,8 @@ const pad = (n: number) => String(n).padStart(2, '0');
     keepAlive(kick, {
       // Coming back to the page (Back button, tab switch): clear temporary holds.
       onReturn: () => {
-        reading = false;
+        hovering = false;
+        focused = false;
         endBrowsing();
         lastFrame = 0;
       },
