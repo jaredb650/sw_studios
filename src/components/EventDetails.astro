@@ -166,7 +166,7 @@ const descriptionId = `${anchor}-descripcion`;
   {
     primary.url ? (
       <a class="button" href={primary.url} target="_blank" rel="noopener" data-primary>
-        <span>{primary.label}</span>
+        <span>{primary.label}<span class="visually-hidden">: {data.title}</span></span>
         <i class="icon icon-arrow" aria-hidden="true" />
       </a>
     ) : (
@@ -176,12 +176,12 @@ const descriptionId = `${anchor}-descripcion`;
     )
   }
   <a class="text-link" href={site.address.mapsUrl} target="_blank" rel="noopener">
-    {t.directions} <i class="icon icon-arrow" aria-hidden="true" />
+    {t.directions}<span class="visually-hidden">: {data.title}</span> <i class="icon icon-arrow" aria-hidden="true" />
   </a>
   <a class="text-link" href={href(`${path('home')}#reglas`)}>
-    {t.rules} <i class="icon icon-arrow" aria-hidden="true" />
+    {t.rules}<span class="visually-hidden">: {data.title}</span> <i class="icon icon-arrow" aria-hidden="true" />
   </a>
   <a class="text-link" href={href(`${path(upcoming ? 'agenda' : 'archive')}#${anchor}`)} data-share={data.title} data-copied={t.linkCopied}>
-    {t.share} <i class="icon icon-arrow" aria-hidden="true" />
+    {t.share} <span class="visually-hidden">{data.title}</span><i class="icon icon-arrow" aria-hidden="true" />
   </a>
 </div>

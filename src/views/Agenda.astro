@@ -46,7 +46,7 @@ const typeCounts = TYPE_ORDER.map((type) => ({ type, count: upcoming.filter((eve
       )
     }
     {featured && <h2 class="visually-hidden">{t.featuredHidden}</h2>}
-    {featured && <FeaturedEvent event={featured} />}
+    {featured && <FeaturedEvent event={featured} priority />}
 
     <div class="agenda" data-upcoming>
       {

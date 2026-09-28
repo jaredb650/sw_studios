@@ -184,4 +184,14 @@ const jsonLd = {
     }
   </section>
   <Lightbox />
+  <script>
+    // "Artistas" returns to the list with the filters that were on (see Artists.astro).
+    try {
+      const query = sessionStorage.getItem('shipwreck-artist-filter');
+      const crumb = document.querySelector<HTMLAnchorElement>('.crumbs a:last-of-type');
+      if (query && crumb) crumb.search = query;
+    } catch {
+      /* Optional. */
+    }
+  </script>
 </Base>

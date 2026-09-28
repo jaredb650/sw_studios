@@ -2,6 +2,7 @@
 // once-per-session logo intro on the home page, and event-row helpers.
 import { initAgenda } from './agenda';
 import { initRules } from './rules';
+import { initSpotlight } from './spotlight';
 import { strings } from './strings';
 import { initTypewriter } from './typewriter';
 
@@ -137,11 +138,21 @@ function applyMotion() {
   }
   if (paused) finishLoader();
   // The hero video follows the motion setting too.
-  document.querySelectorAll<HTMLVideoElement>('video[data-hero-video]').forEach((video) => {
-    if (paused) video.pause();
-    else video.play().catch(() => {});
-  });
+  if (paused) heroVideo?.pause();
+  else if (loaderEnded) playHeroVideo();
   requestUpdate();
+}
+
+/* Hero video: nothing is downloaded until it's allowed to play (after the
+   intro, with motion on, and not on data saver or a very slow connection). */
+const heroVideo = document.querySelector<HTMLVideoElement>('video[data-hero-video]');
+heroVideo?.addEventListener('playing', () => heroVideo.classList.add('is-playing'));
+function playHeroVideo() {
+  if (!heroVideo || paused || reduced.matches) return;
+  const connection = (navigator as Navigator & { connection?: { saveData?: boolean; effectiveType?: string } }).connection;
+  if (connection?.saveData || /(^|-)2g$/.test(connection?.effectiveType ?? '')) return;
+  heroVideo.preload = 'auto';
+  heroVideo.play().catch(() => {});
 }
 for (const toggle of toggles) {
   toggle.addEventListener('click', () => {
@@ -181,6 +192,7 @@ function finishLoader() {
   }
   root.classList.remove('intro');
   save('shipwreck-intro', 'seen');
+  playHeroVideo();
   if (!paused && window.scrollY < 100 && hero) {
     root.classList.add('intro-enter');
     setTimeout(() => {
@@ -204,7 +216,8 @@ if (!loaderEnded && loader) {
     image.src = src;
     return image.decode ? image.decode() : Promise.resolve();
   };
-  const heroPoster = document.querySelector<HTMLVideoElement>('video[data-hero-video]')?.poster;
+  const posters = document.querySelector<HTMLElement>('video[data-hero-video]')?.dataset;
+  const heroPoster = window.matchMedia('(max-width: 680px)').matches ? posters?.posterTall : posters?.posterWide;
   const assets: Promise<unknown>[] = [document.fonts?.ready ?? Promise.resolve(), decode(heroPoster)];
   let ready = 0;
   const state = loader.querySelector<HTMLElement>('.loader-state');
@@ -280,6 +293,7 @@ document.addEventListener('click', async (event) => {
 
 initAgenda();
 initTypewriter();
+initSpotlight();
 
 /* Seven values on the home page: when the two groups (4 + 3) wrap onto
    separate lines, hide the star between them so each line stands alone. */

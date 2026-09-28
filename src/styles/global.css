@@ -182,7 +182,7 @@ ul, ol { margin: 0; padding: 0; }
 .chip {
   display: inline-flex; align-items: center; gap: 6px;
   font-family: var(--mono);
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 1px;
   text-transform: uppercase;
   padding: 4px 8px;
@@ -364,7 +364,9 @@ ul, ol { margin: 0; padding: 0; }
   border: 0; border-bottom: 1px solid var(--line-strong);
   background: none; color: var(--muted);
   padding: 0 0 3px; font: inherit; cursor: pointer;
+  position: relative;
 }
+.motion-toggle::after { content: ""; position: absolute; inset: -12px -6px; }
 .motion-toggle:hover { color: var(--accent); }
 @media (max-width: 900px) { .footer-inner { grid-template-columns: 1fr 1fr; } .footer-brand { grid-column: 1 / -1; } }
 @media (max-width: 480px) { .footer-inner { grid-template-columns: 1fr; } }
@@ -385,4 +387,17 @@ ul, ol { margin: 0; padding: 0; }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
+}
+
+/* Windows high contrast and other forced-color modes: the logo, icons and
+   progress bars are drawn with background colors, which those modes remove.
+   Keep them, in the system text color, and give the sticky header a solid
+   background so the page doesn't show through it. */
+@media (forced-colors: active) {
+  .brand-mark, .icon, .icon::before, .icon::after, .icon-pause,
+  .menu-button .bars::before, .menu-button .bars::after,
+  .spot-bar, .spot-thumb-bar { forced-color-adjust: none; }
+  .brand-mark, .spot-bar, .spot-thumb-bar { background-color: CanvasText; }
+  .icon-star { background-color: transparent; }
+  .site-header::before { background: Canvas; }
 }

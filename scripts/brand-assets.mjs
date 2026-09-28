@@ -29,13 +29,15 @@ async function tile(size, file) {
     .toFile(file);
 }
 
-// Alpha-only silhouette used as a CSS mask, so CSS can recolor it.
+// Alpha-only silhouette used as a CSS mask, so CSS can recolor it. Only its
+// shape matters, so a small 16-color palette keeps it light (it loads on every page).
 await sharp(LOGO)
-  .resize(512, 512, { fit: 'contain', background: '#0000' })
-  .png({ compressionLevel: 9, palette: true })
+  .resize(384, 384, { fit: 'contain', background: '#0000' })
+  .png({ compressionLevel: 9, palette: true, colors: 16 })
   .toFile(path.join(ROOT, 'src/assets/brand/shipwreck-mark.png'));
 
-await tile(512, path.join(ROOT, 'public/favicon.png'));
+// Browser tab icon: 64px covers high-density screens.
+await tile(64, path.join(ROOT, 'public/favicon.png'));
 await tile(180, path.join(ROOT, 'public/apple-touch-icon.png'));
 
 const mark = await tinted(400, LIME);

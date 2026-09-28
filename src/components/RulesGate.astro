@@ -9,7 +9,7 @@ import RulesList from './RulesList.astro';
 import SampleChip from './SampleChip.astro';
 import { getImage } from 'astro:assets';
 import { getRules } from '../lib/rules';
-import rulesPhoto from '../assets/venue/rules-bg.jpg';
+import spacePhoto from '../assets/venue/the-space-bg.jpg';
 import { useLang } from '../i18n';
 
 interface Props {
@@ -21,9 +21,10 @@ const titleId = mode === 'inline' ? 'gate-title' : 'gate-dialog-title';
 const { t: ui } = useLang();
 const t = ui.rules;
 const lead = rules ? rules.data.lead : undefined;
-// Faded photo behind the rules (the booth, from the crowd).
-const rulesBg = await getImage({ src: rulesPhoto, width: 1600, format: 'webp' });
-const bgStyle = `--bg-photo: url(${rulesBg.src}); --bg-pos: center 58%; --bg-opacity: .12`;
+// Faded photo of the space behind the rules. It's barely visible, so a small,
+// light file is enough (it loads with the pop-up on every inner page).
+const rulesBg = await getImage({ src: spacePhoto, width: 640, quality: 50, format: 'webp' });
+const bgStyle = `--bg-photo: url(${rulesBg.src}); --bg-pos: center; --bg-opacity: .12`;
 ---
 
 {

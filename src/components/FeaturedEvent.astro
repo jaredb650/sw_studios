@@ -11,9 +11,11 @@ import { useLang } from '../i18n';
 
 interface Props {
   event: Event;
+  /** Load the flyer first (the agenda page, where it's the main image). */
+  priority?: boolean;
 }
 
-const { event } = Astro.props;
+const { event, priority = false } = Astro.props;
 const { data } = event;
 const { t: ui } = useLang();
 const t = ui.event;
@@ -27,7 +29,7 @@ const ratio = data.flyer ? (data.flyer.width / data.flyer.height).toFixed(4) : '
   {
     data.flyer && flyerLarge ? (
       <a class="poster ev-flyer" href={flyerLarge.src} data-lightbox={anchor} data-title={data.title} data-meta={longDate(event.startsAt)} aria-label={t.viewFlyer(data.title)} data-label={t.flyerLabel}>
-        <Image src={data.flyer} alt={flyerAlt} width={1080} sizes="(max-width: 680px) 36vw, 46vw" loading="eager" fetchpriority="high" />
+        <Image src={data.flyer} alt={flyerAlt} width={1080} widths={[320, 480, 720, 1080]} sizes="(max-width: 680px) 45vw, 46vw" loading={priority ? 'eager' : 'lazy'} fetchpriority={priority ? 'high' : undefined} />
       </a>
     ) : (
       <div class="poster no-link type-poster ev-flyer" aria-hidden="true">

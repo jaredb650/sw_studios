@@ -67,7 +67,8 @@ const gate = rules && !['not-found', 'space', 'visit'].includes(page) ? (page ==
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={shareImage} />
 
-    <Font cssVariable="--font-display" preload />
+    <!-- Preload only the display weights the first screen uses (hero title 800, intro 700). -->
+    <Font cssVariable="--font-display" preload={[{ weight: 800 }, { weight: 700 }]} />
     <Font cssVariable="--font-body" />
 
     <script is:inline>

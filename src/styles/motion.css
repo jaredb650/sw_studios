@@ -53,7 +53,7 @@ html.intro .preloader { animation: loader-safety .01s 4.5s forwards; }
   display: flex; justify-content: space-between; align-items: center; gap: 15px;
   font-family: var(--mono); font-size: 12px; letter-spacing: 1px;
 }
-.loader-skip { pointer-events: auto; border: 0; border-bottom: 1px solid currentColor; color: inherit; background: none; padding: 6px 0; cursor: pointer; font: inherit; }
+.loader-skip { pointer-events: auto; border: 0; border-bottom: 1px solid currentColor; color: inherit; background: none; padding: 12px 0 6px; min-height: 44px; cursor: pointer; font: inherit; }
 .loader-skip:focus-visible { outline: 2px solid var(--accent-ink); outline-offset: 5px; }
 @keyframes loader-safety { to { visibility: hidden; pointer-events: none; } }
 
@@ -63,7 +63,7 @@ html.motion-paused { scroll-behavior: auto; }
 .motion-paused [data-reveal] { opacity: 1 !important; transform: none !important; }
 
 @media (max-width: 680px) {
-  .loader-bottom { font-size: 10px; bottom: 24px; }
+  .loader-bottom { font-size: 12px; bottom: 24px; }
   .loader-bottom > span:first-child { max-width: 100px; }
 }
 /* Landscape phones: smaller type and no status line, so nothing overlaps. */

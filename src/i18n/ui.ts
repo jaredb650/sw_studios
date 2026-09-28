@@ -209,6 +209,7 @@ const es = {
     accent: 'residentes.',
     lead: 'Las personas y proyectos que le dan sonido y color a Shipwreck: en la música, en las paredes y en todo lo que pasa entre ellas.',
     filterLabel: 'Filtrar artistas',
+    list: 'Lista de artistas',
     filterAll: 'Todos',
     categories: { musica: 'Música', arte: 'Arte visual' },
     showing: (shown: number, total: number) => (shown === total ? plural(total, 'artista', 'artistas') : `Mostrando ${shown} de ${plural(total, 'artista', 'artistas')}`),

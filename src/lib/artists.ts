@@ -64,7 +64,7 @@ export function artistFilterSlugs(artist: Artist): string[] {
   return [...slugs];
 }
 
-/** Filter chips for the Artistas page: the two broad categories, then every tag by how many artists have it. */
+/** Filter chips for the Artistas page: the two broad categories, then the tags two or more artists share. */
 export function artistFilterTags(artists: Artist[], categoryLabels: Record<ArtistCategory, string>): ArtistTag[] {
   const roles = new Map<string, ArtistTag>();
   const categories = new Map<ArtistCategory, number>();
@@ -83,7 +83,8 @@ export function artistFilterTags(artists: Artist[], categoryLabels: Record<Artis
   const categoryTags: ArtistTag[] = (['musica', 'arte'] as ArtistCategory[])
     .filter((category) => categories.has(category))
     .map((category) => ({ slug: category, label: categoryLabels[category], count: categories.get(category)!, kind: 'category' }));
-  const roleTags = [...roles.values()].sort((a, b) => b.count - a.count || a.label.localeCompare(b.label, 'es'));
+  // Tags only one artist has would each filter down to that one card, so they aren't offered.
+  const roleTags = [...roles.values()].filter((tag) => tag.count >= 2).sort((a, b) => b.count - a.count || a.label.localeCompare(b.label, 'es'));
   return [...categoryTags, ...roleTags];
 }
 

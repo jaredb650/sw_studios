@@ -7,7 +7,8 @@ import { useLang } from '../i18n';
 const { t: ui } = useLang();
 const t = ui.artistsPage;
 const artists = await getArtists();
-// Every tag the artists use is a filter (src/lib/artists.ts → artistFilterTags).
+// Filters: the two broad categories plus every tag at least two artists share
+// (src/lib/artists.ts → artistFilterTags). Every tag still shows on the cards.
 const tags = artistFilterTags(artists, t.categories);
 ---
 
@@ -22,21 +23,22 @@ const tags = artistFilterTags(artists, t.categories);
     {
       tags.length > 0 && (
         <div class="tag-filter" role="group" aria-label={t.filterLabel} data-tag-filter>
-          <a class="tag-chip" href="?" data-tag="" aria-pressed="true">
+          <button class="tag-chip" type="button" data-tag="" aria-pressed="true">
             {t.filterAll} <span class="tag-count">{artists.length}</span>
-          </a>
+          </button>
           {tags.map((tag, i) => (
             <>
               {tag.kind === 'role' && tags[i - 1]?.kind === 'category' && <span class="tag-sep" aria-hidden="true" />}
-              <a class:list={['tag-chip', { 'is-category': tag.kind === 'category' }]} href={`?tag=${tag.slug}`} data-tag={tag.slug} aria-pressed="false">
+              <button class:list={['tag-chip', { 'is-category': tag.kind === 'category' }]} type="button" data-tag={tag.slug} aria-pressed="false">
                 {tag.label} <span class="tag-count">{tag.count}</span>
-              </a>
+              </button>
             </>
           ))}
         </div>
       )
     }
-    <p class="tag-status" role="status" data-tag-status data-template-all={t.showing(artists.length, artists.length)}>{t.showing(artists.length, artists.length)}</p>
+    <p class="tag-status" role="status" data-tag-status data-template-all={t.showing(artists.length, artists.length)} data-template-some={t.showing(999, artists.length).replace('999', '{shown}')}>{t.showing(artists.length, artists.length)}</p>
+    <h2 class="visually-hidden">{t.list}</h2>
     {artists.length === 0 && <p class="row-empty">{ui.home.noArtists}</p>}
     <div class="artist-grid" data-artist-grid>
       {
@@ -51,19 +53,21 @@ const tags = artistFilterTags(artists, t.categories);
   <script>
     // Multi-select filter: any number of tags can be on at once, and the grid
     // shows artists that have any of them. "Todos" clears the selection. The
-    // selection is kept in the address (?tag=dj,pintura) so it can be shared.
-    // Without JavaScript the full grid shows.
+    // selection is kept in the address (?tag=dj,pintura) so it can be shared,
+    // Back steps through earlier selections, and an artist profile's
+    // "Artistas" link returns to it. Without JavaScript the full grid shows.
     const filter = document.querySelector<HTMLElement>('[data-tag-filter]');
     const grid = document.querySelector<HTMLElement>('[data-artist-grid]');
     const status = document.querySelector<HTMLElement>('[data-tag-status]');
     if (filter && grid && status) {
-      const allChip = filter.querySelector<HTMLAnchorElement>('[data-tag=""]')!;
-      const chips = [...filter.querySelectorAll<HTMLAnchorElement>('[data-tag]:not([data-tag=""])')];
+      const allChip = filter.querySelector<HTMLButtonElement>('[data-tag=""]')!;
+      const chips = [...filter.querySelectorAll<HTMLButtonElement>('[data-tag]:not([data-tag=""])')];
       const known = new Set(chips.map((chip) => chip.dataset.tag!));
       const items = [...grid.querySelectorAll<HTMLElement>('[data-tags]')];
       let selected = new Set<string>();
-  
-      const apply = (updateUrl = false) => {
+      const fromUrl = () => new Set((new URLSearchParams(location.search).get('tag') ?? '').split(',').filter((tag) => known.has(tag)));
+
+      const apply = () => {
         allChip.setAttribute('aria-pressed', String(selected.size === 0));
         chips.forEach((chip) => chip.setAttribute('aria-pressed', String(selected.has(chip.dataset.tag!))));
         let shown = 0;
@@ -72,34 +76,36 @@ const tags = artistFilterTags(artists, t.categories);
           item.hidden = !match;
           if (match) shown++;
         });
-        status.textContent =
-          shown === items.length
-            ? status.dataset.templateAll!
-            : `Mostrando ${shown} de ${items.length} artistas`;
-        if (updateUrl) {
-          // Tags are plain slugs, so the commas can stay readable (?tag=dj,pintura).
-          const query = selected.size ? `?tag=${[...selected].join(',')}` : '';
-          history.replaceState(null, '', location.pathname + query + location.hash);
+        status.textContent = shown === items.length ? status.dataset.templateAll! : status.dataset.templateSome!.replace('{shown}', String(shown));
+        // Tags are plain slugs, so the commas can stay readable (?tag=dj,pintura).
+        const query = selected.size ? `?tag=${[...selected].join(',')}` : '';
+        try {
+          sessionStorage.setItem('shipwreck-artist-filter', query);
+        } catch {
+          /* Optional. */
         }
+        return query;
       };
-  
-      allChip.addEventListener('click', (event) => {
-        event.preventDefault();
-        selected = new Set();
-        apply(true);
-      });
+      const choose = (next: Set<string>) => {
+        selected = next;
+        history.pushState(null, '', location.pathname + apply());
+      };
+
+      allChip.addEventListener('click', () => choose(new Set()));
       chips.forEach((chip) =>
-        chip.addEventListener('click', (event) => {
-          event.preventDefault();
+        chip.addEventListener('click', () => {
+          const next = new Set(selected);
           const tag = chip.dataset.tag!;
-          if (selected.has(tag)) selected.delete(tag);
-          else selected.add(tag);
-          apply(true);
+          if (next.has(tag)) next.delete(tag);
+          else next.add(tag);
+          choose(next);
         }),
       );
-  
-      const fromUrl = (new URLSearchParams(location.search).get('tag') ?? '').split(',').filter((tag) => known.has(tag));
-      selected = new Set(fromUrl);
+      window.addEventListener('popstate', () => {
+        selected = fromUrl();
+        apply();
+      });
+      selected = fromUrl();
       apply();
     }
   </script>

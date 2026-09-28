@@ -3,7 +3,6 @@
 import { getCollection, getEntry } from 'astro:content';
 import { Image, getImage } from 'astro:assets';
 import spacePhoto from '../assets/venue/the-space-bg.jpg';
-import rulesPhoto from '../assets/venue/rules-bg.jpg';
 import Base from '../layouts/Base.astro';
 import FeaturedEvent from '../components/FeaturedEvent.astro';
 import EventCard from '../components/EventCard.astro';
@@ -49,14 +48,16 @@ const souls = (manifesto?.data.items ?? []).map((soul) => soul.title);
 const ribbon = [...souls, ...souls].map((soul) => soul.toUpperCase());
 // Faded venue photo behind the "El espacio" section.
 const spaceBg = await getImage({ src: spacePhoto, width: 1600, format: 'webp' });
-const rulesBg = await getImage({ src: rulesPhoto, width: 1600, format: 'webp' });
+const rulesBg = await getImage({ src: spacePhoto, width: 640, quality: 50, format: 'webp' });
 ---
 
 <Base page="home" jsonLd={venueJsonLd()}>
   <section id="inicio" class="masthead" aria-labelledby="site-title">
-    <!-- Looping background video: a wide crop for desktop, a tall one for phones (public/media). -->
-    <div class="hero-media" aria-hidden="true" style={`--hero-poster: url(${href('/media/hero-wide.jpg')})`}>
-      <video class="hero-video" autoplay muted loop playsinline preload="auto" poster={href('/media/hero-wide.jpg')} data-hero-video>
+    <!-- Looping background video: a wide crop for desktop, a tall one for phones (public/media).
+         The still frame shows first; src/scripts/site.ts starts the video after the intro,
+         and not at all with reduced motion, paused animations or data saver on. -->
+    <div class="hero-media" aria-hidden="true" style={`--poster-wide: url(${href('/media/hero-wide.jpg')}); --poster-tall: url(${href('/media/hero-tall.jpg')})`}>
+      <video class="hero-video" muted loop playsinline preload="none" data-hero-video data-poster-wide={href('/media/hero-wide.jpg')} data-poster-tall={href('/media/hero-tall.jpg')}>
         <source src={href('/media/hero-tall.mp4')} type="video/mp4" media="(max-width: 680px)" />
         <source src={href('/media/hero-wide.mp4')} type="video/mp4" />
       </video>
@@ -226,7 +227,7 @@ const rulesBg = await getImage({ src: rulesPhoto, width: 1600, format: 'webp' })
 
     {
       rules && (
-        <section id="reglas" class="section bg-photo" style={`--bg-photo: url(${rulesBg.src}); --bg-pos: center 58%; --bg-opacity: .12`} aria-labelledby="rules-title">
+        <section id="reglas" class="section bg-photo" style={`--bg-photo: url(${rulesBg.src}); --bg-opacity: .12`} aria-labelledby="rules-title">
           <div class="section-heading">
             <h2 id="rules-title">
               <span class="section-index">06 /</span>
