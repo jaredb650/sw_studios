@@ -5,7 +5,7 @@ import sitemap from '@astrojs/sitemap';
 // Where the site is published. Until the client's Namecheap domain is connected,
 // the site lives at https://jaredb650.github.io/sw_studios/. When the domain is
 // ready: set SITE to 'https://<domain>', BASE to '/', and add public/CNAME
-// (see HANDOFF.md → "Conectar el dominio").
+// (see README.md → "Connecting the domain").
 const SITE = process.env.SITE_URL ?? 'https://jaredb650.github.io';
 const BASE = process.env.BASE_PATH ?? '/sw_studios';
 
