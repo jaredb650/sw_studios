@@ -1,6 +1,7 @@
 // Site-wide behavior: mobile menu, motion preference, scroll effects, the
 // once-per-session logo intro on the home page, and event-row helpers.
 import { initAgenda } from './agenda';
+import { initAgendaFilter } from './agenda-filter';
 import { initRules } from './rules';
 import { initSpotlight } from './spotlight';
 import { strings } from './strings';
@@ -270,6 +271,7 @@ document.addEventListener('click', async (event) => {
 });
 
 initAgenda();
+initAgendaFilter();
 initTypewriter();
 initSpotlight();
 
