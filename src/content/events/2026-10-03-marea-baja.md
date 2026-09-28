@@ -20,4 +20,4 @@ bodyEn: |
 placeholder: true
 ---
 
-Una noche de house para bailar sin prisa. Marejada y Salitre comparten cabina toda la noche, en un recorrido que va del deep house al disco de madrugada. Nube Tropical abre la pista con un set cálido de percusión y groove. Evento para mayores de 18 años; trae identificación. Los boletos en preventa se venden a través del enlace del promotor.
+Una sesión de house sin prisa. Marejada y Salitre comparten el set en un recorrido que va del deep house al disco. Nube Tropical abre con un set cálido de percusión y groove. Evento para mayores de 18 años; trae identificación. Los boletos en preventa se venden a través del enlace del promotor.

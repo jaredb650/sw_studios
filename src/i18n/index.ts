@@ -7,6 +7,10 @@ import { ui, type UI } from './ui';
 export type Lang = 'es' | 'en';
 export const LANGS: Lang[] = ['es', 'en'];
 
+// The site is Spanish-only for now. The English version is kept but switched off:
+// to bring it back, set this to true and rename src/pages/_en to src/pages/en.
+export const ENGLISH_ENABLED = false;
+
 const PATHS = {
   home: { es: '/', en: '/en/' },
   agenda: { es: '/agenda/', en: '/en/events/' },
@@ -14,7 +18,7 @@ const PATHS = {
   artists: { es: '/artistas/', en: '/en/artists/' },
   gallery: { es: '/galeria/', en: '/en/gallery/' },
   space: { es: '/espacio/', en: '/en/space/' },
-  club: { es: '/club/', en: '/en/club/' },
+  memberships: { es: '/membresias/', en: '/en/memberships/' },
   visit: { es: '/visita/', en: '/en/visit/' },
 } as const;
 

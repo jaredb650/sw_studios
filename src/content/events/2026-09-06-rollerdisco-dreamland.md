@@ -10,4 +10,4 @@ bodyEn: |
 placeholder: false
 ---
 
-Noche de patinaje y música disco presentada por WeSkatePR en Shipwreck Studios. Detalles según la publicación original del organizador.
+Evento de patinaje y música disco presentado por WeSkatePR en Shipwreck Studios. Detalles según la publicación original del organizador.

@@ -18,4 +18,4 @@ bodyEn: |
 placeholder: true
 ---
 
-Cerramos el año en el barco con una noche larga. DJ Marejada abre la pista y Faro Rojo b2b Bruma nos llevan hasta el amanecer, con una sorpresa a medianoche. Los detalles de boletos se anunciarán pronto en Instagram. Evento para mayores de 21 años; se requiere identificación en la entrada.
+Cerramos el año juntos en el barco. DJ Marejada abre la programación y Faro Rojo b2b Bruma la continúan, con una sorpresa a medianoche. Los detalles de boletos se anunciarán pronto en Instagram. Evento para mayores de 21 años; se requiere identificación en la entrada.

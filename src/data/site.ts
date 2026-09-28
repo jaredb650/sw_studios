@@ -101,16 +101,16 @@ export const site = {
 // Header navigation: each item jumps to a section of the home page (labels
 // in src/i18n/ui.ts → nav.sections). `pages` are the deeper pages that belong
 // to that section, so the item stays highlighted while visiting them.
-export const nav: { section: 'inicio' | 'agenda' | 'espacio' | 'artistas' | 'galeria' | 'club' | 'reglas' | 'visita'; pages: Route[] }[] = [
+export const nav: { section: 'inicio' | 'agenda' | 'espacio' | 'artistas' | 'galeria' | 'membresias' | 'reglas' | 'visita'; pages: Route[] }[] = [
   { section: 'inicio', pages: [] },
   { section: 'agenda', pages: ['agenda', 'archive'] },
   { section: 'espacio', pages: ['space'] },
   { section: 'artistas', pages: ['artists'] },
   { section: 'galeria', pages: ['gallery'] },
-  { section: 'club', pages: ['club'] },
+  { section: 'membresias', pages: ['memberships'] },
   { section: 'reglas', pages: [] },
   { section: 'visita', pages: ['visit'] },
 ];
 
 // Full pages, listed in the footer (labels in src/i18n/ui.ts → footer.pages).
-export const pages: Exclude<Route, 'home'>[] = ['agenda', 'archive', 'artists', 'gallery', 'space', 'club', 'visit'];
+export const pages: Exclude<Route, 'home'>[] = ['agenda', 'archive', 'artists', 'gallery', 'space', 'memberships', 'visit'];

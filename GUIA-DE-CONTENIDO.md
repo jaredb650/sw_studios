@@ -96,10 +96,6 @@ Los boletos, pagos, reembolsos y la atención al comprador los gestiona cada pro
   - Mientras la cuenta no esté lista, el sitio muestra "Próximamente".
 - **Programa de Artistas**: el texto aprobado de Alacran, hasta 1,000 palabras. Se publica sin costo adicional dentro de los 6 meses del lanzamiento.
 
-## Inglés
-
-El sitio tiene una versión oficial en inglés. Yo traduzco los textos aprobados. Si prefieren usar sus propias traducciones, o revisar las mías, envíenlas junto con el español. Los nombres propios (eventos, artistas, obras, organizadores) no se traducen.
-
 ## Derechos y aprobación
 
 Envía solo material que Shipwreck Studios tiene derecho a publicar. Cada foto debe llevar el crédito de quien la tomó, cuando corresponda.

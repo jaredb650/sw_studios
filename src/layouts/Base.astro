@@ -10,7 +10,7 @@ import { absolute, href } from '../lib/urls';
 import { getPlaceholders } from '../lib/placeholders';
 import RulesGate from '../components/RulesGate.astro';
 import { getRules, rulesVersion } from '../lib/rules';
-import { LANGS, useLang, type Lang } from '../i18n';
+import { ENGLISH_ENABLED, LANGS, useLang, type Lang } from '../i18n';
 
 interface Props {
   title?: string;
@@ -45,8 +45,8 @@ const gate = rules && page !== 'not-found' ? (page === 'home' ? 'inline' : 'dial
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
-    {alternates && LANGS.map((code) => <link rel="alternate" hreflang={code} href={absolute(alternates[code])} />)}
-    {alternates && <link rel="alternate" hreflang="x-default" href={absolute(alternates.es)} />}
+    {ENGLISH_ENABLED && alternates && LANGS.map((code) => <link rel="alternate" hreflang={code} href={absolute(alternates[code])} />)}
+    {ENGLISH_ENABLED && alternates && <link rel="alternate" hreflang="x-default" href={absolute(alternates.es)} />}
     {isSample && <meta name="robots" content="noindex, nofollow" />}
     <meta name="theme-color" content="#111211" />
     <link rel="icon" type="image/png" href={href('/favicon.png')} />

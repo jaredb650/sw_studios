@@ -15,15 +15,15 @@ admission: tickets
 ticketUrl: https://example.com/boletos/2026-06-20-solsticio
 price: "$15"
 recap:
-  summary: "Celebramos la noche más corta del año con ocho horas de música, del atardecer a la madrugada."
+  summary: "Celebramos el solsticio de verano con ocho horas de música, arte y comunidad."
   summaryEn: "We celebrated the shortest night of the year with eight hours of music, from sunset to the early morning."
   photos:
     - src: ../../assets/placeholders/recaps/2026-06-20-solsticio-01.jpg
-      alt: "Foto de ejemplo: la pista llena durante Solsticio"
+      alt: "Foto de ejemplo: el espacio lleno durante Solsticio"
       altEn: "Sample photo: a packed dance floor during Solsticio"
       credit: "Foto: por confirmar"
     - src: ../../assets/placeholders/recaps/2026-06-20-solsticio-02.jpg
-      alt: "Foto de ejemplo: la cabina iluminada en verde durante el set de Coral Negro"
+      alt: "Foto de ejemplo: el escenario iluminado en verde durante el set de Coral Negro"
       altEn: "Sample photo: the booth lit up in green during Coral Negro's set"
       credit: "Foto: por confirmar"
   videos:
@@ -34,4 +34,4 @@ bodyEn: |
 placeholder: true
 ---
 
-Una noche para recibir el verano de la puesta de sol a la madrugada. Marejada abrió con house al atardecer, Coral Negro presentó un set en vivo a medianoche y Salitre cerró la pista con disco hasta las cuatro.
+Un evento para recibir el verano desde la puesta de sol. Marejada abrió con house al atardecer, Coral Negro presentó un set en vivo y Salitre cerró con disco.

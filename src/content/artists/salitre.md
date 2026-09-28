@@ -30,6 +30,6 @@ order: 5
 placeholder: true
 ---
 
-Salitre es un proyecto de disco, boogie y edits que toca casi siempre en vinilo. Su maleta mezcla clásicos de pista con joyas de la música caribeña de los setenta y ochenta, y edits propios que alargan los mejores momentos de cada canción.
+Salitre es un proyecto de disco, boogie y edits que toca casi siempre en vinilo. Su maleta mezcla clásicos del disco con joyas de la música caribeña de los setenta y ochenta, y edits propios que alargan los mejores momentos de cada canción.
 
-En Shipwreck Studios, Salitre está a cargo de las tardes de vinilo, los mercados de arte y las noches de disco. Su propuesta es sencilla: buena música, sin prisa, para bailar en comunidad.
+En Shipwreck Studios, Salitre está a cargo de las tardes de vinilo, los mercados de arte y las sesiones de disco. Su propuesta es sencilla: buena música, sin prisa, para compartir en comunidad.

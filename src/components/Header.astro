@@ -1,7 +1,7 @@
 ---
 import { nav, site } from '../data/site';
 import { href } from '../lib/urls';
-import { LANGS, routePath, useLang, type Lang } from '../i18n';
+import { ENGLISH_ENABLED, LANGS, routePath, useLang, type Lang } from '../i18n';
 
 interface Props {
   /** This page in each language; without it the switch leads to the other language's home page. */
@@ -54,7 +54,7 @@ const { alternates = { es: routePath('home', 'es'), en: routePath('home', 'en') 
       </div>
     </nav>
     <div class="header-end">
-      <div class="lang-switch" role="group" aria-label={t.switchLabel}>
+      {ENGLISH_ENABLED && (<div class="lang-switch" role="group" aria-label={t.switchLabel}>
         {
           LANGS.map((code, i) => (
             <>
@@ -71,7 +71,7 @@ const { alternates = { es: routePath('home', 'es'), en: routePath('home', 'en') 
             </>
           ))
         }
-      </div>
+      </div>)}
       <a class="header-social" href={site.socials.instagram} target="_blank" rel="noopener">
         Instagram <i class="icon icon-arrow" aria-hidden="true"></i>
       </a>

@@ -22,4 +22,4 @@ bodyEn: |
 placeholder: true
 ---
 
-La noche más oscura del año en el barco. Faro Rojo y Bruma se reparten la madrugada con techno hipnótico, y Ojo de Tormenta abre la pista. Resaca Visual transforma las paredes con proyecciones en vivo. Disfraz recomendado, no obligatorio. Evento para mayores de 21 años; se requiere identificación en la entrada.
+Un evento audiovisual de Halloween en el barco. Faro Rojo y Bruma presentan sets de techno hipnótico, Ojo de Tormenta abre la programación y Resaca Visual transforma las paredes con proyecciones en vivo. Disfraz recomendado, no obligatorio. Evento para mayores de 21 años; se requiere identificación en la entrada.

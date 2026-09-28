@@ -1,18 +1,18 @@
 ---
 title: "El espacio"
 titleEn: "The Space"
-lead: "Shipwreck Studios es un espacio de música y una galería de arte viva en Puerta de Tierra: un lugar para bailar, crear y encontrarse en comunidad."
-leadEn: "Shipwreck Studios is a music venue and living art gallery in Puerta de Tierra: a place to dance, create, and come together as a community."
+lead: "Shipwreck Studios es un espacio creativo y de eventos en Puerta de Tierra: un lugar para ser, crear, conectar y evolucionar."
+leadEn: "Shipwreck Studios is a creative and event space in Puerta de Tierra: a place to be, create, connect, and evolve."
 photos:
   - src: ../../assets/placeholders/venue/venue-01.jpg
-    alt: "Foto de ejemplo: la sala principal con luces verdes y la cabina al fondo"
+    alt: "Foto de ejemplo: la sala principal con luces verdes y el escenario al fondo"
     altEn: "Sample photo: the main room with green lights and the DJ booth at the back"
     caption: "Sala principal"
     captionEn: "Main room"
   - src: ../../assets/placeholders/venue/venue-02.jpg
-    alt: "Foto de ejemplo: detalle de la cabina y el equipo de sonido"
+    alt: "Foto de ejemplo: detalle del escenario y el equipo de sonido"
     altEn: "Sample photo: close-up of the DJ booth and sound system"
-    caption: "La cabina"
+    caption: "El escenario"
     captionEn: "The booth"
   - src: ../../assets/placeholders/venue/venue-03.jpg
     alt: "Foto de ejemplo: murales que cubren la pared norte"
@@ -34,7 +34,7 @@ photos:
     caption: "Pasillo de entrada"
     captionEn: "Entrance hallway"
   - src: ../../assets/placeholders/venue/venue-07.jpg
-    alt: "Foto de ejemplo: la fachada del edificio en Calle San Agustín de noche"
+    alt: "Foto de ejemplo: la fachada del edificio en Calle San Agustín"
     altEn: "Sample photo: the building's facade on Calle San Agustín at night"
     caption: "Calle San Agustín"
 videos:
@@ -53,12 +53,12 @@ bodyEn: |
 placeholder: true
 ---
 
-Shipwreck Studios nació de una idea sencilla: que la música y el arte se encuentren en el mismo lugar, sin separaciones. Aquí la pista de baile y la galería comparten paredes, y quienes vienen a escuchar un set también se quedan mirando lo que se pintó esa semana.
+Shipwreck Studios nació de una idea sencilla: que la música y el arte se encuentren en el mismo lugar, sin separaciones. Aquí la música y la galería comparten paredes, y quienes vienen a un evento también se quedan mirando lo que se pintó esa semana.
 
 Las paredes del espacio nunca están quietas. Los murales se pintan, se exhiben y, con el tiempo, se repintan para dar paso a obra nueva. Por eso documentamos cada pieza en nuestra galería: lo que ya no está en la pared sigue formando parte de la historia del lugar.
 
-La programación va de noches largas de house y techno a tardes de vinilo, sesiones de dibujo en vivo, mercados de arte y exposiciones colectivas. Trabajamos con artistas residentes, promotores independientes y colectivos de toda la isla, con una misma intención: crear un lugar seguro, abierto y exigente con la calidad de lo que presenta.
+La programación reúne eventos de música, talleres, tardes de vinilo, sesiones de dibujo en vivo, mercados de arte y exposiciones colectivas. Trabajamos con artistas residentes, promotores independientes y colectivos de toda la isla, con una misma intención: crear un lugar seguro, abierto y exigente con la calidad de lo que presenta.
 
-Más que un escenario, el espacio funciona como un taller abierto. Durante el día se pinta, se ensaya y se preparan las instalaciones; de noche, esas mismas paredes reciben al público. Muchas de las obras que ves en una fiesta se terminaron pocas horas antes, y algunas cambian mientras la música suena. Nos interesa que cada visita sea distinta y que quienes vuelven encuentren siempre algo nuevo que mirar, escuchar o descubrir.
+Más que un escenario, el espacio funciona como un taller abierto. Durante el día se pinta, se ensaya y se preparan las instalaciones; luego, esas mismas paredes reciben al público. Muchas de las obras que ves en un evento se terminaron pocas horas antes, y algunas cambian mientras sucede. Nos interesa que cada visita sea distinta y que quienes vuelven encuentren siempre algo nuevo que mirar, escuchar o descubrir.
 
 Somos un creative hub en el corazón de Puerto Rico, en Calle San Agustín. Música, arte y comunidad: eso es lo que nos mantiene a flote.

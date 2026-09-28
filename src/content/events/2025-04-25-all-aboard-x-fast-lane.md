@@ -10,4 +10,4 @@ bodyEn: |
 placeholder: false
 ---
 
-Noche de house y minimal de All Aboard y Fast Lane en Shipwreck Studios, según su ficha en Resident Advisor.
+Evento de house y minimal de All Aboard y Fast Lane en Shipwreck Studios, según su ficha en Resident Advisor.

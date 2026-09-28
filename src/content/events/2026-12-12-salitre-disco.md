@@ -17,4 +17,4 @@ bodyEn: |
 placeholder: true
 ---
 
-Salitre trae su maleta de disco, boogie y edits para una noche larga de pista: seis horas de música, luces bajas y la bola de espejos encendida. Los boletos se consiguen en el enlace del promotor; si no se agotan, habrá una cantidad limitada en la puerta.
+Salitre trae su maleta de disco, boogie y edits a una sesión de seis horas de música, luces bajas y la bola de espejos encendida. Los boletos se consiguen en el enlace del promotor; si no se agotan, habrá una cantidad limitada en la puerta.

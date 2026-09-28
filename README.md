@@ -20,7 +20,7 @@ npm run brand        # regenerate favicon, share image, logo mask from the maste
 ## How the site is organized
 
 The home page is an overview with one section per header nav item:
-Inicio, Agenda, El espacio, Artistas, Galería, Club, Reglas and Visítanos.
+Inicio, Agenda, El espacio, Artistas, Galería, Membresías, Reglas and Visítanos.
 The nav only scrolls between these sections; from other pages it returns to the matching section.
 Each section ends in a "Ver…" link to its full page. The agenda goes one level deeper:
 home preview → **Ver toda la agenda** (`/agenda/`) → **Ver eventos anteriores** (`/archivo/`).
@@ -28,13 +28,13 @@ The footer links to every full page.
 
 | Page | Path | Source |
 | --- | --- | --- |
-| Home: hero, Featured Event + up to 8 event cards, section previews | `/` | all of the below (`HOME_CARDS` in `src/pages/index.astro`) |
+| Home: hero, Featured Event + up to 4 event cards, section previews | `/` | all of the below (`HOME_CARDS` in `src/views/Home.astro`) |
 | Full agenda: compact heading, Featured Event, a card for every upcoming event, then "Ver eventos anteriores" | `/agenda/` | `src/content/events/*.md` |
 | Archive of past events with recaps | `/archivo/` | same events, once they end |
 | Resident artists + profile pages | `/artistas/`, `/artistas/<id>/` | `src/content/artists/*.md` |
 | Gallery: on the walls now / archived work | `/galeria/` | `src/content/artworks/*.md` |
 | Mission, story, venue photos, tour video, founder | `/espacio/` | `src/content/pages/espacio.md`, `fundador.md` |
-| Patreon tiers + Artist Program | `/club/` | `src/data/site.ts` (Patreon), `src/content/pages/programa-de-artistas.md` |
+| Patreon memberships + Artist Program | `/membresias/` | `src/data/site.ts` (Patreon), `src/content/pages/programa-de-artistas.md` |
 | Club rules (home section `#reglas`, plus the checkpoint) | `/#reglas` | `src/content/pages/reglas.md` |
 | Address, directions, contact | `/visita/` | `src/data/site.ts` |
 
@@ -103,25 +103,11 @@ The Artist Program shows "Próximamente" until `programa-de-artistas.md` is set 
 
 ## Languages
 
-The site is in Spanish (at the root) with an official English version under `/en/`, using translated paths:
-
-| Spanish | English |
-| --- | --- |
-| `/` | `/en/` |
-| `/agenda/` | `/en/events/` |
-| `/archivo/` | `/en/archive/` |
-| `/artistas/<id>/` | `/en/artists/<id>/` |
-| `/galeria/` | `/en/gallery/` |
-| `/espacio/` | `/en/space/` |
-| `/club/` | `/en/club/` |
-| `/visita/` | `/en/visit/` |
-
-- **ES / EN switch:** the switch in the header opens the same page in the other language. On the home page it keeps the section you were on.
-- **Search engines:** every page lists its translation (`hreflang`).
-- **Interface text** (labels, buttons, headings, messages) is in `src/i18n/ui.ts`, one object per language.
-- **Content:** each file carries both languages. Add `En` to any translatable field for the English version, e.g. `timeNoteEn`, `priceEn`, `flyerAltEn`, `disciplinesEn`, or `bodyEn` for the English Markdown body. If an English field is missing, the Spanish shows. `npm run content` lists every missing translation.
-- **Never translated:** proper names, meaning Shipwreck Studios, event titles, artist and artwork names, lineups, organizers, and Patreon tier names.
-- **Routes:** each page's layout lives in `src/views/`. `src/pages/<es>.astro` and `src/pages/en/<en>.astro` are two-line wrappers, and the language comes from the URL (`useLang(Astro.url)` in `src/i18n/index.ts`).
+The site is **Spanish only**. An English version is fully built but switched off at the client's request:
+- **Where it lives:** its pages are in `src/pages/_en/`. Astro skips folders that start with `_`, so they aren't published.
+- **To turn it back on:** set `ENGLISH_ENABLED = true` in `src/i18n/index.ts` and rename `src/pages/_en` to `src/pages/en`.
+- **Interface text** for both languages is in `src/i18n/ui.ts`. Content files carry `xEn` fields (for example `bodyEn` and `timeNoteEn`) for the English copy.
+- **Recent Spanish edits:** some Spanish copy was reworded after the English was written, so review the English before re-enabling it.
 
 ## Sample content
 

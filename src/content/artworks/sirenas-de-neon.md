@@ -18,4 +18,4 @@ bodyEn: |
 placeholder: true
 ---
 
-Proyección creada para acompañar las noches de verano sobre la pared sur.
+Proyección creada para acompañar los eventos de verano sobre la pared sur.

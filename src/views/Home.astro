@@ -24,7 +24,7 @@ import { getRules } from '../lib/rules';
 import { pick, routePath, useLang } from '../i18n';
 
 // How many event cards follow the Featured Event on the home page; the rest are on the agenda page.
-const HOME_CARDS = 8;
+const HOME_CARDS = 4;
 
 const { lang, t: ui, path } = useLang(Astro.url);
 const t = ui.home;
@@ -174,10 +174,10 @@ const rulesBg = await getImage({ src: rulesPhoto, width: 1600, format: 'webp' })
       <SectionMore to={path('gallery')} label={t.seeGallery} detail={t.workCount(works.length)} />
     </section>
 
-    <section id="club" class="section" aria-labelledby="club-title">
+    <section id="membresias" class="section" aria-labelledby="club-title">
       <div class="club-band" data-reveal>
         <div>
-          <span class="label muted">05 / Club</span>
+          <span class="label muted">05 / {ui.nav.sections.membresias}</span>
           <h2 id="club-title" style="margin-top: 18px">{t.clubTitle[0]}<br />{t.clubTitle[1]}</h2>
           <p>{t.clubText}</p>
         </div>
@@ -193,7 +193,7 @@ const rulesBg = await getImage({ src: rulesPhoto, width: 1600, format: 'webp' })
           }
         </div>
       </div>
-      <SectionMore to={path('club')} label={t.seeClub} />
+      <SectionMore to={path('memberships')} label={t.seeClub} />
     </section>
 
     {

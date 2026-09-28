@@ -27,6 +27,6 @@ order: 9
 placeholder: true
 ---
 
-Resaca Visual es un proyecto de visuales en vivo que proyecta sobre murales, telas y humo. Su trabajo mezcla video analógico, gráficos generativos y material de archivo de la costa puertorriqueña, y responde en tiempo real a la música de la cabina.
+Resaca Visual es un proyecto de visuales en vivo que proyecta sobre murales, telas y humo. Su trabajo mezcla video analógico, gráficos generativos y material de archivo de la costa puertorriqueña, y responde en tiempo real a la música.
 
-En Shipwreck Studios, Resaca Visual acompaña las noches más largas y colabora con los muralistas del espacio para que las paredes pintadas cambien de forma durante la fiesta.
+En Shipwreck Studios, Resaca Visual acompaña los eventos más ambiciosos del espacio y colabora con los muralistas para que las paredes pintadas cambien de forma durante cada presentación.

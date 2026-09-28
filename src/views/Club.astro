@@ -15,7 +15,7 @@ const published = program?.data.status === 'published';
 const programLead = program ? pick(program.data, 'lead', lang) : undefined;
 ---
 
-<Base title={t.title} description={t.description} page="club" alternates={{ es: routePath('club', 'es'), en: routePath('club', 'en') }}>
+<Base title={t.title} description={t.description} page="memberships" alternates={{ es: routePath('memberships', 'es'), en: routePath('memberships', 'en') }}>
   <PageHero index={t.index} label={t.label} title={t.heading} accent={t.accent} lead={t.lead} />
 
   <section class="section" aria-label={t.options}>

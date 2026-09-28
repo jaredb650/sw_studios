@@ -18,4 +18,4 @@ bodyEn: |
 placeholder: true
 ---
 
-Dos residentes, una cabina y seis horas sin guion. Faro Rojo y Marejada se turnaron canción por canción, del house de la medianoche al techno del amanecer.
+Dos residentes y seis horas sin guion. Faro Rojo y Marejada se turnaron canción por canción, del house al techno.
