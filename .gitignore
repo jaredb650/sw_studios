@@ -6,3 +6,9 @@ dist/
 
 # Private client notes (the repo is public)
 CLIENT-VISION.md
+
+# Private project notes: contract scope and pricing, research notes, logo notes
+SCOPE.md
+RESEARCH.md
+LOGO.md
+.openai/
