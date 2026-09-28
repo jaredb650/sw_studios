@@ -180,7 +180,7 @@ const pages = defineCollection({
         .default([]),
       videos: z.array(video).default([]),
       items: z
-        .array(z.object({ title: z.string(), text: z.string() }))
+        .array(z.object({ title: z.string(), text: z.string(), about: z.string().optional() }))
         .default([]),
       // Text after the item list (Markdown), e.g. the manifesto's closing after the SEVENS.
       outro: z.string().optional(),

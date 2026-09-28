@@ -133,7 +133,7 @@ const jsonLd = {
                     <a href={href(`${path('agenda')}#${eventAnchor(event)}`)}>
                       <time datetime={event.data.date}>{shortDate(event.startsAt)}</time>
                       <strong>{event.data.title}</strong>
-                      <i class="icon icon-arrow" aria-hidden="true" />
+                      <i class="icon icon-arrow icon-right" aria-hidden="true" />
                     </a>
                   </li>
                 ))}
@@ -152,7 +152,7 @@ const jsonLd = {
                     <a href={href(`${path('archive')}#${eventAnchor(event)}`)}>
                       <time datetime={event.data.date}>{shortDate(event.startsAt)}</time>
                       <strong>{event.data.title}</strong>
-                      <i class="icon icon-arrow" aria-hidden="true" />
+                      <i class="icon icon-arrow icon-right" aria-hidden="true" />
                     </a>
                   </li>
                 ))}

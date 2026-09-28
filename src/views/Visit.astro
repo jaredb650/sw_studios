@@ -15,13 +15,14 @@ const channels = [
   contact.whatsapp && { label: 'WhatsApp', value: contact.whatsapp, url: `https://wa.me/${contact.whatsapp.replace(/\D/g, '')}` },
   { label: 'Instagram', value: t.dm(site.instagramHandle), url: contact.instagramDm },
 ].filter((channel): channel is { label: string; value: string; url: string } => Boolean(channel));
-const socialLinks = Object.entries({ Instagram: socials.instagram, Facebook: socials.facebook, TikTok: socials.tiktok, YouTube: socials.youtube, SoundCloud: socials.soundcloud }).filter(
+// Instagram is already a contact channel above, so the networks list skips it.
+const socialLinks = Object.entries({ Facebook: socials.facebook, TikTok: socials.tiktok, YouTube: socials.youtube, SoundCloud: socials.soundcloud }).filter(
   (entry): entry is [string, string] => Boolean(entry[1]),
 );
 ---
 
 <Base title={t.title} description={t.description} page="visit" jsonLd={venueJsonLd()}>
-  <VisitBlock heading="h1" showMore={false} />
+  <VisitBlock heading="h1" showMore={false} showContact={false} />
 
   {
     site.visitNotes.length > 0 && (
@@ -46,7 +47,7 @@ const socialLinks = Object.entries({ Instagram: socials.instagram, Facebook: soc
   <section class="section" id="contacto" aria-labelledby="contact-title">
     <div class="split">
       <div class="section-heading" style="display: block">
-        <h2 id="contact-title"><span class="section-index">01 /</span>{t.contact}</h2>
+        <h2 id="contact-title">{t.contact}</h2>
       </div>
       <div>
         <ul class="link-list">
@@ -55,7 +56,7 @@ const socialLinks = Object.entries({ Instagram: socials.instagram, Facebook: soc
               <li>
                 <a href={channel.url} target={channel.url.startsWith('http') ? '_blank' : undefined} rel="noopener">
                   <span>
-                    <span class="label muted" style="display: block; font-size: 11px">
+                    <span class="label muted" style="display: block; font-size: 12px">
                       {channel.label}
                     </span>
                     {channel.value}

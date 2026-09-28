@@ -2,7 +2,8 @@
 interface Props {
   /** Optional faded background photo (URL). */
   bg?: string;
-  index: string;
+  /** A short line after the label, e.g. the souls the page serves. */
+  kicker?: string;
   label: string;
   title: string;
   accent?: string;
@@ -10,13 +11,12 @@ interface Props {
   /** Title on the left, lead and slot content on the right. */
   split?: boolean;
 }
-const { index, label, title, accent, lead, bg, split = false } = Astro.props;
+const { kicker, label, title, accent, lead, bg, split = false } = Astro.props;
 ---
 
 <header class:list={['page-hero', { 'bg-photo': bg, 'is-split': split }]} style={bg ? `--bg-photo: url(${bg})` : undefined}>
   <div class="eyebrow">
-    <span>{index} / {label}</span>
-    <span>Shipwreck Studios · San Juan, PR</span>
+    <span>{label}{kicker && <span class="muted"> · {kicker}</span>}</span>
   </div>
   {
     split ? (

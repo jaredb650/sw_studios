@@ -60,11 +60,10 @@ const bgStyle = `--bg-photo: url(${rulesBg.src}); --bg-pos: center; --bg-opacity
               {t.heading[0]} <span class="accent">{t.heading[1]}</span>
             </h2>
             {lead && <p class="lead">{lead}</p>}
-            <RulesList items={rules.data.items} compact />
+            <RulesList items={rules.data.items} compact scrollable label={t.label} />
             <div class="gate-actions">
               <button class="button" type="button" data-accept-rules>
                 <span>{t.accept}</span>
-                <i class="icon icon-arrow" aria-hidden="true" />
               </button>
               <p class="gate-note">{t.noteDialog}</p>
             </div>

@@ -45,13 +45,41 @@ export function initRules(reducedMotion: () => boolean) {
     // Browsers without <dialog> support (Safari before 15.4) skip the checkpoint
     // rather than lock the page.
     if (typeof dialog.showModal !== 'function') return accept();
+    // Visitors who land here straight from a search or a shared link see the
+    // rules as a sheet along the bottom, so the page they came for stays
+    // readable. Links still wait until the rules are accepted. Moving between
+    // pages of the site shows the full pop-up.
+    let fromOutside = true;
+    try {
+      fromOutside = !document.referrer || new URL(document.referrer).origin !== location.origin;
+    } catch {
+      /* Unreadable referrer: treat as arriving from outside. */
+    }
+    const open = () => (fromOutside ? dialog.show() : dialog.showModal());
+    if (fromOutside) {
+      dialog.classList.add('is-sheet');
+      document.addEventListener(
+        'click',
+        (event) => {
+          if (!root.classList.contains('rules-pending')) return;
+          const link = (event.target as Element).closest('a[href]');
+          if (!link || dialog.contains(link)) return;
+          event.preventDefault();
+          dialog.classList.remove('is-nudged');
+          void dialog.offsetWidth; // restart the nudge animation
+          dialog.classList.add('is-nudged');
+          dialog.querySelector<HTMLElement>('[data-accept-rules]')?.focus();
+        },
+        true,
+      );
+    }
     dialog.addEventListener('cancel', (event) => event.preventDefault());
     // Some browsers let a second Escape close the dialog anyway; reopen it
     // until the rules are accepted.
     dialog.addEventListener('close', () => {
-      if (root.classList.contains('rules-pending')) dialog.showModal();
+      if (root.classList.contains('rules-pending')) open();
     });
-    dialog.showModal();
+    open();
     // Start at the title, not scrolled down to the button.
     dialog.querySelector<HTMLElement>('h2')?.focus({ preventScroll: true });
     dialog.scrollTop = 0;

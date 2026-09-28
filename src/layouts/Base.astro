@@ -12,6 +12,7 @@ import RulesGate from '../components/RulesGate.astro';
 import Preloader from '../components/Preloader.astro';
 import { getRules, rulesVersion } from '../lib/rules';
 import { useLang } from '../i18n';
+import tokens from '../styles/global.css?raw';
 
 interface Props {
   title?: string;
@@ -35,6 +36,8 @@ const shareAlt = imageAlt ?? `${site.name}: ${t.site.intro}`;
 const placeholders = await getPlaceholders();
 const isSample = placeholders.length > 0;
 const structured = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
+// The browser's toolbar color follows the --bg token, so a rebrand only edits global.css.
+const themeColor = tokens.match(/--bg:\s*([^;]+);/)?.[1].trim() ?? '#111211';
 // The home page places its own inline rules checkpoint; other pages use the dialog.
 const rules = await getRules();
 // The El espacio page (like the home page's El espacio section) and the visit page
@@ -51,7 +54,7 @@ const gate = rules && !['not-found', 'space', 'visit'].includes(page) ? (page ==
     <meta name="description" content={description} />
     {page !== 'not-found' && <link rel="canonical" href={canonical} />}
     {(isSample || page === 'not-found') && <meta name="robots" content="noindex, nofollow" />}
-    <meta name="theme-color" content="#111211" />
+    <meta name="theme-color" content={themeColor} />
     <link rel="icon" type="image/png" href={href('/favicon.png')} />
     <link rel="apple-touch-icon" href={href('/apple-touch-icon.png')} />
     <link rel="sitemap" href={href('/sitemap-index.xml')} />
@@ -75,6 +78,7 @@ const gate = rules && !['not-found', 'space', 'visit'].includes(page) ? (page ==
     <!-- Preload only the display weights the first screen uses (hero title 800, intro 700). -->
     <Font cssVariable="--font-display" preload={[{ weight: 800 }, { weight: 700 }]} />
     <Font cssVariable="--font-body" />
+    <Font cssVariable="--font-mono" />
 
     <script is:inline>
       (function () {
@@ -142,7 +146,6 @@ const gate = rules && !['not-found', 'space', 'visit'].includes(page) ? (page ==
   </head>
   <body data-page={page}>
     {page === 'home' && <Preloader />}
-    <div class="reading-progress" aria-hidden="true"></div>
     <a class="skip" href="#contenido">{t.nav.skip}</a>
     {
       isSample && (
@@ -171,7 +174,7 @@ const gate = rules && !['not-found', 'space', 'visit'].includes(page) ? (page ==
       }
       <slot />
     </main>
-    <Footer />
+    <Footer showAddress={page !== 'home' && page !== 'visit'} />
     {gate === 'dialog' && <RulesGate mode="dialog" />}
     <script>
       import '../scripts/site.ts';

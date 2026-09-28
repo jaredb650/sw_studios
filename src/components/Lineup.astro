@@ -8,7 +8,7 @@ interface Props {
   class?: string;
 }
 
-// Names run inline, separated by the star used in the ribbon, instead of one per line.
+// Names run inline, separated by a slash, instead of one per line.
 const { lines, class: className = 'lineup inline-list' } = Astro.props;
 const index = artistIndex(await getArtists());
 const { artist: artistPath } = useLang();

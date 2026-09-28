@@ -19,7 +19,7 @@ const { artist: artistPath } = useLang();
     <div class="frame">
       <Image src={data.photo} alt={data.photoAlt} width={640} sizes={sizes} />
     </div>
-    <h3>{data.name}<i class="icon icon-arrow" aria-hidden="true"></i></h3>
+    <h3>{data.name}<i class="icon icon-arrow icon-right" aria-hidden="true"></i></h3>
     <p>{data.disciplines.join(' · ')}</p>
   </a>
   <SampleChip show={data.placeholder} />

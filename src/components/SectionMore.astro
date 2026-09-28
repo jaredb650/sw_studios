@@ -8,12 +8,31 @@ interface Props {
   detail?: string;
   /** Use on the lime visit block. */
   inverse?: boolean;
+  /** A simple text link instead of the full-width band (the band is kept for the agenda). */
+  plain?: boolean;
+  /** Keeps a "N eventos" detail current between rebuilds: the end time of each
+   *  event counted, and the text for one and several (src/scripts/agenda.ts). */
+  count?: { ends: string[]; one: string; many: string };
 }
-const { to, label, detail, inverse = false } = Astro.props;
+const { to, label, detail, inverse = false, plain = false, count } = Astro.props;
 ---
 
-<a class:list={['section-more', { inverse }]} href={href(to)}>
+<a class:list={[plain ? 'more-link' : 'section-more', { inverse }]} href={href(to)}>
   <span class="section-more-label">{label}</span>
-  {detail && <span class="section-more-detail">{detail}</span>}
-  <span class="round-arrow" aria-hidden="true"><i class="icon icon-arrow"></i></span>
+  {
+    detail && (
+      <span class="section-more-detail" data-count-ends={count && JSON.stringify(count.ends)} data-one={count?.one} data-many={count?.many}>
+        {detail}
+      </span>
+    )
+  }
+  {
+    plain ? (
+      <i class="icon icon-arrow icon-right" aria-hidden="true" />
+    ) : (
+      <span class="round-arrow" aria-hidden="true">
+        <i class="icon icon-arrow icon-right" />
+      </span>
+    )
+  }
 </a>

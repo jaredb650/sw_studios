@@ -23,7 +23,7 @@ const recaps = past.filter(hasRecap).length;
   <section class="section" aria-labelledby="archive-title">
     <div class="section-heading page-heading">
       <div>
-        <h1 id="archive-title"><span class="section-index">{t.index}</span>{t.heading}</h1>
+        <h1 id="archive-title"><span class="section-index">{ui.souls.archive}</span>{t.heading}</h1>
         <p class="page-sub">{t.sub}</p>
       </div>
       <span class="label">{t.count(past.length, recaps)}</span>

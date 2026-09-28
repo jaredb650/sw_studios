@@ -13,9 +13,9 @@ import { routePath } from '../i18n';
     <h1>{ui.notFound.heading[0]}<span>{ui.notFound.heading[1]}</span></h1>
     <p class="prose">{ui.notFound.text}</p>
     <div class="panel-actions">
-      <a class="button" href={href(routePath('agenda'))}><span>{ui.notFound.agenda}</span><i class="icon icon-arrow" aria-hidden="true"></i></a>
-      <a class="text-link" href={href(routePath('archive'))}>{ui.notFound.archive} <i class="icon icon-arrow" aria-hidden="true"></i></a>
-      <a class="text-link" href={href(routePath('visit'))}>{ui.notFound.directions} <i class="icon icon-arrow" aria-hidden="true"></i></a>
+      <a class="button" href={href(routePath('agenda'))}><span>{ui.notFound.agenda}</span><i class="icon icon-arrow icon-right" aria-hidden="true"></i></a>
+      <a class="text-link" href={href(routePath('archive'))}>{ui.notFound.archive} <i class="icon icon-arrow icon-right" aria-hidden="true"></i></a>
+      <a class="text-link" href={href(routePath('visit'))}>{ui.notFound.directions} <i class="icon icon-arrow icon-right" aria-hidden="true"></i></a>
     </div>
   </section>
 </Base>

@@ -9,12 +9,24 @@ const es = {
   site: {
     tagline: 'Siete almas · Un espacio',
     intro: 'Donde las ideas cobran vida',
+    descriptor: 'Espacio creativo y de eventos en Puerta de Tierra: música, arte, talleres, clases y comunidad.',
     description:
       'Shipwreck Studios es donde las ideas cobran vida: un espacio creativo y de eventos en San Juan, Puerto Rico, con música, arte, talleres, clases y comunidad.',
     city: 'San Juan, Puerto Rico',
     // Hero: "Shipwreck Studios es_" then each of the seven souls is typed out in turn.
     heroIs: 'es',
     heroSentence: (souls: string[]) => `Shipwreck Studios es ${souls.slice(0, -1).join(', ').toLowerCase()} y ${souls.at(-1)!.toLowerCase()}.`,
+  },
+
+  // Small labels above headings: the souls each part of the site serves.
+  souls: {
+    agenda: 'Música · Arte · Comunidad',
+    archive: 'Música · Comunidad',
+    artists: 'Música · Arte',
+    gallery: 'Arte',
+    participate: 'Comunidad · Educación',
+    rules: 'Comunidad · Libertad',
+    space: 'Siete almas · Un espacio',
   },
 
   nav: {
@@ -61,6 +73,7 @@ const es = {
     upcomingCount: (n: number) => plural(n, 'evento próximo', 'eventos próximos'),
     space: 'El espacio',
     culture: ['Música.', 'Arte.', 'Comunidad.'],
+    spacePhotoAlt: 'Shipwreck Studios por dentro: murales y pinturas alrededor del escenario, bajo luces colgantes, durante una presentación.',
     knowSpace: 'Conoce el espacio',
     knowSpaceDetail: 'Recorrido virtual + quiénes somos',
     manifestoTitle: ['Siete almas.', 'Un espacio.', 'Infinitas posibilidades.'],
@@ -105,7 +118,6 @@ const es = {
   agendaPage: {
     title: 'Agenda',
     description: 'Próximos eventos, talleres y actividades en Shipwreck Studios, San Juan: fechas, lineups, flyers y enlaces de boletos.',
-    index: '02 / Agenda',
     heading: 'Qué pasa en Shipwreck',
     sub: 'Música, talleres, clases, exposiciones y más, en orden de fecha. Abre un evento para ver el flyer, los detalles y quién lo presenta.',
     filterLabel: 'Filtrar por tipo',
@@ -123,7 +135,6 @@ const es = {
   archivePage: {
     title: 'Archivo de eventos',
     description: 'Eventos anteriores en Shipwreck Studios, San Juan: lineups, flyers, fotos y videos de cada evento.',
-    index: '02 / Agenda / Archivo',
     heading: 'Eventos anteriores',
     sub: 'Cada evento deja algo en las paredes. Aquí quedan los eventos anteriores, con sus flyers, lineups y, cuando los hay, fotos y videos.',
     count: (n: number, recaps: number) => `${plural(n, 'evento', 'eventos')} · ${recaps} con fotos o video`,
@@ -198,7 +209,6 @@ const es = {
   artistsPage: {
     title: 'Artistas residentes',
     description: 'Artistas residentes de Shipwreck Studios: artistas visuales, muralistas, músicos y DJs de San Juan, Puerto Rico.',
-    index: '03',
     label: 'Artistas',
     heading: 'Artistas',
     accent: 'residentes.',
@@ -223,7 +233,6 @@ const es = {
   galleryPage: {
     title: 'Galería',
     description: 'Murales y obras en las paredes de Shipwreck Studios, y el archivo de las piezas que ya fueron repintadas.',
-    index: '04',
     label: 'Galería',
     heading: 'Una galería',
     accent: 'que cambia.',
@@ -240,7 +249,6 @@ const es = {
 
   spacePage: {
     description: 'Shipwreck Studios: espacio creativo y de eventos, y galería de arte viva, en Puerta de Tierra, San Juan.',
-    index: '01',
     label: 'El espacio',
     heading: 'El',
     accent: 'espacio.',
@@ -254,7 +262,6 @@ const es = {
   participaPage: {
     title: 'Participa',
     description: 'Tres formas de ser parte de Shipwreck Studios: apoyar el espacio con una membresía, contribuir con tu arte en el Programa de Artistas o proponer un evento.',
-    index: '05',
     label: 'Participa',
     heading: 'Súbete',
     accent: 'al barco.',

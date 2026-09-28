@@ -3,11 +3,14 @@
 interface Props {
   items: { title: string; text: string }[];
   compact?: boolean;
+  /** The list scrolls on its own (in the rules pop-up), so it must take keyboard focus. */
+  scrollable?: boolean;
+  label?: string;
 }
-const { items, compact = false } = Astro.props;
+const { items, compact = false, scrollable = false, label } = Astro.props;
 ---
 
-<ol class:list={['rules', { compact }]}>
+<ol class:list={['rules', { compact }]} tabindex={scrollable ? 0 : undefined} aria-label={label}>
   {
     items.map((rule) => (
       <li>

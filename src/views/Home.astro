@@ -15,7 +15,6 @@ import RulesList from '../components/RulesList.astro';
 import SampleChip from '../components/SampleChip.astro';
 import Sevens from '../components/Sevens.astro';
 import { getAgenda } from '../lib/events';
-import { year } from '../lib/dates';
 import { getArtists } from '../lib/artists';
 import { site } from '../data/site';
 import { href } from '../lib/urls';
@@ -40,15 +39,10 @@ const works = await getCollection('artworks', ({ data }) => !data.draft);
 // Home mosaic: up to 5 works, current ones first, then archived.
 const MOSAIC_WORKS = 5;
 const mosaicWorks = [...allCurrent, ...works.filter((w) => w.data.status === 'archived').sort((a, b) => a.data.order - b.data.order)].slice(0, MOSAIC_WORKS);
-const years = [...new Set(upcoming.map((event) => year(event.startsAt)))];
-const seasonLabel = years.length ? `${t.agendaLabel} / ${years.join('–')}` : t.agendaLabel;
 const rules = await getRules();
 const follow = t.followFirst(site.instagramHandle);
-// The seven souls (manifesto) drive the hero typewriter, the preloader and the ribbon.
+// The seven souls (manifesto) drive the hero typewriter and the preloader.
 const souls = (manifesto?.data.items ?? []).map((soul) => soul.title);
-const ribbon = [...souls, ...souls].map((soul) => soul.toUpperCase());
-// Faded venue photo behind the "El espacio" section.
-const spaceBg = await getImage({ src: spacePhoto, width: 1600, format: 'webp' });
 const rulesBg = await getImage({ src: spacePhoto, width: 640, quality: 50, format: 'webp' });
 ---
 
@@ -81,7 +75,10 @@ const rulesBg = await getImage({ src: spacePhoto, width: 640, quality: 50, forma
       </h1>
     </div>
     <div class="mast-bottom">
-      <p>{ui.site.intro}</p>
+      <div class="mast-intro">
+        <p class="mast-tagline">{ui.site.intro}</p>
+        <p class="mast-descriptor">{ui.site.descriptor}</p>
+      </div>
       <button class="motion-toggle hero-motion" type="button" hidden data-pause-label={ui.footer.pauseMotion} data-play-label={ui.footer.playMotion}>
         <i class="icon-pause" aria-hidden="true"></i><span data-label>{ui.footer.pauseMotion}</span>
       </button>
@@ -92,16 +89,12 @@ const rulesBg = await getImage({ src: spacePhoto, width: 640, quality: 50, forma
     </div>
   </section>
 
-  <div class="type-ribbon" aria-hidden="true">
-    <div class="ribbon-track">
-      {ribbon.map((word) => <>{word} <span><i class="icon icon-star"></i></span> </>)}
-    </div>
-  </div>
-
-  <section id="espacio" class="section about bg-photo" style={`--bg-photo: url(${spaceBg.src})`} aria-labelledby="about-title">
+  <section id="espacio" class="section about" aria-labelledby="about-title">
     <div class="about-label">
-      <span class="label"><span class="muted">01 /</span> {t.space}</span>
-      <span class="brand-mark about-mark" role="img" aria-label="Shipwreck Studios"></span>
+      <span class="label">{t.space}</span>
+      <figure class="about-photo">
+        <Image src={spacePhoto} alt={t.spacePhotoAlt} width={800} sizes="(max-width: 680px) 100vw, 45vw" />
+      </figure>
     </div>
     <div>
       <h2 id="about-title" class="manifesto-title">
@@ -110,7 +103,7 @@ const rulesBg = await getImage({ src: spacePhoto, width: 640, quality: 50, forma
       {manifesto && <p class="lead">{manifesto.data.lead}</p>}
       <p class="manifesto-line">{t.universe}</p>
       <Sevens variant="inline" label={t.sevens} />
-      <SectionMore to={path('space')} label={t.knowSpace} detail={t.knowSpaceDetail} />
+      <SectionMore to={path('space')} label={t.knowSpace} detail={t.knowSpaceDetail} plain />
     </div>
   </section>
 
@@ -121,10 +114,9 @@ const rulesBg = await getImage({ src: spacePhoto, width: 640, quality: 50, forma
     <section id="agenda" class="section events" aria-labelledby="events-title">
       <div class="section-heading">
         <div>
-          <h2 id="events-title"><span class="section-index">02 /</span>{t.upcoming}</h2>
+          <h2 id="events-title"><span class="section-index">{ui.souls.agenda}</span>{t.upcoming}</h2>
           <p class="page-sub">{t.upcomingSub}</p>
         </div>
-        <span class="label">{seasonLabel}</span>
       </div>
 
       {featured && <FeaturedEvent event={featured} />}
@@ -134,7 +126,6 @@ const rulesBg = await getImage({ src: spacePhoto, width: 640, quality: 50, forma
           preview.length > 0 && (
             <div class="agenda-head">
               <h3>{t.nextDates}</h3>
-              <span class="label muted">{t.ofEvents(preview.length, rest.length)}</span>
             </div>
           )
         }
@@ -145,23 +136,26 @@ const rulesBg = await getImage({ src: spacePhoto, width: 640, quality: 50, forma
           {featured ? t.noMore : t.noEvents} {follow[0]} <a class="inline-link" href={site.socials.instagram} target="_blank" rel="noopener">{follow[1]}</a> {follow[2]}
         </p>
       </div>
-      <SectionMore to={path('agenda')} label={t.seeAgenda} detail={t.upcomingCount(upcoming.length)} />
+      <SectionMore
+        to={path('agenda')}
+        label={t.seeAgenda}
+        detail={t.upcomingCount(upcoming.length)}
+        count={{ ends: upcoming.map((event) => event.endsAt.toISOString()), one: t.upcomingCount(1), many: t.upcomingCount(2) }}
+      />
     </section>
 
 
     <section id="artistas" class="section artists-home" aria-labelledby="artists-title">
       <div class="section-heading">
-        <h2 id="artists-title"><span class="section-index">03 /</span>{t.artists}</h2>
-        <span class="label">{t.artistCount(allArtists.length)}</span>
+        <h2 id="artists-title"><span class="section-index">{ui.souls.artists}</span>{t.artists}</h2>
       </div>
       {allArtists.length > 0 ? <ArtistSpotlight /> : <p class="row-empty">{t.noArtists}</p>}
-      <SectionMore to={path('artists')} label={t.seeArtists} />
+      <SectionMore to={path('artists')} label={t.seeArtists} plain />
     </section>
 
     <section id="galeria" class="section" aria-labelledby="walls-title">
       <div class="section-heading">
-        <h2 id="walls-title"><span class="section-index">04 /</span>{t.walls}</h2>
-        <span class="label">{t.currentCount(allCurrent.length)}</span>
+        <h2 id="walls-title"><span class="section-index">{ui.souls.gallery}</span>{t.walls}</h2>
       </div>
       {
         mosaicWorks.length > 0 ? (
@@ -180,13 +174,13 @@ const rulesBg = await getImage({ src: spacePhoto, width: 640, quality: 50, forma
           <p class="row-empty">{t.wallsEmpty}</p>
         )
       }
-      <SectionMore to={path('gallery')} label={t.seeGallery} detail={t.workCount(works.length)} />
+      <SectionMore to={path('gallery')} label={t.seeGallery} plain />
     </section>
 
     <section id="participa" class="section" aria-labelledby="participa-title">
       <div class="participa-band" data-reveal>
         <div class="participa-head">
-          <span class="label muted">{t.participaLabel}</span>
+          <span class="label muted">{ui.souls.participate}</span>
           <h2 id="participa-title">{t.participaTitle.join(' ')}</h2>
           <p class="participa-sub">{t.participaSub}</p>
         </div>
@@ -204,7 +198,7 @@ const rulesBg = await getImage({ src: spacePhoto, width: 640, quality: 50, forma
                 </h3>
                 <p>{offer.text}</p>
                 <a class="text-link" href={href(offer.to)}>
-                  {offer.more} <i class="icon icon-arrow" aria-hidden="true" />
+                  {offer.more} <i class="icon icon-arrow icon-right" aria-hidden="true" />
                 </a>
               </li>
             ))
@@ -218,17 +212,12 @@ const rulesBg = await getImage({ src: spacePhoto, width: 640, quality: 50, forma
         <section id="reglas" class="section bg-photo" style={`--bg-photo: url(${rulesBg.src}); --bg-opacity: .12`} aria-labelledby="rules-title">
           <div class="section-heading">
             <h2 id="rules-title">
-              <span class="section-index">06 /</span>
+              <span class="section-index">{ui.souls.rules}</span>
               {rules.data.title}
             </h2>
             <SampleChip show={rules.data.placeholder} />
           </div>
-          {rules.data.lead && (
-            <p class="prose">
-              {rules.data.lead}
-            </p>
-          )}
-          <RulesList items={rules.data.items} />
+          <RulesList items={rules.data.items} compact />
         </section>
       )
     }

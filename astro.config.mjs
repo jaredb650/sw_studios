@@ -36,6 +36,16 @@ export default defineConfig({
       fallbacks: ['Arial Narrow', 'Impact', 'sans-serif'],
     },
     {
+      // Labels, dates and tags: one monospace everywhere, instead of each system's default.
+      provider: fontProviders.google(),
+      name: 'IBM Plex Mono',
+      cssVariable: '--font-mono',
+      weights: [400, 600],
+      styles: ['normal'],
+      subsets: ['latin'],
+      fallbacks: ['ui-monospace', 'Menlo', 'Consolas', 'monospace'],
+    },
+    {
       provider: fontProviders.google(),
       name: 'DM Sans',
       cssVariable: '--font-body',

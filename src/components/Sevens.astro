@@ -15,7 +15,7 @@ const souls = manifesto?.data.items ?? [];
 {
   souls.length > 0 && variant === 'inline' && (
     // One line when it fits; otherwise 4 on top and 3 below (src/scripts/site.ts
-    // hides the star between the groups once they wrap).
+    // hides the mark between the groups once they wrap).
     <div class="sevens inline" role="list" aria-label={label} data-sevens>
       {[souls.slice(0, 4), souls.slice(4)].map((group, g) => (
         <>
@@ -42,6 +42,7 @@ const souls = manifesto?.data.items ?? [];
           </span>
           <span class="seven-name">{soul.title}</span>
           <span class="seven-verb">{soul.text}</span>
+          {soul.about && <p class="seven-about">{soul.about}</p>}
         </li>
       ))}
     </ol>

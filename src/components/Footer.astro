@@ -13,48 +13,47 @@ const socials = [
   ['Patreon', site.patreon.status === 'live' ? site.patreon.url : null],
 ].filter((entry): entry is [string, string] => Boolean(entry[1]));
 const { address } = site;
+
+interface Props {
+  /** Pages that already show the address and directions (home, Visítanos) skip them here. */
+  showAddress?: boolean;
+}
+const { showAddress = true } = Astro.props;
 ---
 
+<!-- Two compact rows: the logo, pages and networks; then the address, copyright and motion toggle. -->
 <footer class="site-footer">
   <div class="footer-inner">
-    <div class="footer-brand">
-      <a class="logo" href={href(path('home'))}>
-        <span class="brand-mark" aria-hidden="true"></span>
-        <span>SHIPWRECK STUDIOS<span class="accent">_</span></span>
-      </a>
-      <p>{t.site.intro}. {t.site.tagline}.</p>
-    </div>
-    <div>
-      <h2>{t.footer.explore}</h2>
+    <a class="logo" href={href(path('home'))} aria-label={t.nav.home}>
+      <span class="brand-mark" aria-hidden="true"></span>
+      <span>SHIPWRECK STUDIOS<span class="accent">_</span></span>
+    </a>
+    <nav class="footer-links" aria-label={t.footer.explore}>
       <ul>
         {pages.map((route) => <li><a href={href(path(route))}>{t.footer.pages[route]}</a></li>)}
       </ul>
-    </div>
-    <div>
-      <h2>{t.footer.follow}</h2>
-      <ul>
-        {
-          socials.map(([label, url]) => (
-            <li>
-              <a href={url} target="_blank" rel="noopener">
-                {label} <i class="icon icon-arrow" aria-hidden="true" />
-              </a>
-            </li>
-          ))
-        }
-      </ul>
-    </div>
-    <div>
-      <h2>{t.footer.address}</h2>
-      <address style="font-style: normal">
-        {address.street}<br />{address.neighborhood}, {address.city}<br />Puerto Rico{address.postalCode && ` ${address.postalCode}`}
-      </address>
-      <p style="margin-top: 12px">
-        <a class="inline-link" href={address.mapsUrl} target="_blank" rel="noopener">{t.footer.directions}</a>
-      </p>
-    </div>
+    </nav>
+    <ul class="footer-social" aria-label={t.footer.follow}>
+      {
+        socials.map(([label, url]) => (
+          <li>
+            <a href={url} target="_blank" rel="noopener">
+              {label} <i class="icon icon-arrow" aria-hidden="true" />
+            </a>
+          </li>
+        ))
+      }
+    </ul>
   </div>
   <div class="footer-bottom">
+    {
+      showAddress && (
+        <address>
+          {address.street}, {address.neighborhood}, {address.city}{address.postalCode && ` ${address.postalCode}`} ·{' '}
+          <a class="inline-link" href={address.mapsUrl} target="_blank" rel="noopener">{t.footer.directions}</a>
+        </address>
+      )
+    }
     <span>© {new Date().getFullYear()} Shipwreck Studios · {t.site.city}</span>
     <button class="motion-toggle" type="button" hidden data-pause-label={t.footer.pauseMotion} data-play-label={t.footer.playMotion}>{t.footer.pauseMotion}</button>
   </div>

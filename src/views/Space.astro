@@ -51,7 +51,7 @@ const explore = [
 ---
 
 <Base title={t.label} description={lead ?? t.description} page="space">
-  <PageHero index={t.index} label={t.label} title={t.heading} accent={t.accent} bg={spaceBg.src} split>
+  <PageHero kicker={ui.souls.space} label={t.label} title={t.heading} accent={t.accent} bg={spaceBg.src} split>
     {lead && <p class="mission">{lead}</p>}
   </PageHero>
 
@@ -60,7 +60,6 @@ const explore = [
       <section class="section" aria-labelledby="tour-title">
         <div class="section-heading">
           <h2 id="tour-title">
-            <span class="section-index">01 /</span>
             {t.tour}
           </h2>
           <SampleChip show={espacio.data.placeholder} />
@@ -95,7 +94,6 @@ const explore = [
       <section class="section manifesto" aria-labelledby="manifesto-title">
         <div class="section-heading">
           <h2 id="manifesto-title">
-            <span class="section-index">02 /</span>
             {manifesto.data.title}
           </h2>
         </div>
@@ -116,7 +114,6 @@ const explore = [
       <section class="section" aria-labelledby="photos-title">
         <div class="section-heading">
           <h2 id="photos-title">
-            <span class="section-index">03 /</span>
             {t.photos}
           </h2>
           <SampleChip show={espacio.data.placeholder} />
@@ -137,7 +134,6 @@ const explore = [
       <section class="section founder" aria-labelledby="founder-title">
         <div class="section-heading">
           <h2 id="founder-title">
-            <span class="section-index">04 /</span>
             {founder.data.title}
           </h2>
         </div>
@@ -171,7 +167,7 @@ const explore = [
             <a href={href(item.href)}>
               <span>{item.label}</span>
               <span class="round-arrow" aria-hidden="true">
-                <i class="icon icon-arrow" />
+                <i class="icon icon-arrow icon-right" />
               </span>
             </a>
           </li>

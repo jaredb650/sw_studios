@@ -16,11 +16,11 @@ const artists = await getArtists();
 ---
 
 <Base title={t.title} description={t.description} page="gallery">
-  <PageHero index={t.index} label={t.label} title={t.heading} accent={t.accent} lead={t.lead} />
+  <PageHero kicker={ui.souls.gallery} label={t.label} title={t.heading} accent={t.accent} lead={t.lead} />
 
   <section class="section" aria-labelledby="current-title">
     <div class="section-heading">
-      <h2 id="current-title"><span class="section-index">{t.works(current.length)} /</span>{t.current}</h2>
+      <h2 id="current-title"><span class="section-index">{t.works(current.length)}</span>{t.current}</h2>
     </div>
     {
       current.length ? (
@@ -40,7 +40,7 @@ const artists = await getArtists();
       <section class="section" aria-labelledby="archived-title">
         <div class="section-heading">
           <h2 id="archived-title">
-            <span class="section-index">{t.works(archived.length)} /</span>
+            <span class="section-index">{t.works(archived.length)}</span>
             {t.archived}
           </h2>
           <span class="label">{t.repainted}</span>

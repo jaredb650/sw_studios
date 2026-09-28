@@ -17,7 +17,7 @@ const programLead = program ? program.data.lead : undefined;
 ---
 
 <Base title={t.title} description={t.description} page="participate">
-  <PageHero index={t.index} label={t.label} title={t.heading} accent={t.accent} lead={t.lead} />
+  <PageHero kicker={ui.souls.participate} label={t.label} title={t.heading} accent={t.accent} lead={t.lead} />
 
   <nav class="page-anchors" aria-label={t.options}>
     <a href="#membresia">{t.membership} <i class="icon icon-arrow icon-down" aria-hidden="true"></i></a>
@@ -27,7 +27,7 @@ const programLead = program ? program.data.lead : undefined;
 
   <section class="section" id="membresia" aria-labelledby="membership-title">
     <div class="section-heading">
-      <h2 id="membership-title"><span class="section-index">01 /</span>{t.membership}</h2>
+      <h2 id="membership-title">{t.membership}</h2>
       <span class="label">{t.viaPatreon}</span>
     </div>
     <PatreonTiers />
@@ -35,7 +35,7 @@ const programLead = program ? program.data.lead : undefined;
 
   <section class="section" id="programa-de-artistas" aria-labelledby="program-title">
     <div class="section-heading">
-      <h2 id="program-title"><span class="section-index">02 /</span>{t.program}</h2>
+      <h2 id="program-title">{t.program}</h2>
       <SampleChip show={program?.data.placeholder} />
     </div>
     {
@@ -55,7 +55,7 @@ const programLead = program ? program.data.lead : undefined;
   <!-- Pitch an event: for now proposals come in by Instagram DM. -->
   <section class="section" id="propon-un-evento" aria-labelledby="pitch-title">
     <div class="section-heading">
-      <h2 id="pitch-title"><span class="section-index">03 /</span>{t.pitch}</h2>
+      <h2 id="pitch-title">{t.pitch}</h2>
       <span class="label">Instagram</span>
     </div>
     <div class="pitch">
@@ -67,7 +67,7 @@ const programLead = program ? program.data.lead : undefined;
         <ul class="pitch-perks">
           {t.pitchPerks.map((perk) => (
             <li>
-              <i class="icon icon-star" aria-hidden="true" />
+              <i class="icon icon-mark" aria-hidden="true" />
               <span>{perk}</span>
             </li>
           ))}

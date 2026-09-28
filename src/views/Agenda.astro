@@ -23,10 +23,10 @@ const typeCounts = TYPE_ORDER.map((type) => ({ type, count: upcoming.filter((eve
 ---
 
 <Base title={t.title} description={t.description} page="agenda" jsonLd={jsonLd}>
-  <section class="section events" aria-labelledby="agenda-title">
+  <section class="section events agenda-page" aria-labelledby="agenda-title">
     <div class="section-heading page-heading">
       <div>
-        <h1 id="agenda-title"><span class="section-index">{t.index}</span>{t.heading}</h1>
+        <h1 id="agenda-title"><span class="section-index">{ui.souls.agenda}</span>{t.heading}</h1>
         <p class="page-sub">{t.sub}</p>
       </div>
       <span class="label"><span data-live-count data-template={t.count(0)}>{t.count(upcoming.length)}</span>{years.length ? ` / ${years.join('–')}` : ''}</span>

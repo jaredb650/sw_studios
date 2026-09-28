@@ -26,7 +26,7 @@ const owner = nav.find((item) => item.pages.some((route) => current.startsWith(r
     <nav class="site-nav" id="menu" aria-label={t.nav.label}>
       <ul>
         {
-          nav.map((item, i) => (
+          nav.map((item) => (
             <li>
               <a
                 href={isHome ? `#${item.section}` : href(`${path('home')}#${item.section}`)}
@@ -34,9 +34,6 @@ const owner = nav.find((item) => item.pages.some((route) => current.startsWith(r
                 aria-current={owner === item ? 'page' : undefined}
               >
                 {t.nav.sections[item.section]}
-                <span class="nav-index" aria-hidden="true">
-                  {String(i).padStart(2, '0')}
-                </span>
               </a>
             </li>
           ))

@@ -24,6 +24,12 @@ export function hideEnded(now = new Date()) {
 export function initAgenda(now = new Date()) {
   const today = dayKey(now);
   hideEnded(now);
+  // "13 eventos próximos": recount without the events that have ended.
+  document.querySelectorAll<HTMLElement>('[data-count-ends]').forEach((label) => {
+    const left = (JSON.parse(label.dataset.countEnds!) as string[]).filter((end) => new Date(end) > now).length;
+    const text = (left === 1 ? label.dataset.one : label.dataset.many) ?? '';
+    label.textContent = text.replace(/^\d+/, String(left));
+  });
   const mark = (element: HTMLElement, starts: Date) => {
     if (starts > now && dayKey(starts) !== today) return;
     const chip = element.querySelector<HTMLElement>('[data-today]');

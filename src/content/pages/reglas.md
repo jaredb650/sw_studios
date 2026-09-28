@@ -12,11 +12,11 @@ items:
     text: "Las paredes son galería: no toques ni te recuestes en murales u obras."
   - title: "Fotos con respeto"
     text: "Sin flash durante presentaciones. Pide permiso antes de fotografiar a otros."
-  - title: "Identificación y edad"
-    text: "La edad mínima varía por evento. Trae identificación con foto vigente."
-  - title: "Prohibido portar armas"
-    text: "No se permiten armas ni objetos peligrosos. Podemos revisar pertenencias."
-  - title: "Derecho de admisión"
-    text: "La entrada depende de cumplir estas reglas."
+  - title: "Edad"
+    text: "Cada evento indica su edad mínima. Si aplica, trae identificación con foto."
+  - title: "Tu seguridad"
+    text: "No se permiten armas ni objetos peligrosos en el espacio."
+  - title: "Un espacio para todos"
+    text: "Quien no respete estas reglas no podrá quedarse."
 placeholder: true
 ---

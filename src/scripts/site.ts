@@ -67,11 +67,6 @@ window.matchMedia('(min-width: 961px)').addEventListener('change', (event) => ev
 
 /* Scroll-linked effects */
 const hero = document.querySelector<HTMLElement>('.masthead');
-const ribbon = document.querySelector<HTMLElement>('.type-ribbon');
-const about = document.querySelector<HTMLElement>('.about');
-const poster = document.querySelector<HTMLElement>('.featured .poster');
-const featured = document.querySelector<HTMLElement>('.featured');
-const culture = [...document.querySelectorAll<HTMLElement>('.culture-line')];
 let frame = 0;
 
 /* On the home page, highlight the nav item for the section in view. */
@@ -97,28 +92,11 @@ function spy() {
 function update() {
   frame = 0;
   const y = window.scrollY;
-  const vh = window.innerHeight;
-  const scrollable = root.scrollHeight - vh;
-  root.style.setProperty('--scroll-progress', String(scrollable > 0 ? clamp(y / scrollable, 0, 1) : 0));
   header?.classList.toggle('is-scrolled', y > 30);
   spy();
   if (paused || document.hidden) return;
   const hr = hero?.getBoundingClientRect();
   if (hero && hr && hr.bottom > 0) hero.style.setProperty('--title-drift', `${clamp(-hr.top / hr.height, 0, 1) * -28}px`);
-  const rr = ribbon?.getBoundingClientRect();
-  if (ribbon && rr && rr.top < vh && rr.bottom > 0) {
-    ribbon.style.setProperty('--ribbon-x', `${-50 - clamp((vh - rr.top) / (vh + rr.height), 0, 1) * 260}px`);
-  }
-  const ar = about?.getBoundingClientRect();
-  if (about && ar && ar.top < vh && ar.bottom > 0) {
-    const progress = clamp((vh - ar.top) / (vh + ar.height), 0, 1);
-    about.style.setProperty('--about-turn', `${-12 + progress * 24}deg`);
-    culture.forEach((line, i) => line.style.setProperty('--culture-x', `${(progress - 0.5) * (i === 1 ? -30 : 24)}px`));
-  }
-  if (poster && featured && window.innerWidth > 680) {
-    const pr = featured.getBoundingClientRect();
-    if (pr.top < vh && pr.bottom > 0) poster.style.setProperty('--poster-y', `${clamp((vh * 0.3 - pr.top) * 0.045, -14, 24)}px`);
-  }
 }
 const requestUpdate = () => {
   if (!frame) frame = requestAnimationFrame(update);

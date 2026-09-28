@@ -6,8 +6,10 @@ import { useLang } from '../i18n';
 interface Props {
   heading?: 'h1' | 'h2';
   showMore?: boolean;
+  /** The Instagram and email links (the /visita/ page lists them in its own contact section). */
+  showContact?: boolean;
 }
-const { heading: Heading = 'h2', showMore = true } = Astro.props;
+const { heading: Heading = 'h2', showMore = true, showContact = true } = Astro.props;
 const { address, contact } = site;
 const Venue = Heading === 'h1' ? 'h2' : 'h3';
 const { t: ui, path } = useLang();
@@ -31,17 +33,21 @@ const t = ui.visit;
       <a class="text-link" href={address.appleMapsUrl} target="_blank" rel="noopener">
         {t.apple} <i class="icon icon-arrow" aria-hidden="true"></i>
       </a>
-      <a class="text-link" href={contact.instagramDm} target="_blank" rel="noopener" style="margin-top: 26px">
-        {t.instagram} <i class="icon icon-arrow" aria-hidden="true"></i>
-      </a>
       {
-        contact.email && (
+        showContact && (
+          <a class="text-link" href={contact.instagramDm} target="_blank" rel="noopener" style="margin-top: 26px">
+            {t.instagram} <i class="icon icon-arrow" aria-hidden="true" />
+          </a>
+        )
+      }
+      {
+        showContact && contact.email && (
           <a class="text-link" href={`mailto:${contact.email}`}>
             {contact.email} <i class="icon icon-arrow" aria-hidden="true" />
           </a>
         )
       }
-      {showMore && <SectionMore to={path('visit')} label={t.contactMore} inverse />}
+      {showMore && <SectionMore to={path('visit')} label={t.contactMore} inverse plain />}
     </div>
   </div>
 </section>

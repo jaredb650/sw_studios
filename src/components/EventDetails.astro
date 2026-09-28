@@ -181,9 +181,9 @@ const descriptionId = `${anchor}-descripcion`;
     {t.directions}<span class="visually-hidden">: {data.title}</span> <i class="icon icon-arrow" aria-hidden="true" />
   </a>
   <a class="text-link" href={href(`${path('home')}#reglas`)}>
-    {t.rules}<span class="visually-hidden">: {data.title}</span> <i class="icon icon-arrow" aria-hidden="true" />
+    {t.rules}<span class="visually-hidden">: {data.title}</span> <i class="icon icon-arrow icon-right" aria-hidden="true" />
   </a>
   <a class="text-link" href={href(`${path(upcoming ? 'agenda' : 'archive')}#${anchor}`)} data-share={data.title} data-copied={t.linkCopied}>
-    {t.share} <span class="visually-hidden">{data.title}</span><i class="icon icon-arrow" aria-hidden="true" />
+    {t.share} <span class="visually-hidden">{data.title}</span>
   </a>
 </div>
