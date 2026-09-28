@@ -517,31 +517,23 @@ html:has(.rules-dialog[open]) { overflow: hidden; }
 .rules-dialog h2:focus { outline: none; }
 .rules-dialog::backdrop { background: rgba(9, 10, 9, .82); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
 
+/* Membership tiers (src/components/PatreonTiers.astro) */
+.tier-list { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
+.tier-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr) auto; gap: 20px 40px; align-items: start; padding: 28px 0; border-bottom: 1px solid var(--line); }
+.tier-name { font-family: var(--display); font-weight: 700; text-transform: uppercase; font-size: 28px; line-height: 1; }
+.tier-price { margin-top: 8px; font-size: 20px; font-weight: 600; }
+.tier-price span { font-size: 14px; font-weight: 400; color: var(--muted); }
+.tier-detail p { color: var(--muted); margin-bottom: 8px; }
+.tier-detail ul { margin: 0; padding-left: 1.1em; display: grid; gap: 6px; }
+.tier-row .text-link { white-space: nowrap; }
+@media (max-width: 800px) { .tier-row { grid-template-columns: minmax(0, 1fr); } }
+
+/* Participa page: jump links to the three ways to take part */
+.page-anchors { max-width: var(--max); margin: 0 auto; padding: 0 var(--gutter); display: flex; flex-wrap: wrap; gap: 10px 34px; }
+.page-anchors a { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; border-bottom: 1px solid var(--line-strong); font-weight: 500; }
+.page-anchors a:hover { color: var(--accent); border-color: var(--accent); }
+
 /* Participa */
-.offers { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--line); }
-.offer { padding: 40px; display: grid; gap: 14px; align-content: start; }
-.offer + .offer { border-left: 1px solid var(--line); }
-.offer .index { font-family: var(--mono); font-size: 12px; color: var(--muted); letter-spacing: 1px; }
-.offer h2 { font-family: var(--display); font-weight: 700; text-transform: uppercase; font-size: clamp(2.4rem, 4.4vw, 4rem); line-height: .95; }
-.offer p { color: var(--muted); max-width: 460px; }
-.offer .text-link { margin-top: 8px; }
-.tiers { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); border: 1px solid var(--line); }
-.tier { padding: 38px 34px; display: flex; flex-direction: column; gap: 16px; position: relative; }
-.tier + .tier { border-left: 1px solid var(--line); }
-.tier.highlight { background: var(--accent); color: var(--accent-ink); }
-.tier.highlight .muted, .tier.highlight .per { color: var(--accent-muted); }
-.tier-name { font-family: var(--mono); font-size: 13px; letter-spacing: 2px; text-transform: uppercase; }
-.tier-price { font-family: var(--display); font-weight: 700; font-size: 96px; line-height: .85; display: flex; align-items: flex-start; gap: 6px; }
-.tier-price sup { font-size: .4em; line-height: 1; margin-top: .12em; }
-.per { font-family: var(--mono); font-size: 12px; color: var(--muted); letter-spacing: 1px; }
-.tier ul { list-style: none; display: grid; gap: 10px; margin: 8px 0 18px; }
-.tier li { display: grid; grid-template-columns: 20px minmax(0, 1fr); gap: 10px; font-size: 15px; }
-.tier li .icon { margin-top: 3px; color: var(--accent); }
-.tier.highlight li .icon { color: var(--accent-ink); }
-.tier .button { margin-top: auto; }
-.tier.highlight .button { background: var(--accent-ink); color: var(--accent); }
-.tier.highlight .button:hover { background: var(--fg); color: var(--accent-ink); box-shadow: 7px 7px 0 var(--accent-shadow); }
-.tier-flag { position: absolute; top: 18px; right: 18px; }
 .fine-print { font-size: 13px; color: var(--muted); max-width: 720px; margin-top: 22px; line-height: 1.6; }
 
 .coming-soon {
@@ -550,7 +542,7 @@ html:has(.rules-dialog[open]) { overflow: hidden; }
   display: grid; gap: 20px;
   background: repeating-linear-gradient(-45deg, transparent 0 22px, #ffffff04 22px 44px);
 }
-.coming-soon .big { font-family: var(--display); font-weight: 800; text-transform: uppercase; font-size: clamp(2.4rem, 10vw, 9rem); overflow-wrap: anywhere; line-height: .85; color: transparent; -webkit-text-stroke: 1.5px var(--accent); }
+.coming-soon .big { max-width: none; font-family: var(--display); font-weight: 800; text-transform: uppercase; font-size: clamp(2rem, 9vw, 9rem); line-height: .85; color: transparent; -webkit-text-stroke: 1.5px var(--accent); }
 .coming-soon p { max-width: 560px; color: var(--muted); font-size: 17px; }
 
 /* 404 */
@@ -576,9 +568,6 @@ html:has(.rules-dialog[open]) { overflow: hidden; }
   .profile-photo { position: static; max-width: 520px; }
   .split { grid-template-columns: 1fr; gap: 34px; }
   .founder-photo { max-width: 420px; }
-  .offers { grid-template-columns: 1fr; }
-  .offer + .offer { border-left: 0; border-top: 1px solid var(--line); }
-  .tier + .tier { border-left: 0; border-top: 1px solid var(--line); }
 }
 @media (max-width: 680px) {
   .masthead { min-height: 600px; min-height: calc(86svh - 75px); padding-top: 26px; padding-bottom: 27px; }
@@ -647,9 +636,6 @@ html:has(.rules-dialog[open]) { overflow: hidden; }
   .mosaic a:first-child, .mosaic a:last-child:nth-child(even) { grid-column: span 2; }
   .lightbox-stage { padding: 0 8px; }
   .lightbox-prev, .lightbox-next { top: auto; bottom: 8px; translate: none; width: 46px; height: 46px; background: rgba(17, 18, 17, .8); }
-  .offer { padding: 28px; }
-  .tier { padding: 30px 26px; }
-  .tier-price { font-size: 80px; }
 }
 
 /* ------------------------------------------------------------------
@@ -864,29 +850,18 @@ html:has(.rules-dialog[open]) { overflow: hidden; }
 .page-hero-side .mission { font-size: clamp(1.7rem, 2.7vw, 2.9rem); line-height: 1.02; }
 .page-hero-side .lead { margin-top: 0; }
 
-/* Membresías band on the home page */
-.participa-band {
-  display: grid; gap: 30px;
-  border: 1px solid var(--line); padding: 44px 50px;
-  background: linear-gradient(110deg, #d5ff5109, transparent 55%);
-  position: relative;
-}
-.participa-band::before { content: ""; position: absolute; left: -1px; top: -1px; bottom: -1px; width: 3px; background: var(--accent); }
+/* Participa band on the home page */
+.participa-band { display: grid; gap: 30px; }
 .participa-head { text-align: center; display: grid; gap: 12px; justify-items: center; }
 .participa-head h2 { font-family: var(--display); font-weight: 700; text-transform: uppercase; font-size: clamp(2.6rem, 5vw, 4.8rem); line-height: .95; }
 .participa-sub { color: var(--fg); font-size: 18px; max-width: 620px; }
-.participa-offers { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border-top: 1px solid var(--line); }
+.participa-offers { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border-top: 1px solid var(--line); list-style: none; margin: 0; padding: 0; }
 .participa-offer { display: flex; flex-direction: column; gap: 14px; padding: 28px 40px 4px 0; }
 .participa-offer + .participa-offer { padding: 28px 0 4px 40px; border-left: 1px solid var(--line); }
 .participa-offer h3 { font-family: var(--display); font-weight: 700; text-transform: uppercase; font-size: clamp(26px, 2.4vw, 34px); line-height: 1; color: var(--accent); }
+.participa-offer h3 .chip { vertical-align: middle; margin-left: 6px; color: var(--muted); }
 .participa-offer p { color: var(--muted); font-size: 16px; line-height: 1.6; }
-.participa-perks { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
-.participa-perks li { display: grid; grid-template-columns: 18px minmax(0, 1fr); gap: 10px; font-size: 15px; line-height: 1.45; }
-.participa-perks .icon { color: var(--accent); margin-top: 3px; font-size: 13px; }
 .participa-offer .text-link { margin-top: auto; max-width: none; }
-.participa-note { text-align: center; font-size: 12px; color: var(--muted); margin-top: -8px; }
-.participa-cta { display: flex; justify-content: center; }
-.participa-cta .button { min-width: 280px; font-size: 18px; padding: 20px 24px; }
 
 /* Galería mosaic on the home page: one large tile and up to four smaller ones. */
 .art-mosaic { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); grid-auto-rows: clamp(150px, 15vw, 250px); gap: 12px; }
@@ -937,7 +912,6 @@ html:has(.rules-dialog[open]) { overflow: hidden; }
 }
 @media (max-width: 1000px) {
   .page-hero-grid { grid-template-columns: 1fr; gap: 20px; }
-  .participa-band { padding: 34px; }
 }
 @media (max-width: 680px) {
   .sevens.inline .seven, .sevens-sep { font-size: 16px; }
@@ -947,16 +921,12 @@ html:has(.rules-dialog[open]) { overflow: hidden; }
   .sevens.full li { align-content: start; gap: 10px; }
   .page-hero.is-split { padding-bottom: 36px; }
   .page-hero-side .mission { font-size: 26px; }
-  .participa-band { padding: 26px 22px; gap: 20px; }
   .participa-head h2 { font-size: clamp(32px, 10vw, 44px); }
   .participa-sub { font-size: 15.5px; }
   .participa-offers { grid-template-columns: 1fr; }
   .participa-offer, .participa-offer + .participa-offer { padding: 22px 0 6px; border-left: 0; }
   .participa-offer + .participa-offer { border-top: 1px solid var(--line); }
   .participa-offer p { font-size: 15px; }
-  .participa-perks li { font-size: 14px; }
-  .participa-note { margin-top: -4px; }
-  .participa-cta .button { width: 100%; min-width: 0; }
   /* Mosaic on phones: large tile across the top, four small tiles below, all in one screen. */
   .art-mosaic { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: min(26vw, 16svh); gap: 8px; }
   .art-mosaic .art-tile:first-child { grid-column: span 2; grid-row: span 2; }
@@ -1256,6 +1226,9 @@ html:not(.js) :is([data-type-filter], [data-tag-filter]) { display: none; }
 @media (max-width: 1000px) { .offers { grid-template-columns: 1fr; } }
 
 /* Participa page: pitch an event */
+.pitch-perks { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.pitch-perks li { display: grid; grid-template-columns: 18px minmax(0, 1fr); gap: 10px; font-size: 15px; line-height: 1.45; }
+.pitch-perks .icon { color: var(--accent); margin-top: 3px; font-size: 13px; }
 .pitch { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 50px; align-items: start; border-top: 1px solid var(--line); padding-top: 30px; }
 .pitch-lead { font-family: var(--display); font-weight: 600; text-transform: uppercase; font-size: clamp(1.8rem, 3vw, 2.8rem); line-height: 1.02; }
 .pitch-how { color: var(--muted); font-size: 17px; line-height: 1.6; margin-top: 18px; max-width: 620px; }

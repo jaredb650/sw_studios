@@ -199,7 +199,7 @@ function portrait(name, discipline, seed) {
   };
 }
 
-function artwork(title, seed) {
+function artwork(seed) {
   const random = rng(seed);
   const [width, height] = pick(random, [
     [1200, 1500],
@@ -301,7 +301,7 @@ async function render(target, data) {
     case 'artists':
       return portrait(data.name ?? name, data.disciplines?.[0] ?? 'Artista', name);
     case 'artworks':
-      return artwork(data.title ?? name, name);
+      return artwork(name);
     case 'venue':
       return name === 'fundador'
         ? portrait('Fundador', 'Shipwreck Studios', name)

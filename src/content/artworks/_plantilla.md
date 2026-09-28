@@ -12,4 +12,5 @@ location: "Pared norte, sala principal"      # For current work.
 image: ../../assets/artworks/titulo-de-la-obra.jpg
 alt: "Descripción visual de la obra"
 order: 1
+# draft: true                 # Hide this work from the site without deleting the file.
 ---

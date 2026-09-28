@@ -17,10 +17,15 @@ const time = z
 
 // An 11-character YouTube video id, e.g. the `dQw4w9WgXcQ` in youtube.com/watch?v=dQw4w9WgXcQ.
 // Omit `youtube` to show a "video coming soon" frame instead.
+// Web links (tickets, socials, selected work) must be http(s) addresses.
+const link = z.url({ protocol: /^https?$/, error: 'Usa un enlace completo que empiece con https://' });
+
+// Every schema is strict: a misspelled field (e.g. "featued") stops the build
+// instead of being silently ignored.
 const video = z.object({
   youtube: z.string().regex(/^[\w-]{11}$/, { error: 'Usa solo el id de 11 caracteres del video.' }).optional(),
   title: z.string(),
-});
+}).strict();
 
 const events = defineCollection({
   loader: glob({ pattern: '**/[^_]*.md', base: './src/content/events' }),
@@ -48,7 +53,7 @@ const events = defineCollection({
           ),
         lineup: z.array(z.string()).default([]),
         admission: z.enum(['tickets', 'free', 'door', 'soon']),
-        ticketUrl: z.url().optional(),
+        ticketUrl: link.optional(),
         price: z.string().optional(),
         restrictions: z.string().optional(),
         // Any event can be the Featured Event at the top of the agenda. If several
@@ -56,10 +61,12 @@ const events = defineCollection({
         // What kind of event it is: shown on the card and used by the agenda filters.
         type: z.enum(['musica', 'arte', 'taller', 'clase', 'bienestar', 'mercado', 'comunidad']).default('musica'),
         featured: z.boolean().default(false),
+        // true = the button reads "Agotado" (greyed out) instead of linking to tickets.
+        soldOut: z.boolean().default(false),
         status: z.enum(['scheduled', 'cancelled', 'postponed']).default('scheduled'),
         statusNote: z.string().optional(),
         timeNote: z.string().optional(),
-        source: z.url().optional(),
+        source: link.optional(),
         sourceLabel: z.string().optional(),
         recap: z
           .object({
@@ -73,26 +80,36 @@ const events = defineCollection({
         placeholder: z.boolean().default(false),
         draft: z.boolean().default(false),
       })
+      .strict()
       .refine((event) => event.admission !== 'tickets' || event.ticketUrl, {
         error: 'admission: tickets requiere ticketUrl.',
         path: ['ticketUrl'],
+      })
+      .refine((event) => !event.endDate || event.endDate >= event.date, {
+        error: 'endDate no puede ser anterior a date.',
+        path: ['endDate'],
+      })
+      .refine((event) => !event.end || event.start, {
+        error: 'Si indicas end (hora de cierre), indica también start.',
+        path: ['end'],
       }),
 });
 
 const socials = z
   .object({
-    instagram: z.url(),
-    soundcloud: z.url(),
-    mixcloud: z.url(),
-    spotify: z.url(),
-    bandcamp: z.url(),
-    beatport: z.url(),
-    residentAdvisor: z.url(),
-    youtube: z.url(),
-    tiktok: z.url(),
-    website: z.url(),
+    instagram: link,
+    soundcloud: link,
+    mixcloud: link,
+    spotify: link,
+    bandcamp: link,
+    beatport: link,
+    residentAdvisor: link,
+    youtube: link,
+    tiktok: link,
+    website: link,
   })
   .partial()
+  .strict()
   .default({});
 
 const artists = defineCollection({
@@ -109,12 +126,12 @@ const artists = defineCollection({
       socials,
       // Selected external work: mixes, releases, videos, press.
       work: z
-        .array(z.object({ title: z.string(), url: z.url(), kind: z.string().optional() }))
+        .array(z.object({ title: z.string(), url: link, kind: z.string().optional() }))
         .default([]),
       order: z.number().default(100),
       placeholder: z.boolean().default(false),
       draft: z.boolean().default(false),
-    }),
+    }).strict(),
 });
 
 const artworks = defineCollection({
@@ -139,6 +156,7 @@ const artworks = defineCollection({
         placeholder: z.boolean().default(false),
         draft: z.boolean().default(false),
       })
+      .strict()
       .refine((work) => work.artist || work.artistName, {
         error: 'Indica artist (residente) o artistName (invitado).',
         path: ['artist'],
@@ -167,7 +185,7 @@ const pages = defineCollection({
       // Text after the item list (Markdown), e.g. the manifesto's closing after the SEVENS.
       outro: z.string().optional(),
       placeholder: z.boolean().default(false),
-    }),
+    }).strict(),
 });
 
 export const collections = { events, artists, artworks, pages };

@@ -75,6 +75,22 @@ const explore = [
   }
 
   {
+    /* "Nuestra historia": the body of src/content/pages/espacio.md. Hidden until the client sends it. */
+    espacio.body?.trim() && (
+      <section class="section" aria-labelledby="story-title">
+        <div class="split">
+          <div class="section-heading" style="display: block">
+            <h2 id="story-title">{t.story}</h2>
+          </div>
+          <div class="prose">
+            <EntryBody entry={espacio} />
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  {
     manifesto && (
       <section class="section manifesto" aria-labelledby="manifesto-title">
         <div class="section-heading">

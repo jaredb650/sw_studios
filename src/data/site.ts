@@ -14,7 +14,6 @@ export type PatreonTier = {
   benefits: string[];
   /** Tier-specific join link; falls back to patreon.url. */
   url?: string;
-  highlight?: boolean;
 };
 
 export const site = {
@@ -84,7 +83,6 @@ export const site = {
           'Inscripción anticipada y cupos reservados en talleres',
           'Sesiones y encuentros exclusivos para miembros',
         ],
-        highlight: true,
       },
       {
         name: 'Capitanía',

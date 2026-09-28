@@ -1,7 +1,7 @@
 ---
 title: "Programa de Artistas"
 status: coming-soon
-lead: "Aplica para ser artista residente patrocinado por Shipwreck: acceso al espacio fuera de horario, estudios y materiales, paredes para pintar y oportunidades de exhibición. Es distinto de las membresías de Patreon."
+lead: "Estamos preparando el Programa de Artistas: una forma de crear, trabajar y exhibir en Shipwreck. Es distinto de la membresía de Patreon."
 placeholder: true
 ---
 

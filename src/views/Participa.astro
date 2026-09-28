@@ -19,28 +19,11 @@ const programLead = program ? program.data.lead : undefined;
 <Base title={t.title} description={t.description} page="participate">
   <PageHero index={t.index} label={t.label} title={t.heading} accent={t.accent} lead={t.lead} />
 
-  <section class="section" aria-label={t.options}>
-    <div class="offers">
-      <div class="offer">
-        <span class="index">{t.paid}</span>
-        <h2>{t.membership}</h2>
-        <p>{t.membershipText}</p>
-        <a class="text-link" href="#membresia">{t.seeTiers} <i class="icon icon-arrow icon-down" aria-hidden="true"></i></a>
-      </div>
-      <div class="offer">
-        <span class="index">{t.participation}</span>
-        <h2>{t.program}</h2>
-        <p>{t.programText}</p>
-        <a class="text-link" href="#programa-de-artistas">{t.seeProgram} <i class="icon icon-arrow icon-down" aria-hidden="true"></i></a>
-      </div>
-      <div class="offer">
-        <span class="index">{t.pitchIndex}</span>
-        <h2>{t.pitch}</h2>
-        <p>{t.pitchText}</p>
-        <a class="text-link" href="#propon-un-evento">{t.seePitch} <i class="icon icon-arrow icon-down" aria-hidden="true"></i></a>
-      </div>
-    </div>
-  </section>
+  <nav class="page-anchors" aria-label={t.options}>
+    <a href="#membresia">{t.membership} <i class="icon icon-arrow icon-down" aria-hidden="true"></i></a>
+    <a href="#programa-de-artistas">{t.program} <i class="icon icon-arrow icon-down" aria-hidden="true"></i></a>
+    <a href="#propon-un-evento">{t.pitch} <i class="icon icon-arrow icon-down" aria-hidden="true"></i></a>
+  </nav>
 
   <section class="section" id="membresia" aria-labelledby="membership-title">
     <div class="section-heading">
@@ -81,7 +64,7 @@ const programLead = program ? program.data.lead : undefined;
         <p class="pitch-how">{t.pitchHow}</p>
       </div>
       <div class="pitch-side">
-        <ul class="participa-perks">
+        <ul class="pitch-perks">
           {t.pitchPerks.map((perk) => (
             <li>
               <i class="icon icon-star" aria-hidden="true" />

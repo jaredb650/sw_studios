@@ -32,6 +32,7 @@ const { upcoming, featured, rest } = await getAgenda();
 const preview = rest.slice(0, HOME_CARDS);
 const allArtists = await getArtists();
 const manifesto = await getEntry('pages', 'manifiesto');
+const program = await getEntry('pages', 'programa-de-artistas');
 const allCurrent = (await getCollection('artworks', ({ data }) => !data.draft && data.status === 'current')).sort(
   (a, b) => a.data.order - b.data.order,
 );
@@ -185,43 +186,30 @@ const rulesBg = await getImage({ src: spacePhoto, width: 640, quality: 50, forma
     <section id="participa" class="section" aria-labelledby="participa-title">
       <div class="participa-band" data-reveal>
         <div class="participa-head">
-          <span class="label muted">05 / {t.participaLabel}</span>
+          <span class="label muted">{t.participaLabel}</span>
           <h2 id="participa-title">{t.participaTitle.join(' ')}</h2>
           <p class="participa-sub">{t.participaSub}</p>
         </div>
-        <div class="participa-offers">
+        <ul class="participa-offers">
           {
             [
-              { title: t.memberTitle, text: t.memberText, perks: t.memberPerks, more: t.memberMore, to: `${path('participate')}#membresia` },
-              { title: t.programTitle, text: t.programText, perks: t.programPerks, more: t.programMore, to: `${path('participate')}#programa-de-artistas` },
-              { title: t.hostTitle, text: t.hostText, perks: t.hostPerks, more: t.hostMore, to: `${path('participate')}#propon-un-evento` },
+              { title: t.memberTitle, text: t.memberText, more: t.memberMore, to: `${path('participate')}#membresia`, soon: site.patreon.status !== 'live' },
+              { title: t.programTitle, text: t.programText, more: t.programMore, to: `${path('participate')}#programa-de-artistas`, soon: program?.data.status !== 'published' },
+              { title: t.hostTitle, text: t.hostText, more: t.hostMore, to: `${path('participate')}#propon-un-evento`, soon: false },
             ].map((offer, i) => (
-              <div class="participa-offer">
+              <li class="participa-offer">
                 <span class="participa-kicker">{t.offerKickers[i]}</span>
-                <h3>{offer.title}</h3>
+                <h3>
+                  {offer.title} {offer.soon && <span class="chip">{t.soon}</span>}
+                </h3>
                 <p>{offer.text}</p>
-                <ul class="participa-perks">
-                  {offer.perks.map((perk) => (
-                    <li>
-                      <i class="icon icon-star" aria-hidden="true" />
-                      <span>{perk}</span>
-                    </li>
-                  ))}
-                </ul>
                 <a class="text-link" href={href(offer.to)}>
                   {offer.more} <i class="icon icon-arrow" aria-hidden="true" />
                 </a>
-              </div>
+              </li>
             ))
           }
-        </div>
-        <p class="participa-note">{t.perksNote}</p>
-        <div class="participa-cta">
-          <a class="button" href={href(path('participate'))}>
-            <span>{t.learnMore}</span>
-            <i class="icon icon-arrow" aria-hidden="true"></i>
-          </a>
-        </div>
+        </ul>
       </div>
     </section>
 

@@ -46,6 +46,10 @@ export function admissionInfo(event: Event, { past = false } = {}): AdmissionInf
         return { chip: t.soon, label: t.infoSoon, primary: { label: t.ticketsSoon } };
     }
   })();
+  if (event.data.soldOut && !past && status === 'scheduled') {
+    info.chip = t.soldOut;
+    info.primary = { label: t.soldOut };
+  }
   if (past) info.primary = { label: t.eventEnded };
   else if (status === 'cancelled') info.primary = { label: t.eventCancelled };
   else if (status === 'postponed' && !info.primary.url) info.primary = { label: t.eventPostponed };
