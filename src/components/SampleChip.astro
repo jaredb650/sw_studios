@@ -1,0 +1,11 @@
+---
+import { useLang } from '../i18n';
+
+interface Props {
+  show?: boolean;
+}
+const { show = true } = Astro.props;
+const { t } = useLang(Astro.url);
+---
+
+{show && <span class="chip sample" title={t.sample.chipTitle}>{t.sample.chip}</span>}

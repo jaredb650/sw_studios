@@ -1,0 +1,25 @@
+{
+  "name": "shipwreck-studios",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "content": "node scripts/content-report.mjs",
+    "placeholders": "node scripts/placeholders.mjs",
+    "brand": "node scripts/brand-assets.mjs"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.4",
+    "astro": "^7.3.5",
+    "marked": "^18.0.14",
+    "sharp": "^0.35.5"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "js-yaml": "^5.4.2",
+    "typescript": "^6.0.3"
+  }
+}

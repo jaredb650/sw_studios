@@ -1,0 +1,145 @@
+---
+import { Font } from 'astro:assets';
+import '../styles/global.css';
+import '../styles/components.css';
+import '../styles/motion.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { site } from '../data/site';
+import { absolute, href } from '../lib/urls';
+import { getPlaceholders } from '../lib/placeholders';
+import RulesGate from '../components/RulesGate.astro';
+import { getRules, rulesVersion } from '../lib/rules';
+import { LANGS, useLang, type Lang } from '../i18n';
+
+interface Props {
+  title?: string;
+  description?: string;
+  /** Absolute or site-relative URL of the share image (1200×630 works best). */
+  image?: string;
+  imageAlt?: string;
+  page?: string;
+  jsonLd?: Record<string, unknown> | Record<string, unknown>[];
+  /** This page in each language (paths without the deploy base), for the ES/EN switch and hreflang. */
+  alternates?: Record<Lang, string>;
+}
+
+const { lang, t } = useLang(Astro.url);
+const { title, description = t.site.description, image, imageAlt, page = 'page', jsonLd, alternates } = Astro.props;
+const fullTitle = title ? `${title} — ${site.name}` : `${site.name} — ${t.site.tagline}`;
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const shareImage = image ? new URL(image, Astro.site).href : absolute('/og-default.jpg');
+const placeholders = await getPlaceholders();
+const isSample = placeholders.length > 0;
+const structured = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
+// The home page places its own inline rules checkpoint; other pages use the dialog.
+const rules = await getRules();
+const gate = rules && page !== 'not-found' ? (page === 'home' ? 'inline' : 'dialog') : undefined;
+---
+
+<!doctype html>
+<html lang={lang} data-rules-version={gate ? rulesVersion(rules!.data.items) : undefined}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {alternates && LANGS.map((code) => <link rel="alternate" hreflang={code} href={absolute(alternates[code])} />)}
+    {alternates && <link rel="alternate" hreflang="x-default" href={absolute(alternates.es)} />}
+    {isSample && <meta name="robots" content="noindex, nofollow" />}
+    <meta name="theme-color" content="#111211" />
+    <link rel="icon" type="image/png" href={href('/favicon.png')} />
+    <link rel="apple-touch-icon" href={href('/apple-touch-icon.png')} />
+    <link rel="sitemap" href={href('/sitemap-index.xml')} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:locale" content={t.ogLocale} />
+    <meta property="og:title" content={title ?? site.name} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={shareImage} />
+    {imageAlt && <meta property="og:image:alt" content={imageAlt} />}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title ?? site.name} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={shareImage} />
+
+    <Font cssVariable="--font-display" preload />
+    <Font cssVariable="--font-body" />
+
+    <script is:inline>
+      (function () {
+        var root = document.documentElement;
+        root.classList.add('js');
+        // The intro and the rules are remembered only while moving between pages
+        // during a visit. A reload (normal or hard) starts the visit over from the top.
+        // The site restores scroll itself: browsers restore it even on reload,
+        // which would reopen the page mid-scroll instead of at the intro.
+        var nav = window.performance && performance.getEntriesByType ? performance.getEntriesByType('navigation')[0] : null;
+        var type = nav ? nav.type : 'navigate';
+        var scrollKey = 'shipwreck-scroll:' + location.pathname + location.hash;
+        if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+        addEventListener('pagehide', function () {
+          try {
+            sessionStorage.setItem(scrollKey, String(Math.round(scrollY)));
+          } catch (e) {}
+        });
+        if (type === 'reload') {
+          try {
+            sessionStorage.removeItem('shipwreck-intro');
+            sessionStorage.removeItem('shipwreck-rules');
+          } catch (e) {}
+          if (location.hash) history.replaceState(null, '', location.pathname + location.search);
+        } else if (type === 'back_forward') {
+          // Pages restored from the back/forward cache keep their scroll; this covers full reloads.
+          var saved = 0;
+          try {
+            saved = Number(sessionStorage.getItem(scrollKey)) || 0;
+          } catch (e) {}
+          if (saved) {
+            addEventListener('load', function () {
+              scrollTo({ top: saved, behavior: 'instant' });
+            });
+          }
+        }
+        try {
+          localStorage.removeItem('shipwreck-rules'); // Earlier builds kept acceptance permanently.
+        } catch (e) {}
+        // Lock the site before first paint until the rules are accepted in this visit.
+        var version = root.getAttribute('data-rules-version');
+        if (!version) return;
+        var seen;
+        try {
+          seen = sessionStorage.getItem('shipwreck-rules');
+        } catch (e) {
+          seen = version;
+        }
+        if (seen !== version) root.classList.add('rules-pending');
+      })();
+    </script>
+    {structured.map((data) => <script type="application/ld+json" set:html={JSON.stringify(data)} />)}
+  </head>
+  <body data-page={page}>
+    <div class="reading-progress" aria-hidden="true"></div>
+    <a class="skip" href="#contenido">{t.nav.skip}</a>
+    {
+      isSample && (
+        <aside class="sample-banner" aria-label={t.sample.bannerLabel}>
+          <span>{t.sample.banner}</span>
+          <span>{t.sample.bannerText}</span>
+        </aside>
+      )
+    }
+    <Header alternates={alternates} />
+    <main id="contenido">
+      <slot />
+    </main>
+    <Footer />
+    {gate === 'dialog' && <RulesGate mode="dialog" />}
+    <script>
+      import '../scripts/site.ts';
+    </script>
+  </body>
+</html>

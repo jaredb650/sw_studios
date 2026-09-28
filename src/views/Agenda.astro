@@ -1,0 +1,55 @@
+---
+// Full agenda: every upcoming event. Past events live in the archive.
+import Base from '../layouts/Base.astro';
+import FeaturedEvent from '../components/FeaturedEvent.astro';
+import EventCard from '../components/EventCard.astro';
+import SectionMore from '../components/SectionMore.astro';
+import Lightbox from '../components/Lightbox.astro';
+import { getAgenda } from '../lib/events';
+import { site } from '../data/site';
+import { eventJsonLd } from '../lib/structured-data';
+import { year } from '../lib/dates';
+import { routePath, useLang } from '../i18n';
+
+const { lang, t: ui, path } = useLang(Astro.url);
+const t = ui.agendaPage;
+const { upcoming, past, featured, rest } = await getAgenda();
+const jsonLd = await Promise.all(upcoming.filter((event) => !event.data.placeholder).map((event) => eventJsonLd(event, lang)));
+const years = [...new Set(upcoming.map((event) => year(event.startsAt)))];
+const follow = ui.home.followFirst('@shipwreckstudios_');
+---
+
+<Base title={t.title} description={t.description} page="agenda" jsonLd={jsonLd} alternates={{ es: routePath('agenda', 'es'), en: routePath('agenda', 'en') }}>
+  <section class="section events" aria-labelledby="agenda-title">
+    <div class="section-heading page-heading">
+      <div>
+        <h1 id="agenda-title"><span class="section-index">{t.index}</span>{t.heading}</h1>
+        <p class="page-sub">{t.sub}</p>
+      </div>
+      <span class="label">{t.count(upcoming.length)}{years.length ? ` / ${years.join('–')}` : ''}</span>
+    </div>
+    {featured && <h2 class="visually-hidden">{t.featuredHidden}</h2>}
+    {featured && <FeaturedEvent event={featured} />}
+
+    <div class="agenda" data-upcoming>
+      {
+        rest.length > 0 && (
+          <div class="agenda-head">
+            <h2 class="agenda-title">{featured ? t.moreDates : t.dates}</h2>
+            <span class="label muted">{t.count(rest.length)}</span>
+          </div>
+        )
+      }
+      <div class="event-grid">
+        {rest.map((event) => <EventCard event={event} />)}
+      </div>
+      <p class="row-empty" data-agenda-empty hidden={rest.length > 0}>
+        {featured ? ui.home.noMore : ui.home.noEvents} {follow[0]} <a class="inline-link" href={site.socials.instagram} target="_blank" rel="noopener">{follow[1]}</a> {follow[2]}
+      </p>
+      <p class="source-note" style="margin-top: 22px">{t.promoterNote}</p>
+    </div>
+
+    <SectionMore to={path('archive')} label={t.seePast} detail={t.inArchive(past.length)} />
+  </section>
+  <Lightbox />
+</Base>

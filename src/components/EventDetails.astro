@@ -1,0 +1,186 @@
+---
+// Everything known about an event, rendered the same way wherever it appears:
+// the Featured Event, agenda cards, and archive rows. It renders sibling blocks
+// (no wrapper) with `ev-*` classes; the parent grid (.featured / .event-panel)
+// places them beside the flyer so the whole event fits on one screen.
+import { Image, getImage } from 'astro:assets';
+import Lineup from './Lineup.astro';
+import YouTube from './YouTube.astro';
+import EntryBody from './EntryBody.astro';
+import { admissionInfo } from '../lib/admission';
+import { clock, compactDate, longDate } from '../lib/dates';
+import { eventAnchor, hasRecap, type Event } from '../lib/events';
+import { href } from '../lib/urls';
+import { site } from '../data/site';
+import { pick, useLang } from '../i18n';
+
+interface Props {
+  event: Event;
+  mode: 'upcoming' | 'past';
+  /** The Featured Event already shows the date in large type. */
+  showDate?: boolean;
+}
+
+const { event, mode, showDate = true } = Astro.props;
+const { data } = event;
+const { lang, t: ui, path } = useLang(Astro.url);
+const t = ui.event;
+const anchor = eventAnchor(event);
+const admission = admissionInfo(event, { past: mode === 'past', lang });
+const { primary } = admission;
+const upcoming = mode === 'upcoming';
+const cancelled = data.status === 'cancelled';
+const multiDay = data.endDate && data.endDate !== data.date;
+const recap = !upcoming && hasRecap(event) ? data.recap : undefined;
+const recapPhotos = recap
+  ? await Promise.all(recap.photos.map(async (photo) => ({ ...photo, large: await getImage({ src: photo.src, width: 1800 }) })))
+  : [];
+const descriptionId = `${anchor}-descripcion`;
+---
+
+<dl class="facts ev-key">
+  {
+    (showDate || multiDay) && (
+      <>
+        <dt>{t.date}</dt>
+        <dd>
+          <span class="date-long">
+            {longDate(event.startsAt, lang)}
+            {multiDay && <> – {longDate(event.endsAt, lang)}</>}
+          </span>
+          <span class="date-short">
+            {compactDate(event.startsAt, lang)}
+            {multiDay && <> – {compactDate(event.endsAt, lang)}</>}
+          </span>
+        </dd>
+      </>
+    )
+  }
+  {
+    data.start && (
+      <>
+        <dt>{t.time}</dt>
+        <dd>
+          {clock(event.startsAt)}
+          {data.end && <> – {clock(event.endsAt)}</>}
+          <span class="tz"> · AST</span>
+        </dd>
+      </>
+    )
+  }
+  {
+    upcoming && !cancelled && (
+      <>
+        <dt>{t.admission}</dt>
+        <dd>{admission.label}</dd>
+      </>
+    )
+  }
+  {
+    data.restrictions && (
+      <>
+        <dt>{t.access}</dt>
+        <dd>{pick(data, 'restrictions', lang)}</dd>
+      </>
+    )
+  }
+</dl>
+
+{
+  (data.lineup.length > 0 || data.organizers.length > 0) && (
+    <dl class="facts ev-people">
+      {data.lineup.length > 0 && (
+        <>
+          <dt>{t.lineup}</dt>
+          <dd>
+            <Lineup lines={data.lineup} />
+          </dd>
+        </>
+      )}
+      {data.organizers.length > 0 && (
+        <>
+          <dt>{data.organizers.length > 1 ? t.organizers : t.organizer}</dt>
+          <dd>
+            <ul class="inline-list">
+              {data.organizers.map((name) => (
+                <li>{name}</li>
+              ))}
+            </ul>
+          </dd>
+        </>
+      )}
+    </dl>
+  )
+}
+
+{
+  (data.statusNote || data.timeNote) && (
+    <div class="ev-notes">
+      {data.statusNote && <p class="status-banner">{pick(data, 'statusNote', lang)}</p>}
+      {data.timeNote && <p class="time-note">{pick(data, 'timeNote', lang)}</p>}
+    </div>
+  )
+}
+
+{
+  event.body?.trim() && (
+    <div class="ev-desc" data-clamp>
+      <div class="prose event-description" id={descriptionId}>
+        <EntryBody entry={event} />
+      </div>
+      <button class="read-more" type="button" aria-expanded="false" aria-controls={descriptionId} data-more={t.readMore} data-less={t.readLess} hidden>
+        {t.readMore}
+      </button>
+    </div>
+  )
+}
+
+{
+  recap && (
+    <div class="recap ev-recap">
+      <p class="label muted">{t.recap}</p>
+      {recap.summary && <p class="prose">{pick(recap, 'summary', lang)}</p>}
+      {recapPhotos.length > 0 && (
+        <div class="recap-grid">
+          {recapPhotos.map((photo) => (
+            <a href={photo.large.src} data-lightbox={anchor} data-title={data.title} data-meta={photo.credit ? t.photoBy(photo.credit) : longDate(event.startsAt, lang)}>
+              <Image src={photo.src} alt={pick(photo, 'alt', lang)} width={600} sizes="(max-width: 680px) 45vw, 240px" />
+            </a>
+          ))}
+        </div>
+      )}
+      {recap.videos.length > 0 && (
+        <div class="video-grid">
+          {recap.videos.map((video) => (
+            <YouTube id={video.youtube} title={pick(video, 'title', lang)} />
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
+<!-- Always the same four actions, in the same order, for every event. -->
+<div class="panel-actions ev-actions">
+  {
+    primary.url ? (
+      <a class="button" href={primary.url} target="_blank" rel="noopener" data-primary>
+        <span>{primary.label}</span>
+        <i class="icon icon-arrow" aria-hidden="true" />
+      </a>
+    ) : (
+      <span class="button is-static" data-primary>
+        <span>{primary.label}</span>
+      </span>
+    )
+  }
+  <a class="text-link" href={site.address.mapsUrl} target="_blank" rel="noopener">
+    {t.directions} <i class="icon icon-arrow" aria-hidden="true" />
+  </a>
+  <a class="text-link" href={href(`${path('home')}#reglas`)}>
+    {t.rules} <i class="icon icon-arrow" aria-hidden="true" />
+  </a>
+  <a class="text-link" href={href(`${path(upcoming ? 'agenda' : 'archive')}#${anchor}`)} data-share={data.title} data-copied={t.linkCopied}>
+    {t.share} <i class="icon icon-arrow" aria-hidden="true" />
+  </a>
+</div>

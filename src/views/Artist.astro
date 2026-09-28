@@ -1,0 +1,183 @@
+---
+import { Image, getImage } from 'astro:assets';
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import SampleChip from '../components/SampleChip.astro';
+import ArtworkItem from '../components/ArtworkItem.astro';
+import EntryBody from '../components/EntryBody.astro';
+import Lightbox from '../components/Lightbox.astro';
+import { artistIndex, eventsForArtist, getArtists, type Artist } from '../lib/artists';
+import { getAgenda, eventAnchor } from '../lib/events';
+import { shortDate } from '../lib/dates';
+import { href, absolute } from '../lib/urls';
+import { artistPath, pick, useLang } from '../i18n';
+
+interface Props {
+  artist: Artist;
+  prev: Artist;
+  next: Artist;
+}
+
+const { artist, prev, next } = Astro.props;
+const { data } = artist;
+const { lang, t: ui, path } = useLang(Astro.url);
+const t = ui.artistsPage;
+const artists = await getArtists();
+const index = artistIndex(artists);
+const { upcoming, past } = await getAgenda();
+const upcomingEvents = eventsForArtist(artist, upcoming, index);
+const pastEvents = eventsForArtist(artist, past, index);
+const works = (await getCollection('artworks', ({ data: work }) => !work.draft && work.artist?.id === artist.id)).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+const SOCIAL_LABELS: Record<string, string> = {
+  instagram: 'Instagram',
+  soundcloud: 'SoundCloud',
+  mixcloud: 'Mixcloud',
+  spotify: 'Spotify',
+  bandcamp: 'Bandcamp',
+  beatport: 'Beatport',
+  residentAdvisor: 'Resident Advisor',
+  youtube: 'YouTube',
+  tiktok: 'TikTok',
+  website: t.website,
+};
+const disciplines = pick(data, 'disciplines', lang);
+const photoAlt = pick(data, 'photoAlt', lang);
+const socials = Object.entries(data.socials).filter(([, url]) => url) as [string, string][];
+const share = await getImage({ src: data.photo, width: 1200, height: 630, fit: 'cover', format: 'jpg' });
+const bio = lang === 'en' ? (data.bodyEn ?? artist.body) : artist.body;
+const description = (bio ?? '').replace(/\s+/g, ' ').trim().slice(0, 155) || `${data.name} — ${disciplines.join(', ')}.`;
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: data.name,
+  description,
+  image: new URL(share.src, import.meta.env.SITE).href,
+  url: absolute(artistPath(artist.id, lang)),
+  jobTitle: disciplines.join(', '),
+  sameAs: socials.map(([, url]) => url),
+};
+---
+
+<Base
+  title={data.name}
+  description={description}
+  image={share.src}
+  imageAlt={photoAlt}
+  page="artist"
+  jsonLd={data.placeholder ? undefined : jsonLd}
+  alternates={{ es: artistPath(artist.id, 'es'), en: artistPath(artist.id, 'en') }}
+>
+  <section class="section">
+    <a class="back-link" href={href(path('artists'))}><i class="icon icon-arrow icon-left" aria-hidden="true"></i> {t.back}</a>
+    <div class="profile" style="margin-top: 34px">
+      <div class="profile-photo">
+        <Image src={data.photo} alt={photoAlt} width={900} sizes="(max-width: 1000px) 90vw, 40vw" loading="eager" />
+        <SampleChip show={data.placeholder} />
+      </div>
+      <div>
+        <div class="disciplines">
+          {disciplines.map((discipline) => <span class="chip accent">{discipline}</span>)}
+          {data.base && <span class="chip">{pick(data, 'base', lang)}</span>}
+        </div>
+        <h1>{data.name}</h1>
+        <div class="prose"><EntryBody entry={artist} /></div>
+
+        {
+          socials.length > 0 && (
+            <div class="profile-block">
+              <h2>{t.socials}</h2>
+              <ul class="link-list">
+                {socials.map(([key, url]) => (
+                  <li>
+                    <a href={url} target="_blank" rel="noopener">
+                      {SOCIAL_LABELS[key] ?? key}
+                      <i class="icon icon-arrow" aria-hidden="true" />
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )
+        }
+
+        {
+          data.work.length > 0 && (
+            <div class="profile-block">
+              <h2>{t.work}</h2>
+              <ul class="link-list">
+                {data.work.map((item) => (
+                  <li>
+                    <a href={item.url} target="_blank" rel="noopener">
+                      {item.title}
+                      {item.kind && <span class="kind">{pick(item, 'kind', lang)}</span>}
+                      <i class="icon icon-arrow" aria-hidden="true" />
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )
+        }
+
+        {
+          upcomingEvents.length > 0 && (
+            <div class="profile-block">
+              <h2>{t.upcoming}</h2>
+              <ul class="mini-events">
+                {upcomingEvents.map((event) => (
+                  <li>
+                    <a href={href(`${path('agenda')}#${eventAnchor(event)}`)}>
+                      <time datetime={event.data.date}>{shortDate(event.startsAt, lang)}</time>
+                      <strong>{event.data.title}</strong>
+                      <i class="icon icon-arrow" aria-hidden="true" />
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )
+        }
+
+        {
+          pastEvents.length > 0 && (
+            <div class="profile-block">
+              <h2>{t.past}</h2>
+              <ul class="mini-events">
+                {pastEvents.map((event) => (
+                  <li>
+                    <a href={href(`${path('archive')}#${eventAnchor(event)}`)}>
+                      <time datetime={event.data.date}>{shortDate(event.startsAt, lang)}</time>
+                      <strong>{event.data.title}</strong>
+                      <i class="icon icon-arrow" aria-hidden="true" />
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )
+        }
+      </div>
+    </div>
+
+    {
+      works.length > 0 && (
+        <div class="profile-block" style="margin-top: 90px">
+          <h2>{t.gallery}</h2>
+          <div class="art-grid" style="margin-top: 26px">
+            {works.map((work) => (
+              <ArtworkItem work={work} artists={artists} group="obras" />
+            ))}
+          </div>
+        </div>
+      )
+    }
+
+    <nav class="pager" aria-label={t.more}>
+      <a href={href(artistPath(prev.id, lang))}><span>{t.prev}</span><strong>{prev.data.name}</strong></a>
+      <a href={href(artistPath(next.id, lang))}><span>{t.next}</span><strong>{next.data.name}</strong></a>
+    </nav>
+  </section>
+  <Lightbox />
+</Base>

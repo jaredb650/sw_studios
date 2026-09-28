@@ -1,0 +1,21 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import ArtistCard from '../components/ArtistCard.astro';
+import { getArtists } from '../lib/artists';
+import { routePath, useLang } from '../i18n';
+
+const { t: ui } = useLang(Astro.url);
+const t = ui.artistsPage;
+const artists = await getArtists();
+---
+
+<Base title={t.title} description={t.description} page="artists" alternates={{ es: routePath('artists', 'es'), en: routePath('artists', 'en') }}>
+  <PageHero index={t.index} label={t.label} title={t.heading} accent={t.accent} lead={t.lead} />
+  <section class="section" aria-labelledby="artist-list-title">
+    <h2 id="artist-list-title" class="visually-hidden">{t.list}</h2>
+    <div class="artist-grid">
+      {artists.map((artist) => <ArtistCard artist={artist} sizes="(max-width: 680px) 45vw, (max-width: 1100px) 30vw, 22vw" />)}
+    </div>
+  </section>
+</Base>

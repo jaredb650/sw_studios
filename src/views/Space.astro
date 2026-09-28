@@ -1,0 +1,125 @@
+---
+import { Image, getImage } from 'astro:assets';
+import spacePhoto from '../assets/venue/the-space-bg.jpg';
+import { getEntry } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import SampleChip from '../components/SampleChip.astro';
+import YouTube from '../components/YouTube.astro';
+import EntryBody from '../components/EntryBody.astro';
+import Lightbox from '../components/Lightbox.astro';
+import { href } from '../lib/urls';
+import { pick, routePath, useLang } from '../i18n';
+
+const { lang, t: ui, path } = useLang(Astro.url);
+const t = ui.spacePage;
+const espacio = (await getEntry('pages', 'espacio'))!;
+const founder = await getEntry('pages', 'fundador');
+const lead = pick(espacio.data, 'lead', lang);
+const spaceBg = await getImage({ src: spacePhoto, width: 1600, format: 'webp' });
+const photos = await Promise.all(
+  espacio.data.photos.map(async (photo) => ({ ...photo, large: await getImage({ src: photo.src, width: 2000 }) })),
+);
+// Desktop mosaic: one large photo beside four small ones, then rows of four.
+// Items in an incomplete last row widen so the grid never ends with a gap.
+const trailing = Math.max(0, photos.length - 5) % 4;
+const spanFor = (i: number) => {
+  if (i === 0 || !trailing || i < photos.length - trailing) return undefined;
+  const position = i - (photos.length - trailing);
+  const spans = { 1: [4], 2: [2, 2], 3: [2, 1, 1] }[trailing] ?? [];
+  return `--span: ${spans[position]}`;
+};
+---
+
+<Base title={t.label} description={lead ?? t.description} page="space" alternates={{ es: routePath('space', 'es'), en: routePath('space', 'en') }}>
+  <PageHero index={t.index} label={t.label} title={t.heading} accent={t.accent} bg={spaceBg.src}>
+    {lead && <p class="mission" style="margin-top: 44px">{lead}</p>}
+    <div style="margin-top: 18px"><SampleChip show={espacio.data.placeholder} /></div>
+  </PageHero>
+
+  {
+    photos.length > 0 && (
+      <section class="section" aria-label={t.photos}>
+        <div class="mosaic">
+          {photos.map((photo, i) => (
+            <a href={photo.large.src} data-lightbox="espacio" data-title="Shipwreck Studios" data-meta={pick(photo, 'caption', lang) ?? ''} style={spanFor(i)}>
+              <Image src={photo.src} alt={pick(photo, 'alt', lang)} width={i === 0 ? 1400 : 700} sizes={i === 0 ? '(max-width: 680px) 100vw, 50vw' : '(max-width: 680px) 50vw, 25vw'} />
+            </a>
+          ))}
+        </div>
+      </section>
+    )
+  }
+
+  <section class="section" aria-labelledby="story-title">
+    <div class="split">
+      <div class="section-heading" style="display: block">
+        <h2 id="story-title"><span class="section-index">01 /</span>{t.story}</h2>
+      </div>
+      <div class="prose"><EntryBody entry={espacio} /></div>
+    </div>
+  </section>
+
+  {
+    espacio.data.videos.length > 0 && (
+      <section class="section" aria-labelledby="tour-title">
+        <div class="section-heading">
+          <h2 id="tour-title">
+            <span class="section-index">02 /</span>
+            {t.tour}
+          </h2>
+        </div>
+        <div class={espacio.data.videos.length > 1 ? 'video-grid' : ''}>
+          {espacio.data.videos.map((video) => (
+            <YouTube id={video.youtube} title={pick(video, 'title', lang)} />
+          ))}
+        </div>
+      </section>
+    )
+  }
+
+  {
+    founder && (
+      <section class="section founder" aria-labelledby="founder-title">
+        <div class="section-heading">
+          <h2 id="founder-title">
+            <span class="section-index">03 /</span>
+            {pick(founder.data, 'title', lang)}
+          </h2>
+        </div>
+        <div class="split">
+          {founder.data.photo && (
+            <div class="founder-photo">
+              <Image src={founder.data.photo} alt={pick(founder.data, 'photoAlt', lang) ?? founder.data.name ?? ''} width={800} sizes="(max-width: 1000px) 90vw, 35vw" />
+            </div>
+          )}
+          <div>
+            {founder.data.role && <p class="label muted">{pick(founder.data, 'role', lang)}</p>}
+            {founder.data.name && <h3>{pick(founder.data, 'name', lang)}</h3>}
+            <SampleChip show={founder.data.placeholder} />
+            <div class="prose" style="margin-top: 22px">
+              <EntryBody entry={founder} />
+            </div>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  <section class="section">
+    <div class="club-band">
+      <div>
+        <span class="label muted">{t.beforeYouCome}</span>
+        <h2 style="margin-top: 16px">{t.readRules[0]}<br />{t.readRules[1]}</h2>
+        <p>{t.rulesText}</p>
+      </div>
+      <div>
+        <a class="button block" href={href(`${path('home')}#reglas`)}>
+          <span>{t.seeRules}</span>
+          <i class="icon icon-arrow" aria-hidden="true"></i>
+        </a>
+      </div>
+    </div>
+  </section>
+  <Lightbox />
+</Base>

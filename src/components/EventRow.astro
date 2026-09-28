@@ -1,0 +1,52 @@
+---
+// Past event as an expandable archive row (native <details>).
+import { Image, getImage } from 'astro:assets';
+import EventDetails from './EventDetails.astro';
+import SampleChip from './SampleChip.astro';
+import { clock, dayNumber, isoLocal, longDate, monthShort, year } from '../lib/dates';
+import { eventAnchor, hasRecap, type Event } from '../lib/events';
+import { pick, useLang } from '../i18n';
+
+interface Props {
+  event: Event;
+}
+
+const { event } = Astro.props;
+const { data } = event;
+const { lang, t } = useLang(Astro.url);
+const anchor = eventAnchor(event);
+const meta = [data.start && clock(event.startsAt), data.organizers.join(' · ') || data.lineup.slice(0, 2).join(' · ')]
+  .filter(Boolean)
+  .join(' · ');
+const flyerLarge = data.flyer ? await getImage({ src: data.flyer, width: 1600 }) : undefined;
+const ratio = data.flyer ? (data.flyer.width / data.flyer.height).toFixed(4) : '0.8';
+---
+
+<details class="event-row" id={anchor}>
+  <summary>
+    <time class="row-date" datetime={isoLocal(data.date, data.start)}>
+      <span class="row-day">{dayNumber(event.startsAt)}</span>
+      <span class="row-month">{monthShort(event.startsAt, lang)}<br />{year(event.startsAt)}</span>
+    </time>
+    <div class="row-title">
+      <h3>{data.title}</h3>
+      {meta && <p class="row-meta">{meta}</p>}
+    </div>
+    <div class="row-chips">
+      {hasRecap(event) && <span class="chip accent">{t.event.recap}</span>}
+      <SampleChip show={data.placeholder} />
+    </div>
+    <span class="row-toggle" aria-hidden="true"><i class="icon icon-plus"></i></span>
+  </summary>
+
+  <div class:list={['event-panel', { 'no-flyer': !data.flyer }]} style={`--ratio: ${ratio}`}>
+    {
+      data.flyer && flyerLarge && (
+        <a class="flyer ev-flyer" href={flyerLarge.src} data-lightbox={anchor} data-title={data.title} data-meta={longDate(event.startsAt, lang)}>
+          <Image src={data.flyer} alt={pick(data, 'flyerAlt', lang) ?? t.event.flyerOf(data.title)} width={720} sizes="(max-width: 680px) 34vw, 360px" />
+        </a>
+      )
+    }
+    <EventDetails event={event} mode="past" />
+  </div>
+</details>

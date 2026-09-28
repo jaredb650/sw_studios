@@ -1,0 +1,19 @@
+---
+// The "see more" link that ends each home section and leads to its full page.
+import { href } from '../lib/urls';
+
+interface Props {
+  to: string;
+  label: string;
+  detail?: string;
+  /** Use on the lime visit block. */
+  inverse?: boolean;
+}
+const { to, label, detail, inverse = false } = Astro.props;
+---
+
+<a class:list={['section-more', { inverse }]} href={href(to)}>
+  <span class="section-more-label">{label}</span>
+  {detail && <span class="section-more-detail">{detail}</span>}
+  <span class="round-arrow" aria-hidden="true"><i class="icon icon-arrow"></i></span>
+</a>

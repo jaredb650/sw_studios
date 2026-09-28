@@ -1,0 +1,52 @@
+---
+import Base from '../layouts/Base.astro';
+import SectionMore from '../components/SectionMore.astro';
+import EventRow from '../components/EventRow.astro';
+import Lightbox from '../components/Lightbox.astro';
+import { getAgenda, hasRecap, type Event } from '../lib/events';
+import { year } from '../lib/dates';
+import { href } from '../lib/urls';
+import { routePath, useLang } from '../i18n';
+
+const { t: ui, path } = useLang(Astro.url);
+const t = ui.archivePage;
+const { past } = await getAgenda();
+const byYear = new Map<string, Event[]>();
+for (const event of past) {
+  const key = year(event.startsAt);
+  byYear.set(key, [...(byYear.get(key) ?? []), event]);
+}
+const recaps = past.filter(hasRecap).length;
+---
+
+<Base title={t.title} description={t.description} page="archive" alternates={{ es: routePath('archive', 'es'), en: routePath('archive', 'en') }}>
+  <section class="section" aria-labelledby="archive-title">
+    <div class="section-heading page-heading">
+      <div>
+        <h1 id="archive-title"><span class="section-index">{t.index}</span>{t.heading}</h1>
+        <p class="page-sub">{t.sub}</p>
+      </div>
+      <span class="label">{t.count(past.length, recaps)}</span>
+    </div>
+    {
+      past.length === 0 ? (
+        <p class="row-empty">
+          {t.empty} <a class="inline-link" href={href(path('agenda'))}>{t.seeAgenda}</a>.
+        </p>
+      ) : (
+        [...byYear].map(([label, events]) => (
+          <div class="year-group">
+            <h2 class="year-label">{label}</h2>
+            <div class="row-list">
+              {events.map((event) => (
+                <EventRow event={event} />
+              ))}
+            </div>
+          </div>
+        ))
+      )
+    }
+    <SectionMore to={path('agenda')} label={t.seeUpcoming} />
+  </section>
+  <Lightbox />
+</Base>

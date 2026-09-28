@@ -1,0 +1,61 @@
+---
+import { pages, site } from '../data/site';
+import { href } from '../lib/urls';
+import { useLang } from '../i18n';
+
+const { t, path } = useLang(Astro.url);
+const socials = [
+  ['Instagram', site.socials.instagram],
+  ['Facebook', site.socials.facebook],
+  ['TikTok', site.socials.tiktok],
+  ['YouTube', site.socials.youtube],
+  ['SoundCloud', site.socials.soundcloud],
+  ['Patreon', site.patreon.status === 'live' ? site.patreon.url : null],
+].filter((entry): entry is [string, string] => Boolean(entry[1]));
+const { address } = site;
+---
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <a class="logo" href={href(path('home'))}>
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span>SHIPWRECK STUDIOS<span class="accent">_</span></span>
+      </a>
+      <p>{t.site.intro}. {t.site.tagline}.</p>
+    </div>
+    <div>
+      <h2>{t.footer.explore}</h2>
+      <ul>
+        {pages.map((route) => <li><a href={href(path(route))}>{t.footer.pages[route]}</a></li>)}
+      </ul>
+    </div>
+    <div>
+      <h2>{t.footer.follow}</h2>
+      <ul>
+        {
+          socials.map(([label, url]) => (
+            <li>
+              <a href={url} target="_blank" rel="noopener">
+                {label} <i class="icon icon-arrow" aria-hidden="true" />
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+    <div>
+      <h2>{t.footer.address}</h2>
+      <address style="font-style: normal">
+        {address.street}<br />{address.neighborhood}, {address.city}<br />Puerto Rico{address.postalCode && ` ${address.postalCode}`}
+      </address>
+      <p style="margin-top: 12px">
+        <a class="inline-link" href={address.mapsUrl} target="_blank" rel="noopener">{t.footer.directions}</a>
+      </p>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© {new Date().getFullYear()} Shipwreck Studios · {t.site.city}</span>
+    <button class="motion-toggle" type="button" hidden aria-pressed="false" data-pause-label={t.footer.pauseMotion} data-play-label={t.footer.playMotion}>{t.footer.pauseMotion}</button>
+  </div>
+</footer>

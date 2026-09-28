@@ -1,0 +1,80 @@
+---
+import { nav, site } from '../data/site';
+import { href } from '../lib/urls';
+import { LANGS, routePath, useLang, type Lang } from '../i18n';
+
+interface Props {
+  /** This page in each language; without it the switch leads to the other language's home page. */
+  alternates?: Record<Lang, string>;
+}
+
+// Every nav item jumps to its section on the home page. On the home page the
+// links are plain fragments so the browser scrolls instead of reloading, and
+// src/scripts/site.ts highlights the section in view. Elsewhere, the item that
+// owns the current page is highlighted.
+const { lang, t, path } = useLang(Astro.url);
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const current = Astro.url.pathname.slice(base.length) || '/';
+const isHome = current === path('home');
+const owner = nav.find((item) => item.pages.some((route) => current.startsWith(routePath(route, lang))));
+const { alternates = { es: routePath('home', 'es'), en: routePath('home', 'en') } } = Astro.props;
+---
+
+<header class="site-header">
+  <div class="header-inner">
+    <a class="logo" href={isHome ? '#inicio' : href(path('home'))} aria-label={t.nav.home}>
+      <span class="brand-mark" aria-hidden="true"></span>
+      <span class="brand-name">SHIPWRECK<br />STUDIOS<span class="accent">_</span></span>
+    </a>
+    <button class="menu-button" type="button" aria-expanded="false" aria-controls="menu" data-open-label={t.nav.close} data-closed-label={t.nav.menu}>
+      <span class="menu-label">{t.nav.menu}</span><span class="bars" aria-hidden="true"></span>
+    </button>
+    <nav class="site-nav" id="menu" aria-label={t.nav.label}>
+      <ul>
+        {
+          nav.map((item, i) => (
+            <li>
+              <a
+                href={isHome ? `#${item.section}` : href(`${path('home')}#${item.section}`)}
+                data-section={item.section}
+                aria-current={owner === item ? 'page' : undefined}
+              >
+                {t.nav.sections[item.section]}
+                <span class="nav-index" aria-hidden="true">
+                  {String(i).padStart(2, '0')}
+                </span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <div class="menu-footer">
+        <span>{site.address.street} · {site.address.city}</span>
+        <a href={site.socials.instagram} target="_blank" rel="noopener">Instagram <i class="icon icon-arrow" aria-hidden="true"></i></a>
+      </div>
+    </nav>
+    <div class="header-end">
+      <div class="lang-switch" role="group" aria-label={t.switchLabel}>
+        {
+          LANGS.map((code, i) => (
+            <>
+              {i > 0 && <span class="lang-sep" aria-hidden="true">/</span>}
+              {code === lang ? (
+                <span class="lang-current" aria-current="true" lang={code}>
+                  {code.toUpperCase()}
+                </span>
+              ) : (
+                <a href={href(alternates[code])} hreflang={code} lang={code} data-lang-switch aria-label={code === 'en' ? 'English' : 'Español'}>
+                  {code.toUpperCase()}
+                </a>
+              )}
+            </>
+          ))
+        }
+      </div>
+      <a class="header-social" href={site.socials.instagram} target="_blank" rel="noopener">
+        Instagram <i class="icon icon-arrow" aria-hidden="true"></i>
+      </a>
+    </div>
+  </div>
+</header>

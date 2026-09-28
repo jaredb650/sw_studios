@@ -1,0 +1,49 @@
+---
+import SampleChip from './SampleChip.astro';
+import ComingSoon from './ComingSoon.astro';
+import { site } from '../data/site';
+import { pick, useLang } from '../i18n';
+
+const { patreon } = site;
+const tiers = patreon.tiers.slice(0, 3);
+const { lang, t: ui } = useLang(Astro.url);
+const t = ui.clubPage;
+---
+
+{
+  patreon.status === 'live' && tiers.length > 0 ? (
+    <>
+      <div class="tiers">
+        {tiers.map((tier) => (
+          <article class:list={['tier', { highlight: tier.highlight }]} data-reveal>
+            {tier.highlight && <span class="chip tier-flag" style="border-color: currentColor; color: inherit">{t.popular}</span>}
+            <p class="tier-name">{tier.name}</p>
+            <p class="tier-price">
+              <sup>$</sup>
+              {tier.price}
+            </p>
+            <p class="per">{t.perMonth}</p>
+            {tier.summary && <p>{pick(tier, 'summary', lang)}</p>}
+            <ul>
+              {(pick(tier, 'benefits', lang) ?? tier.benefits).map((benefit) => (
+                <li>
+                  <i class="icon icon-star" aria-hidden="true" />
+                  <span>{benefit}</span>
+                </li>
+              ))}
+            </ul>
+            <a class="button block" href={tier.url ?? patreon.url} target="_blank" rel="noopener">
+              <span>{t.join}</span>
+              <i class="icon icon-arrow" aria-hidden="true" />
+            </a>
+          </article>
+        ))}
+      </div>
+      <p class="fine-print">
+        {t.finePrint} <SampleChip show={patreon.placeholder} />
+      </p>
+    </>
+  ) : (
+    <ComingSoon lead={t.tiersSoon} />
+  )
+}

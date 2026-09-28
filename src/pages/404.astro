@@ -1,0 +1,31 @@
+---
+// One 404 page for the whole site (GitHub Pages serves it for any missing
+// path), so it speaks both languages.
+import Base from '../layouts/Base.astro';
+import { href } from '../lib/urls';
+import { ui } from '../i18n/ui';
+import { routePath } from '../i18n';
+
+const { es, en } = ui;
+---
+
+<Base title={`${es.notFound.title} / ${en.notFound.title}`} page="not-found">
+  <section class="section not-found">
+    <p class="label muted">{es.notFound.code}</p>
+    <h1>{es.notFound.heading[0]}<span>{es.notFound.heading[1]}</span></h1>
+    <p class="prose">{es.notFound.text}</p>
+    <div class="panel-actions">
+      <a class="button" href={href(routePath('agenda', 'es'))}><span>{es.notFound.agenda}</span><i class="icon icon-arrow" aria-hidden="true"></i></a>
+      <a class="text-link" href={href(routePath('archive', 'es'))}>{es.notFound.archive} <i class="icon icon-arrow" aria-hidden="true"></i></a>
+      <a class="text-link" href={href(routePath('visit', 'es'))}>{es.notFound.directions} <i class="icon icon-arrow" aria-hidden="true"></i></a>
+    </div>
+    <div lang="en" style="margin-top: 36px; padding-top: 30px; border-top: 1px solid var(--line)">
+      <p class="prose">{en.notFound.text}</p>
+      <div class="panel-actions">
+        <a class="button" href={href(routePath('agenda', 'en'))}><span>{en.notFound.agenda}</span><i class="icon icon-arrow" aria-hidden="true"></i></a>
+        <a class="text-link" href={href(routePath('archive', 'en'))}>{en.notFound.archive} <i class="icon icon-arrow" aria-hidden="true"></i></a>
+        <a class="text-link" href={href(routePath('visit', 'en'))}>{en.notFound.directions} <i class="icon icon-arrow" aria-hidden="true"></i></a>
+      </div>
+    </div>
+  </section>
+</Base>

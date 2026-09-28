@@ -1,0 +1,64 @@
+---
+import { getEntry } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import PatreonTiers from '../components/PatreonTiers.astro';
+import ComingSoon from '../components/ComingSoon.astro';
+import SampleChip from '../components/SampleChip.astro';
+import EntryBody from '../components/EntryBody.astro';
+import { pick, routePath, useLang } from '../i18n';
+
+const { lang, t: ui } = useLang(Astro.url);
+const t = ui.clubPage;
+const program = await getEntry('pages', 'programa-de-artistas');
+const published = program?.data.status === 'published';
+const programLead = program ? pick(program.data, 'lead', lang) : undefined;
+---
+
+<Base title={t.title} description={t.description} page="club" alternates={{ es: routePath('club', 'es'), en: routePath('club', 'en') }}>
+  <PageHero index={t.index} label={t.label} title={t.heading} accent={t.accent} lead={t.lead} />
+
+  <section class="section" aria-label={t.options}>
+    <div class="offers">
+      <div class="offer">
+        <span class="index">{t.paid}</span>
+        <h2>{t.membership}</h2>
+        <p>{t.membershipText}</p>
+        <a class="text-link" href="#membresia">{t.seeTiers} <i class="icon icon-arrow icon-down" aria-hidden="true"></i></a>
+      </div>
+      <div class="offer">
+        <span class="index">{t.participation}</span>
+        <h2>{t.program}</h2>
+        <p>{t.programText}</p>
+        <a class="text-link" href="#programa-de-artistas">{t.seeProgram} <i class="icon icon-arrow icon-down" aria-hidden="true"></i></a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="membresia" aria-labelledby="membership-title">
+    <div class="section-heading">
+      <h2 id="membership-title"><span class="section-index">01 /</span>{t.membership}</h2>
+      <span class="label">{t.viaPatreon}</span>
+    </div>
+    <PatreonTiers />
+  </section>
+
+  <section class="section" id="programa-de-artistas" aria-labelledby="program-title">
+    <div class="section-heading">
+      <h2 id="program-title"><span class="section-index">02 /</span>{t.program}</h2>
+      <SampleChip show={program?.data.placeholder} />
+    </div>
+    {
+      published && program ? (
+        <div class="split">
+          <p class="mission" style="font-size: clamp(2rem, 3.4vw, 3.2rem)">{programLead}</p>
+          <div class="prose">
+            <EntryBody entry={program} />
+          </div>
+        </div>
+      ) : (
+        <ComingSoon lead={programLead ?? t.programSoon} />
+      )
+    }
+  </section>
+</Base>

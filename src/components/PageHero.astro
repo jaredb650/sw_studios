@@ -1,0 +1,22 @@
+---
+interface Props {
+  /** Optional faded background photo (URL). */
+  bg?: string;
+  index: string;
+  label: string;
+  title: string;
+  accent?: string;
+  lead?: string;
+}
+const { index, label, title, accent, lead, bg } = Astro.props;
+---
+
+<header class:list={['page-hero', { 'bg-photo': bg }]} style={bg ? `--bg-photo: url(${bg})` : undefined}>
+  <div class="eyebrow">
+    <span>{index} / {label}</span>
+    <span>Shipwreck Studios · San Juan, PR</span>
+  </div>
+  <h1>{title}{accent && <><br /><span class="accent">{accent}</span></>}</h1>
+  {lead && <p class="lead">{lead}</p>}
+  <slot />
+</header>

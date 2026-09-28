@@ -1,0 +1,89 @@
+---
+// One shared image viewer per page. Any link with data-lightbox="<group>"
+// opens here; arrows move within its group. Without JavaScript the links
+// simply open the full-size image.
+import { useLang } from '../i18n';
+const { t } = useLang(Astro.url);
+---
+
+<dialog class="lightbox" aria-label={t.lightbox.label}>
+  <div class="lightbox-inner">
+    <div class="lightbox-top">
+      <span data-lb-count aria-live="polite"></span>
+      <button class="lightbox-btn lightbox-close" type="button" data-lb-close aria-label={t.lightbox.close}>
+        <i class="icon icon-close" aria-hidden="true"></i>
+      </button>
+    </div>
+    <div class="lightbox-stage">
+      <img data-lb-image alt="" />
+      <button class="lightbox-btn lightbox-prev" type="button" data-lb-prev aria-label={t.lightbox.prev}>
+        <i class="icon icon-arrow icon-left" aria-hidden="true"></i>
+      </button>
+      <button class="lightbox-btn lightbox-next" type="button" data-lb-next aria-label={t.lightbox.next}>
+        <i class="icon icon-arrow icon-right" aria-hidden="true"></i>
+      </button>
+    </div>
+    <div class="lightbox-caption">
+      <strong data-lb-title></strong>
+      <span data-lb-meta></span>
+    </div>
+  </div>
+</dialog>
+
+<script>
+  const dialog = document.querySelector<HTMLDialogElement>('dialog.lightbox');
+  if (dialog) {
+    const image = dialog.querySelector<HTMLImageElement>('[data-lb-image]')!;
+    const title = dialog.querySelector<HTMLElement>('[data-lb-title]')!;
+    const meta = dialog.querySelector<HTMLElement>('[data-lb-meta]')!;
+    const count = dialog.querySelector<HTMLElement>('[data-lb-count]')!;
+    const prev = dialog.querySelector<HTMLButtonElement>('[data-lb-prev]')!;
+    const next = dialog.querySelector<HTMLButtonElement>('[data-lb-next]')!;
+    let items: HTMLAnchorElement[] = [];
+    let index = 0;
+    let opener: HTMLElement | null = null;
+
+    const show = (i: number) => {
+      index = (i + items.length) % items.length;
+      const link = items[index];
+      image.src = link.href;
+      image.alt = link.querySelector('img')?.alt ?? '';
+      title.textContent = link.dataset.title ?? '';
+      meta.textContent = link.dataset.meta ?? '';
+      count.textContent = items.length > 1 ? `${index + 1} / ${items.length}` : '';
+      prev.hidden = next.hidden = items.length < 2;
+    };
+
+    document.addEventListener('click', (event) => {
+      const link = (event.target as Element).closest<HTMLAnchorElement>('a[data-lightbox]');
+      if (!link || event.metaKey || event.ctrlKey || event.shiftKey) return;
+      event.preventDefault();
+      items = [...document.querySelectorAll<HTMLAnchorElement>(`a[data-lightbox="${CSS.escape(link.dataset.lightbox!)}"]`)];
+      opener = link;
+      show(items.indexOf(link));
+      dialog.showModal();
+    });
+
+    prev.addEventListener('click', () => show(index - 1));
+    next.addEventListener('click', () => show(index + 1));
+    dialog.querySelector('[data-lb-close]')!.addEventListener('click', () => dialog.close());
+    dialog.addEventListener('click', (event) => {
+      if (event.target === dialog || event.target === dialog.querySelector('.lightbox-stage')) dialog.close();
+    });
+    dialog.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowLeft') show(index - 1);
+      if (event.key === 'ArrowRight') show(index + 1);
+    });
+    dialog.addEventListener('close', () => {
+      image.removeAttribute('src');
+      opener?.focus();
+    });
+
+    let startX = 0;
+    dialog.addEventListener('pointerdown', (event) => (startX = event.clientX));
+    dialog.addEventListener('pointerup', (event) => {
+      const dx = event.clientX - startX;
+      if (Math.abs(dx) > 60 && items.length > 1) show(index + (dx < 0 ? 1 : -1));
+    });
+  }
+</script>

@@ -1,0 +1,222 @@
+---
+// Home: one section per header nav item, each ending in a link to its full page.
+import { getCollection, getEntry } from 'astro:content';
+import { Image, getImage } from 'astro:assets';
+import spacePhoto from '../assets/venue/the-space-bg.jpg';
+import rulesPhoto from '../assets/venue/rules-bg.jpg';
+import Base from '../layouts/Base.astro';
+import FeaturedEvent from '../components/FeaturedEvent.astro';
+import EventCard from '../components/EventCard.astro';
+import ArtistCard from '../components/ArtistCard.astro';
+import VisitBlock from '../components/VisitBlock.astro';
+import SectionMore from '../components/SectionMore.astro';
+import Lightbox from '../components/Lightbox.astro';
+import RulesGate from '../components/RulesGate.astro';
+import RulesList from '../components/RulesList.astro';
+import SampleChip from '../components/SampleChip.astro';
+import { getAgenda } from '../lib/events';
+import { year } from '../lib/dates';
+import { getArtists } from '../lib/artists';
+import { site } from '../data/site';
+import { href } from '../lib/urls';
+import { venueJsonLd } from '../lib/structured-data';
+import { getRules } from '../lib/rules';
+import { pick, routePath, useLang } from '../i18n';
+
+// How many event cards follow the Featured Event on the home page; the rest are on the agenda page.
+const HOME_CARDS = 8;
+
+const { lang, t: ui, path } = useLang(Astro.url);
+const t = ui.home;
+const { upcoming, featured, rest } = await getAgenda();
+const preview = rest.slice(0, HOME_CARDS);
+const allArtists = await getArtists();
+const artists = allArtists.slice(0, 4);
+const espacio = await getEntry('pages', 'espacio');
+const allCurrent = (await getCollection('artworks', ({ data }) => !data.draft && data.status === 'current')).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+const currentWorks = allCurrent.slice(0, 3);
+const works = await getCollection('artworks', ({ data }) => !data.draft);
+const years = [...new Set(upcoming.map((event) => year(event.startsAt)))];
+const seasonLabel = years.length ? `${t.agendaLabel} / ${years.join('–')}` : t.agendaLabel;
+const { patreon } = site;
+const rules = await getRules();
+const follow = t.followFirst('@shipwreckstudios_');
+const ribbon = [...ui.site.ribbon, ...ui.site.ribbon];
+// Faded venue photo behind the "El espacio" section.
+const spaceBg = await getImage({ src: spacePhoto, width: 1600, format: 'webp' });
+const rulesBg = await getImage({ src: rulesPhoto, width: 1600, format: 'webp' });
+---
+
+<Base page="home" jsonLd={venueJsonLd(lang)} alternates={{ es: routePath('home', 'es'), en: routePath('home', 'en') }}>
+  <section id="inicio" class="masthead" aria-labelledby="site-title">
+    <!-- Looping background video: a wide crop for desktop, a tall one for phones (public/media). -->
+    <div class="hero-media" aria-hidden="true" style={`--hero-poster: url(${href('/media/hero-wide.jpg')})`}>
+      <video class="hero-video" autoplay muted loop playsinline preload="auto" poster={href('/media/hero-wide.jpg')} data-hero-video>
+        <source src={href('/media/hero-tall.mp4')} type="video/mp4" media="(max-width: 680px)" />
+        <source src={href('/media/hero-wide.mp4')} type="video/mp4" />
+      </video>
+    </div>
+    <div class="eyebrow"><span>{ui.site.city}</span><span>{ui.site.tagline}</span></div>
+    <div class="hero-composition">
+      <h1 id="site-title" aria-label="Shipwreck Studios">
+        <span class="title-line"><span>SHIPWRECK</span></span>
+        <span class="title-line accent-line"><span>STUDIOS_</span></span>
+      </h1>
+    </div>
+    <div class="mast-bottom">
+      <p>{ui.site.intro}</p>
+      <a class="agenda-jump" href="#agenda" aria-label={t.exploreAgenda}>
+        <span>{t.exploreAgenda}</span>
+        <span class="round-arrow" aria-hidden="true"><i class="icon icon-arrow icon-down"></i></span>
+      </a>
+    </div>
+  </section>
+
+  <RulesGate mode="inline" />
+
+  <!-- Locked until the visitor accepts the rules (see src/scripts/rules.ts). -->
+  <div class="gated" data-gated>
+    <section id="agenda" class="section events" aria-labelledby="events-title">
+      <div class="section-heading">
+        <h2 id="events-title"><span class="section-index">01 /</span>{t.upcoming}</h2>
+        <span class="label">{seasonLabel}</span>
+      </div>
+
+      {featured && <FeaturedEvent event={featured} />}
+
+      <div class="agenda" data-upcoming>
+        {
+          preview.length > 0 && (
+            <div class="agenda-head">
+              <h3>{t.nextDates}</h3>
+              <span class="label muted">{t.ofEvents(preview.length, rest.length)}</span>
+            </div>
+          )
+        }
+        <div class="event-grid">
+          {preview.map((event) => <EventCard event={event} group="agenda-inicio" />)}
+        </div>
+        <p class="row-empty" data-agenda-empty hidden={preview.length > 0}>
+          {featured ? t.noMore : t.noEvents} {follow[0]} <a class="inline-link" href={site.socials.instagram} target="_blank" rel="noopener">{follow[1]}</a> {follow[2]}
+        </p>
+      </div>
+      <SectionMore to={path('agenda')} label={t.seeAgenda} detail={t.upcomingCount(upcoming.length)} />
+    </section>
+
+    <div class="type-ribbon" aria-hidden="true">
+      <div class="ribbon-track">
+        {ribbon.map((word) => <>{word} <span><i class="icon icon-star"></i></span> </>)}
+      </div>
+    </div>
+
+    <section id="espacio" class="section about bg-photo" style={`--bg-photo: url(${spaceBg.src})`} aria-labelledby="about-title">
+      <div class="about-label">
+        <span class="label"><span class="muted">02 /</span> {t.space}</span>
+        <span class="brand-mark about-mark" role="img" aria-label="Shipwreck Studios"></span>
+      </div>
+      <div>
+        <h2 id="about-title">
+          {t.culture.map((line) => <span class="culture-line">{line}</span>)}
+        </h2>
+        {espacio?.data.lead && <p class="lead">{pick(espacio.data, 'lead', lang)}</p>}
+        <SectionMore to={path('space')} label={t.knowSpace} detail={t.knowSpaceDetail} />
+      </div>
+    </section>
+
+    <section id="artistas" class="section" aria-labelledby="artists-title">
+      <div class="section-heading">
+        <h2 id="artists-title"><span class="section-index">03 /</span>{t.artists}</h2>
+        <span class="label">{t.artistCount(allArtists.length)}</span>
+      </div>
+      {
+        artists.length > 0 ? (
+          <div class="teaser-row">
+            {artists.map((artist) => (
+              <ArtistCard artist={artist} />
+            ))}
+          </div>
+        ) : (
+          <p class="row-empty">{t.noArtists}</p>
+        )
+      }
+      <SectionMore to={path('artists')} label={t.seeArtists} />
+    </section>
+
+    <section id="galeria" class="section" aria-labelledby="walls-title">
+      <div class="section-heading">
+        <h2 id="walls-title"><span class="section-index">04 /</span>{t.walls}</h2>
+        <span class="label">{t.currentCount(allCurrent.length)}</span>
+      </div>
+      {
+        currentWorks.length > 0 ? (
+          <div class="teaser-row" style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr))">
+            {currentWorks.map((work) => (
+              <article class="artist-card" data-reveal>
+                <a href={href(`${path('gallery')}#obra-${work.id}`)}>
+                  <div class="frame" style="aspect-ratio: 1">
+                    <Image src={work.data.image} alt={pick(work.data, 'alt', lang)} width={700} sizes="(max-width: 680px) 90vw, 33vw" />
+                  </div>
+                  <h3>
+                    {work.data.title}
+                    <i class="icon icon-arrow" aria-hidden="true" />
+                  </h3>
+                  <p>{pick(work.data, 'location', lang) ?? t.onTheWall}</p>
+                </a>
+              </article>
+            ))}
+          </div>
+        ) : (
+          <p class="row-empty">{t.wallsEmpty}</p>
+        )
+      }
+      <SectionMore to={path('gallery')} label={t.seeGallery} detail={t.workCount(works.length)} />
+    </section>
+
+    <section id="club" class="section" aria-labelledby="club-title">
+      <div class="club-band" data-reveal>
+        <div>
+          <span class="label muted">05 / Club</span>
+          <h2 id="club-title" style="margin-top: 18px">{t.clubTitle[0]}<br />{t.clubTitle[1]}</h2>
+          <p>{t.clubText}</p>
+        </div>
+        <div class="prices">
+          {
+            patreon.status === 'live' && patreon.tiers.length ? (
+              patreon.tiers.slice(0, 3).map((tier) => (
+                <span class="chip">{`${tier.name} · $${tier.price}${t.perMonth}`}</span>
+              ))
+            ) : (
+              <span class="chip">{t.membershipsSoon}</span>
+            )
+          }
+        </div>
+      </div>
+      <SectionMore to={path('club')} label={t.seeClub} />
+    </section>
+
+    {
+      rules && (
+        <section id="reglas" class="section bg-photo" style={`--bg-photo: url(${rulesBg.src}); --bg-pos: center 58%; --bg-opacity: .12`} aria-labelledby="rules-title">
+          <div class="section-heading">
+            <h2 id="rules-title">
+              <span class="section-index">06 /</span>
+              {pick(rules.data, 'title', lang)}
+            </h2>
+            <SampleChip show={rules.data.placeholder} />
+          </div>
+          {rules.data.lead && (
+            <p class="prose" style="margin-bottom: 30px">
+              {pick(rules.data, 'lead', lang)}
+            </p>
+          )}
+          <RulesList items={rules.data.items} />
+        </section>
+      )
+    }
+
+    <VisitBlock />
+  </div>
+  <Lightbox />
+</Base>

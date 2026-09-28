@@ -1,0 +1,16 @@
+---
+// A content entry's Markdown body in the page's language: `bodyEn` on the
+// English site when it exists, otherwise the Spanish body.
+import { render, type CollectionEntry } from 'astro:content';
+import { markdown, useLang } from '../i18n';
+
+interface Props {
+  entry: CollectionEntry<'events' | 'artists' | 'artworks' | 'pages'>;
+}
+const { entry } = Astro.props;
+const { lang } = useLang(Astro.url);
+const english = lang === 'en' ? entry.data.bodyEn : undefined;
+const Content = english ? undefined : (await render(entry)).Content;
+---
+
+{english ? <Fragment set:html={markdown(english)} /> : Content && <Content />}

@@ -1,0 +1,27 @@
+---
+import { artistIndex, getArtists, linkLineup } from '../lib/artists';
+import { href } from '../lib/urls';
+import { useLang } from '../i18n';
+
+interface Props {
+  lines: string[];
+  class?: string;
+}
+
+// Names run inline, separated by the star used in the ribbon, instead of one per line.
+const { lines, class: className = 'lineup inline-list' } = Astro.props;
+const index = artistIndex(await getArtists());
+const { artist: artistPath } = useLang(Astro.url);
+---
+
+<ul class={className}>
+  {
+    lines.map((line) => (
+      <li>
+        {linkLineup(line, index).map((segment) =>
+          segment.artist ? <a href={href(artistPath(segment.artist.id))}>{segment.text}</a> : segment.text,
+        )}
+      </li>
+    ))
+  }
+</ul>

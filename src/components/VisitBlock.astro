@@ -1,0 +1,47 @@
+---
+import { site } from '../data/site';
+import SectionMore from './SectionMore.astro';
+import { useLang } from '../i18n';
+
+interface Props {
+  heading?: 'h1' | 'h2';
+  showMore?: boolean;
+}
+const { heading: Heading = 'h2', showMore = true } = Astro.props;
+const { address, contact } = site;
+const Venue = Heading === 'h1' ? 'h2' : 'h3';
+const { t: ui, path } = useLang(Astro.url);
+const t = ui.visit;
+---
+
+<section class="visit" id="visita" aria-labelledby="visit-title">
+  <div class="visit-inner">
+    <div>
+      <span class="label">{t.findUs}</span>
+      <Heading id="visit-title" class="visit-title">{t.heading[0]}<br />{t.heading[1]}</Heading>
+    </div>
+    <div class="visit-info" data-reveal>
+      <Venue class="visit-venue">{address.venue}</Venue>
+      <p>
+        {address.street}<br />{address.neighborhood}, {address.city}, Puerto Rico{address.postalCode && ` ${address.postalCode}`}
+      </p>
+      <a class="text-link" href={address.mapsUrl} target="_blank" rel="noopener">
+        {t.google} <i class="icon icon-arrow" aria-hidden="true"></i>
+      </a>
+      <a class="text-link" href={address.appleMapsUrl} target="_blank" rel="noopener">
+        {t.apple} <i class="icon icon-arrow" aria-hidden="true"></i>
+      </a>
+      <a class="text-link" href={contact.instagramDm} target="_blank" rel="noopener" style="margin-top: 26px">
+        {t.instagram} <i class="icon icon-arrow" aria-hidden="true"></i>
+      </a>
+      {
+        contact.email && (
+          <a class="text-link" href={`mailto:${contact.email}`}>
+            {contact.email} <i class="icon icon-arrow" aria-hidden="true" />
+          </a>
+        )
+      }
+      {showMore && <SectionMore to={path('visit')} label={t.contactMore} inverse />}
+    </div>
+  </div>
+</section>

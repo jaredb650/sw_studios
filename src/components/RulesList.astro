@@ -1,0 +1,23 @@
+---
+import { pick, useLang } from '../i18n';
+
+interface Props {
+  items: { title: string; titleEn?: string; text: string; textEn?: string }[];
+  compact?: boolean;
+}
+const { items, compact = false } = Astro.props;
+const { lang } = useLang(Astro.url);
+---
+
+<ol class:list={['rules', { compact }]}>
+  {
+    items.map((rule) => (
+      <li>
+        <div>
+          <h3>{pick(rule, 'title', lang)}</h3>
+          <p>{pick(rule, 'text', lang)}</p>
+        </div>
+      </li>
+    ))
+  }
+</ol>

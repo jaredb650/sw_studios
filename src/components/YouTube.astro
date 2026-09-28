@@ -1,0 +1,54 @@
+---
+// Click-to-load YouTube player: no YouTube requests until the visitor presses
+// play. Without an id it shows a "video coming soon" frame.
+import { useLang } from '../i18n';
+
+interface Props {
+  id?: string;
+  title: string;
+  caption?: string;
+}
+const { id, title, caption } = Astro.props;
+const { t } = useLang(Astro.url);
+---
+
+<figure style="margin: 0">
+  {
+    id ? (
+      <div class="video" data-youtube={id}>
+        <a class="video-trigger" href={`https://www.youtube.com/watch?v=${id}`} target="_blank" rel="noopener">
+          <img src={`https://i.ytimg.com/vi/${id}/hqdefault.jpg`} alt="" loading="lazy" width="480" height="360" />
+          <span class="video-play" aria-hidden="true">
+            <i class="icon icon-play" />
+          </span>
+          <span class="visually-hidden">{t.video.play(title)}</span>
+        </a>
+      </div>
+    ) : (
+      <div class="video pending" role="img" aria-label={t.video.soonLabel(title)}>
+        <div>
+          <span class="video-play" aria-hidden="true" style="margin: 0 auto">
+            <i class="icon icon-play" />
+          </span>
+          <p>{t.video.soon}</p>
+        </div>
+      </div>
+    )
+  }
+  <figcaption class="video-caption"><span>{title}</span>{caption && <span>{caption}</span>}</figcaption>
+</figure>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-youtube]').forEach((video) => {
+    video.querySelector('a')?.addEventListener('click', (event) => {
+      event.preventDefault();
+      const iframe = document.createElement('iframe');
+      iframe.src = `https://www.youtube-nocookie.com/embed/${video.dataset.youtube}?autoplay=1&rel=0`;
+      iframe.title = video.querySelector('.visually-hidden')?.textContent ?? 'YouTube';
+      iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+      iframe.allowFullscreen = true;
+      video.replaceChildren(iframe);
+      iframe.focus();
+    });
+  });
+</script>

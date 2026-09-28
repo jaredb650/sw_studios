@@ -1,0 +1,20 @@
+---
+import { site } from '../data/site';
+import { useLang } from '../i18n';
+
+interface Props {
+  lead: string;
+}
+const { lead } = Astro.props;
+const { t } = useLang(Astro.url);
+---
+
+<div class="coming-soon">
+  <p class="big" aria-hidden="true">{t.comingSoon.big}</p>
+  <p class="visually-hidden">{t.comingSoon.big}.</p>
+  <p>{lead}</p>
+  <slot />
+  <a class="text-link" href={site.socials.instagram} target="_blank" rel="noopener">
+    {t.comingSoon.follow} <i class="icon icon-arrow" aria-hidden="true"></i>
+  </a>
+</div>

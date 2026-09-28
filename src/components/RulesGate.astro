@@ -1,0 +1,75 @@
+---
+// Visitors confirm the club rules once before exploring the site.
+// "inline": the home page, between the hero and the agenda; everything after
+//   it stays locked until the visitor accepts.
+// "dialog": every other page, shown on arrival to visitors who haven't accepted yet.
+// Behavior lives in src/scripts/rules.ts. Without JavaScript nothing is locked
+// and the rules remain in the home page's rules section.
+import RulesList from './RulesList.astro';
+import SampleChip from './SampleChip.astro';
+import { getImage } from 'astro:assets';
+import { getRules } from '../lib/rules';
+import rulesPhoto from '../assets/venue/rules-bg.jpg';
+import { pick, useLang } from '../i18n';
+
+interface Props {
+  mode: 'inline' | 'dialog';
+}
+const { mode } = Astro.props;
+const rules = await getRules();
+const titleId = mode === 'inline' ? 'gate-title' : 'gate-dialog-title';
+const { lang, t: ui } = useLang(Astro.url);
+const t = ui.rules;
+const lead = rules ? pick(rules.data, 'lead', lang) : undefined;
+// Faded photo behind the rules (the booth, from the crowd).
+const rulesBg = await getImage({ src: rulesPhoto, width: 1600, format: 'webp' });
+const bgStyle = `--bg-photo: url(${rulesBg.src}); --bg-pos: center 58%; --bg-opacity: .12`;
+---
+
+{
+  rules && (
+    <Fragment>
+      {mode === 'inline' ? (
+        <section id="antes-de-venir" class="rules-gate bg-photo" style={bgStyle} data-rules-gate aria-labelledby={titleId}>
+          <div class="rules-gate-inner">
+            <p class="label">
+              <span class="muted">{t.before}</span> {t.label} <SampleChip show={rules.data.placeholder} />
+            </p>
+            <h2 id={titleId}>
+              {t.heading[0]} <span class="accent">{t.heading[1]}</span>
+            </h2>
+            {lead && <p class="lead">{lead}</p>}
+            <RulesList items={rules.data.items} compact />
+            <div class="gate-actions">
+              <button class="button" type="button" data-accept-rules>
+                <span>{t.accept}</span>
+                <i class="icon icon-arrow icon-down" aria-hidden="true" />
+              </button>
+              <p class="gate-note">{t.noteInline}</p>
+            </div>
+          </div>
+        </section>
+      ) : (
+        <dialog class="rules-dialog" style={bgStyle} data-rules-gate aria-labelledby={titleId}>
+          <div class="rules-gate-inner">
+            <p class="label">
+              <span class="muted">{t.before}</span> {t.label} <SampleChip show={rules.data.placeholder} />
+            </p>
+            <h2 id={titleId} tabindex="-1" autofocus>
+              {t.heading[0]} <span class="accent">{t.heading[1]}</span>
+            </h2>
+            {lead && <p class="lead">{lead}</p>}
+            <RulesList items={rules.data.items} compact />
+            <div class="gate-actions">
+              <button class="button" type="button" data-accept-rules>
+                <span>{t.accept}</span>
+                <i class="icon icon-arrow" aria-hidden="true" />
+              </button>
+              <p class="gate-note">{t.noteDialog}</p>
+            </div>
+          </div>
+        </dialog>
+      )}
+    </Fragment>
+  )
+}

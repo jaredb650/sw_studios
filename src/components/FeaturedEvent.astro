@@ -1,0 +1,52 @@
+---
+// The Featured Event: any event with `featured: true` (see src/lib/events.ts).
+// Same fields and details as every other event, laid out so the whole event
+// (flyer included) fits on one screen.
+import { Image, getImage } from 'astro:assets';
+import EventDetails from './EventDetails.astro';
+import SampleChip from './SampleChip.astro';
+import { dayNumber, isoLocal, longDate, monthLong, weekday, year } from '../lib/dates';
+import { eventAnchor, type Event } from '../lib/events';
+import { pick, useLang } from '../i18n';
+
+interface Props {
+  event: Event;
+}
+
+const { event } = Astro.props;
+const { data } = event;
+const { lang, t: ui } = useLang(Astro.url);
+const t = ui.event;
+const flyerAlt = pick(data, 'flyerAlt', lang) ?? t.flyerOf(data.title);
+const flyerLarge = data.flyer ? await getImage({ src: data.flyer, width: 1600 }) : undefined;
+const anchor = eventAnchor(event);
+const ratio = data.flyer ? (data.flyer.width / data.flyer.height).toFixed(4) : '0.8';
+---
+
+<article class="featured" id={anchor} style={`--ratio: ${ratio}`} data-featured data-ends={event.endsAt.toISOString()} data-starts={event.startsAt.toISOString()}>
+  {
+    data.flyer && flyerLarge ? (
+      <a class="poster ev-flyer" href={flyerLarge.src} data-lightbox={anchor} data-title={data.title} data-meta={longDate(event.startsAt, lang)} aria-label={t.viewFlyer(data.title)} data-label={t.flyerLabel}>
+        <Image src={data.flyer} alt={flyerAlt} width={1080} sizes="(max-width: 680px) 36vw, 46vw" loading="eager" fetchpriority="high" />
+      </a>
+    ) : (
+      <div class="poster no-link type-poster ev-flyer" aria-hidden="true">
+        <span>{data.title}</span>
+      </div>
+    )
+  }
+  <div class="ev-head">
+    <div class="event-top">
+      <span class="label" data-event-status data-past-label={t.past} data-ended-label={t.eventEnded}>{data.status === 'cancelled' ? t.cancelled : t.featured}</span>
+      <span class="event-flags"><span class="chip solid" data-today hidden>{t.today}</span><SampleChip show={data.placeholder} /></span>
+    </div>
+    <time class="date" datetime={isoLocal(data.date, data.start)}>
+      <span>{dayNumber(event.startsAt)}</span>
+      <div>
+        {monthLong(event.startsAt, lang)}<br />{weekday(event.startsAt, lang)} · {year(event.startsAt)}
+      </div>
+    </time>
+    <h3>{data.title}</h3>
+  </div>
+  <EventDetails event={event} mode="upcoming" showDate={false} />
+</article>

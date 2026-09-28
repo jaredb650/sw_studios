@@ -1,0 +1,57 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import ArtworkItem from '../components/ArtworkItem.astro';
+import Lightbox from '../components/Lightbox.astro';
+import { getArtists } from '../lib/artists';
+import { routePath, useLang } from '../i18n';
+
+const { t: ui } = useLang(Astro.url);
+const t = ui.galleryPage;
+const works = (await getCollection('artworks', ({ data }) => !data.draft)).sort((a, b) => a.data.order - b.data.order);
+const current = works.filter((work) => work.data.status === 'current');
+const archived = works.filter((work) => work.data.status === 'archived');
+const artists = await getArtists();
+---
+
+<Base title={t.title} description={t.description} page="gallery" alternates={{ es: routePath('gallery', 'es'), en: routePath('gallery', 'en') }}>
+  <PageHero index={t.index} label={t.label} title={t.heading} accent={t.accent} lead={t.lead} />
+
+  <section class="section" aria-labelledby="current-title">
+    <div class="section-heading">
+      <h2 id="current-title"><span class="section-index">{t.works(current.length)} /</span>{t.current}</h2>
+    </div>
+    {
+      current.length ? (
+        <div class="art-grid">
+          {current.map((work) => (
+            <ArtworkItem work={work} artists={artists} />
+          ))}
+        </div>
+      ) : (
+        <p class="row-empty">{t.empty}</p>
+      )
+    }
+  </section>
+
+  {
+    archived.length > 0 && (
+      <section class="section" aria-labelledby="archived-title">
+        <div class="section-heading">
+          <h2 id="archived-title">
+            <span class="section-index">{t.works(archived.length)} /</span>
+            {t.archived}
+          </h2>
+          <span class="label">{t.repainted}</span>
+        </div>
+        <div class="art-grid archived">
+          {archived.map((work) => (
+            <ArtworkItem work={work} artists={artists} />
+          ))}
+        </div>
+      </section>
+    )
+  }
+  <Lightbox />
+</Base>
