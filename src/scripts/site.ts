@@ -268,9 +268,11 @@ document.addEventListener('click', async (event) => {
       return;
     }
     await navigator.clipboard.writeText(url);
-    const original = link.firstChild!.textContent;
+    // Remember the label once, so a second click while it says "copied" can't overwrite it.
+    link.dataset.label ??= link.firstChild!.textContent ?? '';
     link.firstChild!.textContent = `${link.dataset.copied ?? strings.copied} `;
-    setTimeout(() => (link.firstChild!.textContent = original), 2000);
+    clearTimeout(Number(link.dataset.copyTimer));
+    link.dataset.copyTimer = String(setTimeout(() => (link.firstChild!.textContent = link.dataset.label!), 2000));
   } catch {
     /* The visitor dismissed the share sheet. */
   }

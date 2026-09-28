@@ -8,8 +8,22 @@ import { strings } from './strings';
 
 const dayKey = (date: Date) => date.toLocaleDateString('en-CA', { timeZone: TIME_ZONE });
 
+/** Hides agenda cards for events that have ended since the last build. Safe to call more than once. */
+export function hideEnded(now = new Date()) {
+  document.querySelectorAll<HTMLElement>('[data-upcoming] [data-ends]').forEach((card) => {
+    if (new Date(card.dataset.ends!) <= now) {
+      card.hidden = true;
+      card.dataset.ended = 'true';
+    }
+  });
+  // An ended Featured Event stays in place (relabeled below) but no longer counts.
+  const featured = document.querySelector<HTMLElement>('[data-featured][data-ends]');
+  if (featured && new Date(featured.dataset.ends!) <= now) featured.dataset.ended = 'true';
+}
+
 export function initAgenda(now = new Date()) {
   const today = dayKey(now);
+  hideEnded(now);
   const mark = (element: HTMLElement, starts: Date) => {
     if (starts > now && dayKey(starts) !== today) return;
     const chip = element.querySelector<HTMLElement>('[data-today]');
@@ -19,13 +33,7 @@ export function initAgenda(now = new Date()) {
     }
   };
 
-  document.querySelectorAll<HTMLElement>('[data-upcoming] [data-ends]').forEach((card) => {
-    if (new Date(card.dataset.ends!) <= now) {
-      card.hidden = true;
-      card.dataset.ended = 'true';
-    }
-    else mark(card, new Date(card.dataset.starts!));
-  });
+  document.querySelectorAll<HTMLElement>('[data-upcoming] [data-ends]:not([data-ended])').forEach((card) => mark(card, new Date(card.dataset.starts!)));
 
   const featured = document.querySelector<HTMLElement>('[data-featured]');
   if (featured) {

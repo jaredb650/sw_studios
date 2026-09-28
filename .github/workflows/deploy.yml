@@ -1,8 +1,12 @@
 # Builds the site and publishes it to GitHub Pages.
-# Runs on every push to main, on demand, and once a day so finished events
+# Runs on every push to main, on demand, and twice a day so finished events
 # move from the agenda to the archive without anyone editing the site.
 #
 # One-time setup: Settings → Pages → Build and deployment → Source: "GitHub Actions".
+#
+# If a build fails (for example a content file with a mistake), nothing is
+# published and the last good version stays online. GitHub emails the failure
+# to whoever last changed this schedule; see README → "Keeping the site current".
 
 name: Deploy
 
@@ -12,12 +16,12 @@ on:
   schedule:
     # 13:15 UTC = 9:15 AM in Puerto Rico, after late-night events have ended.
     - cron: '15 13 * * *'
+    # 01:15 UTC = 9:15 PM in Puerto Rico, so daytime events leave the agenda the same evening.
+    - cron: '15 1 * * *'
   workflow_dispatch:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 concurrency:
   group: pages
@@ -32,9 +36,17 @@ jobs:
         with:
           node-version-file: .nvmrc
           cache: npm
+      # Optimized images from earlier builds, so only new or changed ones are processed.
+      - uses: actions/cache@v5
+        with:
+          path: node_modules/.astro
+          key: astro-images-${{ hashFiles('src/assets/**', 'public/**') }}
+          restore-keys: astro-images-
       - run: npm ci
       - run: npm run check
       - run: npm run build
+      # Lists any sample (placeholder) content still in use, in the run log.
+      - run: npm run content
       - uses: actions/upload-pages-artifact@v5
         with:
           path: dist
@@ -42,6 +54,9 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}

@@ -37,6 +37,7 @@ const tags = artistFilterTags(artists, t.categories);
       )
     }
     <p class="tag-status" role="status" data-tag-status data-template-all={t.showing(artists.length, artists.length)}>{t.showing(artists.length, artists.length)}</p>
+    {artists.length === 0 && <p class="row-empty">{ui.home.noArtists}</p>}
     <div class="artist-grid" data-artist-grid>
       {
         artists.map((artist) => (
@@ -47,60 +48,59 @@ const tags = artistFilterTags(artists, t.categories);
       }
     </div>
   </section>
-</Base>
-
-<script>
-  // Multi-select filter: any number of tags can be on at once, and the grid
-  // shows artists that have any of them. "Todos" clears the selection. The
-  // selection is kept in the address (?tag=dj,pintura) so it can be shared.
-  // Without JavaScript the full grid shows.
-  const filter = document.querySelector<HTMLElement>('[data-tag-filter]');
-  const grid = document.querySelector<HTMLElement>('[data-artist-grid]');
-  const status = document.querySelector<HTMLElement>('[data-tag-status]');
-  if (filter && grid && status) {
-    const allChip = filter.querySelector<HTMLAnchorElement>('[data-tag=""]')!;
-    const chips = [...filter.querySelectorAll<HTMLAnchorElement>('[data-tag]:not([data-tag=""])')];
-    const known = new Set(chips.map((chip) => chip.dataset.tag!));
-    const items = [...grid.querySelectorAll<HTMLElement>('[data-tags]')];
-    let selected = new Set<string>();
-
-    const apply = (updateUrl = false) => {
-      allChip.setAttribute('aria-pressed', String(selected.size === 0));
-      chips.forEach((chip) => chip.setAttribute('aria-pressed', String(selected.has(chip.dataset.tag!))));
-      let shown = 0;
-      items.forEach((item) => {
-        const match = selected.size === 0 || item.dataset.tags!.split(' ').some((tag) => selected.has(tag));
-        item.hidden = !match;
-        if (match) shown++;
-      });
-      status.textContent =
-        shown === items.length
-          ? status.dataset.templateAll!
-          : `Mostrando ${shown} de ${items.length} artistas`;
-      if (updateUrl) {
-        // Tags are plain slugs, so the commas can stay readable (?tag=dj,pintura).
-        const query = selected.size ? `?tag=${[...selected].join(',')}` : '';
-        history.replaceState(null, '', location.pathname + query + location.hash);
-      }
-    };
-
-    allChip.addEventListener('click', (event) => {
-      event.preventDefault();
-      selected = new Set();
-      apply(true);
-    });
-    chips.forEach((chip) =>
-      chip.addEventListener('click', (event) => {
+  <script>
+    // Multi-select filter: any number of tags can be on at once, and the grid
+    // shows artists that have any of them. "Todos" clears the selection. The
+    // selection is kept in the address (?tag=dj,pintura) so it can be shared.
+    // Without JavaScript the full grid shows.
+    const filter = document.querySelector<HTMLElement>('[data-tag-filter]');
+    const grid = document.querySelector<HTMLElement>('[data-artist-grid]');
+    const status = document.querySelector<HTMLElement>('[data-tag-status]');
+    if (filter && grid && status) {
+      const allChip = filter.querySelector<HTMLAnchorElement>('[data-tag=""]')!;
+      const chips = [...filter.querySelectorAll<HTMLAnchorElement>('[data-tag]:not([data-tag=""])')];
+      const known = new Set(chips.map((chip) => chip.dataset.tag!));
+      const items = [...grid.querySelectorAll<HTMLElement>('[data-tags]')];
+      let selected = new Set<string>();
+  
+      const apply = (updateUrl = false) => {
+        allChip.setAttribute('aria-pressed', String(selected.size === 0));
+        chips.forEach((chip) => chip.setAttribute('aria-pressed', String(selected.has(chip.dataset.tag!))));
+        let shown = 0;
+        items.forEach((item) => {
+          const match = selected.size === 0 || item.dataset.tags!.split(' ').some((tag) => selected.has(tag));
+          item.hidden = !match;
+          if (match) shown++;
+        });
+        status.textContent =
+          shown === items.length
+            ? status.dataset.templateAll!
+            : `Mostrando ${shown} de ${items.length} artistas`;
+        if (updateUrl) {
+          // Tags are plain slugs, so the commas can stay readable (?tag=dj,pintura).
+          const query = selected.size ? `?tag=${[...selected].join(',')}` : '';
+          history.replaceState(null, '', location.pathname + query + location.hash);
+        }
+      };
+  
+      allChip.addEventListener('click', (event) => {
         event.preventDefault();
-        const tag = chip.dataset.tag!;
-        if (selected.has(tag)) selected.delete(tag);
-        else selected.add(tag);
+        selected = new Set();
         apply(true);
-      }),
-    );
-
-    const fromUrl = (new URLSearchParams(location.search).get('tag') ?? '').split(',').filter((tag) => known.has(tag));
-    selected = new Set(fromUrl);
-    apply();
-  }
-</script>
+      });
+      chips.forEach((chip) =>
+        chip.addEventListener('click', (event) => {
+          event.preventDefault();
+          const tag = chip.dataset.tag!;
+          if (selected.has(tag)) selected.delete(tag);
+          else selected.add(tag);
+          apply(true);
+        }),
+      );
+  
+      const fromUrl = (new URLSearchParams(location.search).get('tag') ?? '').split(',').filter((tag) => known.has(tag));
+      selected = new Set(fromUrl);
+      apply();
+    }
+  </script>
+</Base>

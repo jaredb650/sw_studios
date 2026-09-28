@@ -211,7 +211,7 @@ const es = {
     filterLabel: 'Filtrar artistas',
     filterAll: 'Todos',
     categories: { musica: 'Música', arte: 'Arte visual' },
-    showing: (shown: number, total: number) => (shown === total ? `${total} artistas` : `Mostrando ${shown} de ${total} artistas`),
+    showing: (shown: number, total: number) => (shown === total ? plural(total, 'artista', 'artistas') : `Mostrando ${shown} de ${plural(total, 'artista', 'artistas')}`),
     back: 'Artistas',
     socials: 'Redes',
     work: 'Trabajo seleccionado',

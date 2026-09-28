@@ -7,7 +7,7 @@ import ArtworkItem from '../components/ArtworkItem.astro';
 import EntryBody from '../components/EntryBody.astro';
 import Lightbox from '../components/Lightbox.astro';
 import { artistIndex, eventsForArtist, getArtists, type Artist } from '../lib/artists';
-import { getAgenda, eventAnchor } from '../lib/events';
+import { getAgenda, eventAnchor, isOn } from '../lib/events';
 import { shortDate } from '../lib/dates';
 import { href, absolute } from '../lib/urls';
 import { artistPath, useLang } from '../i18n';
@@ -25,7 +25,7 @@ const t = ui.artistsPage;
 const artists = await getArtists();
 const index = artistIndex(artists);
 const { upcoming, past } = await getAgenda();
-const upcomingEvents = eventsForArtist(artist, upcoming, index);
+const upcomingEvents = eventsForArtist(artist, upcoming.filter(isOn), index);
 const pastEvents = eventsForArtist(artist, past, index);
 const works = (await getCollection('artworks', ({ data: work }) => !work.draft && work.artist?.id === artist.id)).sort(
   (a, b) => a.data.order - b.data.order,
@@ -174,10 +174,14 @@ const jsonLd = {
       )
     }
 
-    <nav class="pager" aria-label={t.more}>
-      <a href={href(artistPath(prev.id))}><span>{t.prev}</span><strong>{prev.data.name}</strong></a>
-      <a href={href(artistPath(next.id))}><span>{t.next}</span><strong>{next.data.name}</strong></a>
-    </nav>
+    {
+      prev.id !== artist.id && (
+        <nav class="pager" aria-label={t.more}>
+          <a href={href(artistPath(prev.id))}><span>{t.prev}</span><strong>{prev.data.name}</strong></a>
+          {next.id !== prev.id && <a href={href(artistPath(next.id))}><span>{t.next}</span><strong>{next.data.name}</strong></a>}
+        </nav>
+      )
+    }
   </section>
   <Lightbox />
 </Base>

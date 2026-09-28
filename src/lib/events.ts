@@ -12,7 +12,8 @@ function withTimes(entry: CollectionEntry<'events'>): Event {
   const startsAt = localDate(date, start);
   let endsAt: Date;
   if (endDate) {
-    endsAt = localDate(endDate, end ?? '23:59');
+    // A multi-day run of overnight events (22:00–04:00) ends the morning after endDate.
+    endsAt = localDate(start && end && end <= start ? addDays(endDate, 1) : endDate, end ?? '23:59');
   } else if (end) {
     endsAt = localDate(start && end <= start ? addDays(date, 1) : date, end);
   } else if (start) {
@@ -36,8 +37,9 @@ export async function getEvents(): Promise<Event[]> {
 export async function getAgenda(now = new Date()) {
   const events = await getEvents();
   const upcoming = events.filter((event) => event.endsAt > now);
+  // Cancelled and postponed events never happened, so they stay out of the archive.
   const past = events
-    .filter((event) => event.endsAt <= now && event.data.status !== 'cancelled')
+    .filter((event) => event.endsAt <= now && event.data.status === 'scheduled')
     .reverse();
   const featured =
     upcoming.find((event) => event.data.featured && event.data.status === 'scheduled') ??
@@ -45,6 +47,9 @@ export async function getAgenda(now = new Date()) {
   const rest = upcoming.filter((event) => event !== featured);
   return { events, upcoming, past, featured, rest };
 }
+
+/** Events that are going ahead (not cancelled or postponed), e.g. for artist profiles. */
+export const isOn = (event: Event) => event.data.status === 'scheduled';
 
 export function hasRecap(event: Event): boolean {
   const recap = event.data.recap;

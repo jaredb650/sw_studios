@@ -8,7 +8,7 @@
 import { Image } from 'astro:assets';
 import SampleChip from './SampleChip.astro';
 import { artistIndex, bioPreview, eventsForArtist, getArtists } from '../lib/artists';
-import { getAgenda } from '../lib/events';
+import { getAgenda, isOn } from '../lib/events';
 import { dayNumber, monthShort, weekdayShort } from '../lib/dates';
 import { href } from '../lib/urls';
 import { useLang } from '../i18n';
@@ -22,11 +22,11 @@ const artists = await getArtists();
 const index = artistIndex(artists);
 const { upcoming } = await getAgenda();
 const slides = artists.map((artist) => {
-  const next = eventsForArtist(artist, upcoming, index)[0];
+  const next = eventsForArtist(artist, upcoming.filter(isOn), index)[0];
   return {
     artist,
     url: href(artistPath(artist.id)),
-    tags: artist.data.disciplines ?? artist.data.disciplines,
+    tags: artist.data.disciplines,
     bio: bioPreview(artist.body),
     next: next ? `${next.data.title} · ${weekdayShort(next.startsAt)} ${Number(dayNumber(next.startsAt))} ${monthShort(next.startsAt)}` : undefined,
   };
@@ -39,7 +39,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
     <div class="spotlight" role="region" aria-roledescription="carrusel" aria-label={t.artists} data-spotlight style={`--spot-duration: ${SECONDS}s`}>
       <div class="spot-stage" aria-live="off" data-spot-stage>
         {slides.map((slide, i) => (
-          <a class="spot-card" href={slide.url} hidden={i > 0 ? true : undefined} data-spot-card aria-label={`${slide.artist.data.name} — ${t.viewProfile}`}>
+          <a class="spot-card" href={slide.url} hidden={i > 0 ? true : undefined} data-spot-card>
             <div class="spot-photo">
               <Image src={slide.artist.data.photo} alt={slide.artist.data.photoAlt} width={900} sizes="(max-width: 680px) 90vw, 40vw" loading={i === 0 ? 'eager' : 'lazy'} />
             </div>
@@ -72,7 +72,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
         <div class="spot-progress">
           <span class="spot-bar" data-spot-bar></span>
         </div>
-        <button class="spot-toggle" type="button" data-spot-toggle aria-pressed="false" data-pause-label={t.pauseRotation} data-play-label={t.playRotation} aria-label={t.pauseRotation} hidden>
+        <button class="spot-toggle" type="button" data-spot-toggle data-pause-label={t.pauseRotation} data-play-label={t.playRotation} aria-label={t.pauseRotation} hidden>
           <span class="spot-toggle-icon" aria-hidden="true"></span>
         </button>
       </div>
@@ -239,6 +239,10 @@ const pad = (n: number) => String(n).padStart(2, '0');
       thumb.addEventListener('click', (event) => {
         if (event.metaKey || event.ctrlKey || event.shiftKey) return;
         event.preventDefault();
+        // Choosing an artist stops the rotation so they stay on screen; the
+        // pause button (now "Reanudar") starts it again.
+        stoppedByMotion = false;
+        setStopped(true);
         show(i, { manual: true });
       }),
     );
@@ -266,7 +270,6 @@ const pad = (n: number) => String(n).padStart(2, '0');
 
     const setStopped = (value: boolean) => {
       stopped = value;
-      toggle.setAttribute('aria-pressed', String(stopped));
       toggle.setAttribute('aria-label', (stopped ? toggle.dataset.playLabel : toggle.dataset.pauseLabel) ?? '');
       carousel.classList.toggle('is-stopped', stopped);
       stage.setAttribute('aria-live', stopped ? 'polite' : 'off');
@@ -315,7 +318,14 @@ const pad = (n: number) => String(n).padStart(2, '0');
       }
       kick();
     }).observe(root, { attributes: true, attributeFilter: ['class'] });
-    window.addEventListener('resize', () => showPage(pageOf(current), false));
+    // Re-page only when the width changes (a phone's toolbar collapsing while
+    // scrolling changes only the height).
+    let lastWidth = list.clientWidth;
+    window.addEventListener('resize', () => {
+      if (list.clientWidth === lastWidth) return;
+      lastWidth = list.clientWidth;
+      showPage(pageOf(current), false);
+    });
     keepAlive(kick, {
       // Coming back to the page (Back button, tab switch): clear temporary holds.
       onReturn: () => {

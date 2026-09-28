@@ -59,7 +59,7 @@ export const site = {
   patreon: {
     // 'coming-soon' hides the tiers and shows "Próximamente".
     // 'live' shows up to three tiers with join buttons.
-    status: 'live' as 'live' | 'coming-soon',
+    status: 'coming-soon' as 'live' | 'coming-soon',
     url: 'https://example.com/patreon-shipwreck' as string | null,
     placeholder: true,
     tiers: [

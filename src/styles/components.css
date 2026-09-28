@@ -217,7 +217,9 @@ a.poster:hover::after, a.poster:focus-visible::after { transform: translateY(0);
   background: rgba(17, 18, 17, .85); border: 1px solid var(--line-strong);
   transition: background .3s, color .3s, border-color .3s;
 }
-.card-body { padding-top: 14px; display: grid; gap: 6px; }
+.card-body { padding-top: 14px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 6px; }
+/* Long prices ("$5 sugeridos en la entrada") wrap instead of widening the page. */
+.card-chips .chip { white-space: normal; }
 .card-date { font-family: var(--mono); font-size: 12px; letter-spacing: 1px; text-transform: uppercase; color: var(--accent); }
 .card-body h3 { font-family: var(--display); font-weight: 700; text-transform: uppercase; font-size: clamp(22px, 1.9vw, 30px); line-height: 1; letter-spacing: -.005em; overflow-wrap: anywhere; }
 .card-meta { color: var(--muted); font-size: 13px; line-height: 1.45; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
@@ -439,15 +441,15 @@ html:has(.lightbox[open]) { overflow: hidden; }
 .video.pending .video-play { background: transparent; color: var(--muted); border: 1px solid var(--line-strong); }
 .video.pending p { font-family: var(--mono); font-size: 12px; letter-spacing: 1.5px; color: var(--muted); margin-top: 18px; text-transform: uppercase; }
 .video-caption { display: flex; justify-content: space-between; gap: 14px; margin-top: 12px; font-family: var(--mono); font-size: 12px; letter-spacing: 1px; color: var(--muted); text-transform: uppercase; }
-.video-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px; }
+.video-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(320px, 100%), 1fr)); gap: 24px; }
 /* El espacio tour: never taller than ~60% of the screen. */
 .tour-player { width: min(100%, 1040px, calc(60svh * 16 / 9)); margin: 0 auto; }
 
 /* Espacio */
 .mission { font-family: var(--display); font-weight: 600; text-transform: uppercase; font-size: clamp(2.6rem, 5.4vw, 5.2rem); line-height: .98; letter-spacing: -.01em; max-width: 1200px; }
 .mosaic { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); grid-auto-rows: clamp(150px, 16vw, 250px); gap: 12px; }
-.mosaic a { display: block; overflow: hidden; background: var(--bg-raised); position: relative; grid-column: span var(--span, 1); }
-.mosaic a:first-child { grid-column: span 2; grid-row: span 2; }
+.mosaic a { display: block; overflow: hidden; background: var(--bg-raised); position: relative; grid-column: span var(--span, 1); grid-row: span var(--rows, 1); }
+.mosaic a:first-child { grid-column: span var(--span, 2); grid-row: span 2; }
 .mosaic img { width: 100%; height: 100%; object-fit: cover; transition: transform .9s var(--ease); }
 .mosaic a:hover img { transform: scale(1.04); }
 .split { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 7fr); gap: 6%; }
@@ -531,12 +533,12 @@ html:has(.rules-dialog[open]) { overflow: hidden; }
   display: grid; gap: 20px;
   background: repeating-linear-gradient(-45deg, transparent 0 22px, #ffffff04 22px 44px);
 }
-.coming-soon .big { font-family: var(--display); font-weight: 800; text-transform: uppercase; font-size: clamp(3.4rem, 10vw, 9rem); line-height: .85; color: transparent; -webkit-text-stroke: 1.5px var(--accent); }
+.coming-soon .big { font-family: var(--display); font-weight: 800; text-transform: uppercase; font-size: clamp(2.4rem, 10vw, 9rem); overflow-wrap: anywhere; line-height: .85; color: transparent; -webkit-text-stroke: 1.5px var(--accent); }
 .coming-soon p { max-width: 560px; color: var(--muted); font-size: 17px; }
 
 /* 404 */
-.not-found { min-height: 60vh; display: grid; align-content: center; gap: 28px; }
-.not-found h1 { font-family: var(--display); font-weight: 800; text-transform: uppercase; font-size: clamp(5rem, 16vw, 15rem); line-height: .85; }
+.not-found { min-height: 60vh; display: grid; grid-template-columns: minmax(0, 1fr); align-content: center; gap: 28px; }
+.not-found h1 { font-family: var(--display); font-weight: 800; text-transform: uppercase; font-size: clamp(2.8rem, 14vw, 15rem); line-height: .85; overflow-wrap: anywhere; }
 .not-found h1 span { color: var(--accent); }
 
 /* Responsive */
@@ -590,7 +592,7 @@ html:has(.rules-dialog[open]) { overflow: hidden; }
   .card-flags { right: 48px; }
   .card-toggle { width: 34px; height: 34px; font-size: 13px; }
   .card-body h3 { font-size: 21px; }
-  .card-date { font-size: 11px; letter-spacing: .2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .card-date { font-size: 11px; letter-spacing: .2px; }
   .event-card[open] .card-body h3 { font-size: 27px; }
   .event-row > summary { grid-template-columns: 74px minmax(0, 1fr) 40px; gap: 16px; padding: 20px 0; }
   .row-chips { grid-column: 2 / 3; grid-row: 2; justify-content: flex-start; }
@@ -625,7 +627,7 @@ html:has(.rules-dialog[open]) { overflow: hidden; }
   .art-grid { gap: 34px 14px; }
   .art-item { flex-basis: 100%; }
   .mosaic { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: 36vw; gap: 8px; }
-  .mosaic a { grid-column: auto; }
+  .mosaic a { grid-column: auto; grid-row: auto; }
   .mosaic a:first-child, .mosaic a:last-child:nth-child(even) { grid-column: span 2; }
   .lightbox-stage { padding: 0 8px; }
   .lightbox-prev, .lightbox-next { top: auto; bottom: 8px; translate: none; width: 46px; height: 46px; background: rgba(17, 18, 17, .8); }
@@ -873,6 +875,8 @@ html:has(.rules-dialog[open]) { overflow: hidden; }
 .art-mosaic .art-tile:first-child { grid-column: span 2; grid-row: span 2; }
 .art-mosaic.count-2 .art-tile, .art-mosaic.count-3 .art-tile:not(:first-child) { grid-column: span 2; }
 .art-mosaic.count-4 .art-tile:last-child { grid-column: span 2; }
+.art-mosaic.count-1 .art-tile:first-child { grid-column: 1 / -1; }
+.art-mosaic.count-2 .art-tile:last-child { grid-row: span 2; }
 .art-tile { position: relative; display: block; overflow: hidden; background: var(--bg-raised); }
 .art-tile img { width: 100%; height: 100%; object-fit: cover; transition: transform .9s var(--ease); }
 .art-tile:hover img { transform: scale(1.05); }
@@ -940,6 +944,8 @@ html:has(.rules-dialog[open]) { overflow: hidden; }
   .art-mosaic .art-tile:first-child { grid-column: span 2; grid-row: span 2; }
   .art-mosaic.count-3 .art-tile:not(:first-child), .art-mosaic.count-4 .art-tile:last-child { grid-column: span 1; }
   .art-mosaic.count-4 .art-tile:last-child { grid-column: span 2; }
+.art-mosaic.count-1 .art-tile:first-child { grid-column: 1 / -1; }
+.art-mosaic.count-2 .art-tile:last-child { grid-row: span 2; }
   .art-tile-caption { padding: 18px 10px 8px; }
   .art-tile-caption strong { font-size: 14px; }
   .art-tile:first-child .art-tile-caption strong { font-size: 20px; }
@@ -1221,6 +1227,8 @@ html:has(.rules-dialog[open]) { overflow: hidden; }
 .agenda-filter { margin: 0 0 30px; }
 .agenda-filter + .featured { margin-top: 0; }
 .is-filtered-out { display: none !important; }
+/* The type filter needs JavaScript; without it every event shows. */
+html:not(.js) [data-type-filter] { display: none; }
 
 /* Participa: kicker above each offer (Apoya / Contribuye / Propón). */
 .participa-kicker { font-family: var(--mono); font-size: 11px; letter-spacing: 1.2px; text-transform: uppercase; color: var(--muted); margin-bottom: -6px; }

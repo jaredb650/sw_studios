@@ -1,0 +1,23 @@
+# GitHub switches off scheduled workflows (the twice-daily rebuild in deploy.yml)
+# in repositories with no activity for 60 days. This monthly job re-enables the
+# deploy workflow so the agenda keeps updating even when nobody edits the site.
+
+name: Keep the daily rebuild on
+
+on:
+  schedule:
+    - cron: '0 12 1 * *'
+  workflow_dispatch:
+
+permissions:
+  actions: write
+
+jobs:
+  keepalive:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          gh workflow enable deploy.yml --repo "$GITHUB_REPOSITORY"
+          gh workflow enable keepalive.yml --repo "$GITHUB_REPOSITORY"
+        env:
+          GH_TOKEN: ${{ github.token }}
