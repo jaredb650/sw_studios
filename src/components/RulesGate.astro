@@ -41,7 +41,7 @@ const bgStyle = `--bg-photo: url(${rulesBg.src}); --bg-pos: center 58%; --bg-opa
             {lead && <p class="lead">{lead}</p>}
             <RulesList items={rules.data.items} compact />
             <div class="gate-actions">
-              <button class="button" type="button" data-accept-rules>
+              <button class="button" type="button" data-accept-rules data-accept-to={t.acceptTo} data-places={JSON.stringify(t.places)}>
                 <span>{t.accept}</span>
                 <i class="icon icon-arrow icon-down" aria-hidden="true" />
               </button>

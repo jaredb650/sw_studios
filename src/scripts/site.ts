@@ -37,7 +37,11 @@ function setMenu(open: boolean) {
   // header currently sits (the preview banner can push it down).
   menu.style.paddingTop = open && header ? `${Math.round(header.getBoundingClientRect().bottom) + 24}px` : '';
   root.toggleAttribute('data-menu-open', open);
-  if (open) menu.querySelector('a')?.focus();
+  // While the menu covers the page, the page behind it can't be reached with
+  // Tab or a screen reader.
+  document.querySelectorAll<HTMLElement>('main, .site-footer, .sample-banner, .skip').forEach((element) => (element.inert = open));
+  // Focus the first link once the menu has become visible (it fades in).
+  if (open) setTimeout(() => menu.querySelector<HTMLElement>('a')?.focus(), 60);
 }
 menuButton?.addEventListener('click', () => setMenu(menuButton.getAttribute('aria-expanded') !== 'true'));
 menu?.addEventListener('click', (event) => {
@@ -58,7 +62,7 @@ document.addEventListener('keydown', (event) => {
     menuButton?.focus();
   }
 });
-window.matchMedia('(min-width: 1181px)').addEventListener('change', (event) => event.matches && setMenu(false));
+window.matchMedia('(min-width: 961px)').addEventListener('change', (event) => event.matches && setMenu(false));
 
 /* Scroll-linked effects */
 const hero = document.querySelector<HTMLElement>('.masthead');
@@ -119,15 +123,17 @@ const requestUpdate = () => {
   if (!frame) frame = requestAnimationFrame(update);
 };
 
-/* Motion toggle */
-const toggle = document.querySelector<HTMLButtonElement>('.motion-toggle');
+/* Motion toggles: one in the footer, one in the home hero (reachable while the
+   rules checkpoint is up). The visible label says what pressing it will do. */
+const toggles = [...document.querySelectorAll<HTMLButtonElement>('.motion-toggle')];
 function applyMotion() {
   root.classList.toggle('motion-paused', paused);
   root.classList.toggle('motion-enabled', !paused);
-  if (toggle) {
+  for (const toggle of toggles) {
     toggle.hidden = false;
-    toggle.textContent = (paused ? toggle.dataset.playLabel : toggle.dataset.pauseLabel) ?? toggle.textContent;
-    toggle.setAttribute('aria-pressed', String(paused));
+    const label = toggle.querySelector('[data-label]') ?? toggle;
+    label.textContent = (paused ? toggle.dataset.playLabel : toggle.dataset.pauseLabel) ?? label.textContent;
+    toggle.classList.toggle('is-paused', paused);
   }
   if (paused) finishLoader();
   // The hero video follows the motion setting too.
@@ -137,30 +143,43 @@ function applyMotion() {
   });
   requestUpdate();
 }
-toggle?.addEventListener('click', () => {
-  paused = !paused;
-  save('shipwreck-motion', paused ? 'paused' : 'enabled');
-  applyMotion();
-});
+for (const toggle of toggles) {
+  toggle.addEventListener('click', () => {
+    paused = !paused;
+    save('shipwreck-motion', paused ? 'paused' : 'enabled');
+    applyMotion();
+  });
+}
 reduced.addEventListener('change', (event) => {
   paused = event.matches || read('shipwreck-motion') === 'paused';
   applyMotion();
 });
 
-/* Home intro: absent without JS, skipped on repeat visits, hard 2.6 s deadline. */
-let loader: HTMLElement | undefined;
-let loaderEnded = false;
+/* Home intro (src/components/Preloader.astro). The <head> script turns it on
+   before the first paint; this plays it: the logo fills while the fonts and the
+   hero image load, the seven souls pop in and out, then the page is revealed.
+   A wheel, tap, key or the skip button ends it early, and it never runs past
+   INTRO_MAX_MS. */
+const SOUL_MS = 220;
+const INTRO_MAX_MS = 3400;
+const loader = document.querySelector<HTMLElement>('[data-preloader]');
+let loaderEnded = !root.classList.contains('intro') || !loader;
 let loaderTimer: number | undefined;
+const skipEvents = ['wheel', 'touchstart', 'pointerdown', 'keydown'] as const;
 function finishLoader() {
-  if (loaderEnded) return;
+  if (loaderEnded) {
+    root.classList.remove('intro');
+    return;
+  }
   loaderEnded = true;
   clearTimeout(loaderTimer);
+  skipEvents.forEach((type) => window.removeEventListener(type, finishLoader, true));
   if (loader) {
     if (loader.contains(document.activeElement)) (document.activeElement as HTMLElement).blur();
     loader.classList.add('is-done');
-    const done = loader;
-    setTimeout(() => done.remove(), 850);
+    setTimeout(() => loader.remove(), 850);
   }
+  root.classList.remove('intro');
   save('shipwreck-intro', 'seen');
   if (!paused && window.scrollY < 100 && hero) {
     root.classList.add('intro-enter');
@@ -171,56 +190,50 @@ function finishLoader() {
   }
 }
 
-if (document.body.dataset.page === 'home' && !paused && !read('shipwreck-intro') && !location.hash && window.scrollY < 100) {
-  // Intro: the logo fills while the page loads, then the seven souls pop in
-  // and out one after another under it, then the home page is revealed.
-  // Skippable (button, Tab, Escape) and capped by a hard deadline.
+if (!loaderEnded && loader) {
   const souls: string[] = JSON.parse(document.querySelector<HTMLElement>('[data-typewriter]')?.dataset.words ?? '[]');
-  const SOUL_MS = 300;
-  loader = document.createElement('div');
-  loader.className = 'preloader';
-  loader.innerHTML =
-    `<div class="preloader-logo" aria-hidden="true"><span class="brand-mark"></span><span class="brand-mark loader-fill"></span></div><p class="loader-wordmark">SHIPWRECK STUDIOS_</p><p class="loader-souls" aria-hidden="true"><span></span></p><div class="loader-bottom"><span>${strings.place}</span><span class="loader-state" role="status">${strings.loading}</span><button class="loader-skip" type="button">${strings.skip} <i class="icon icon-arrow" aria-hidden="true"></i></button></div>`;
-  document.body.append(loader);
-  loaderTimer = window.setTimeout(finishLoader, 900 + souls.length * SOUL_MS + 1600);
-  loader.querySelector('button')!.addEventListener('click', finishLoader);
-  const skipKey = (event: KeyboardEvent) => {
-    if (event.key === 'Tab' || event.key === 'Escape') {
-      finishLoader();
-      document.removeEventListener('keydown', skipKey);
-    }
+  // If this script arrived late (slow connection), the visitor has already
+  // waited: reveal the page instead of playing the souls.
+  const late = performance.now() > 2500;
+  const remaining = Math.max(400, INTRO_MAX_MS - performance.now());
+  loaderTimer = window.setTimeout(finishLoader, late ? 300 : remaining);
+  skipEvents.forEach((type) => window.addEventListener(type, finishLoader, { capture: true, passive: true }));
+  const decode = (src?: string | null) => {
+    if (!src) return Promise.resolve();
+    const image = new Image();
+    image.src = src;
+    return image.decode ? image.decode() : Promise.resolve();
   };
-  document.addEventListener('keydown', skipKey);
-  const decode = (image?: HTMLImageElement | null) => (image?.decode ? image.decode() : Promise.resolve());
-  const assets: Promise<unknown>[] = [document.fonts?.ready ?? Promise.resolve(), decode(document.querySelector<HTMLImageElement>('.poster img'))];
+  const heroPoster = document.querySelector<HTMLVideoElement>('video[data-hero-video]')?.poster;
+  const assets: Promise<unknown>[] = [document.fonts?.ready ?? Promise.resolve(), decode(heroPoster)];
   let ready = 0;
-  const active = loader;
+  const state = loader.querySelector<HTMLElement>('.loader-state');
   const tracked = assets.map((asset) =>
     Promise.resolve(asset)
       .catch(() => {})
       .then(() => {
         ready++;
-        active.style.setProperty('--load', `${(ready / assets.length) * 100}%`);
-        if (ready === assets.length) active.querySelector('.loader-state')!.textContent = strings.ready;
+        loader.style.setProperty('--load', `${(ready / assets.length) * 100}%`);
+        if (ready === assets.length && state) state.textContent = state.dataset.ready ?? '';
       }),
   );
   const pause = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-  const soulSlot = active.querySelector<HTMLElement>('.loader-souls span')!;
-  Promise.all([Promise.all(tracked), pause(900)])
-    .then(async () => {
-      active.classList.add('is-souls');
-      for (const soul of souls) {
-        if (loaderEnded) return;
-        soulSlot.textContent = soul;
-        soulSlot.classList.remove('pop');
-        void soulSlot.offsetWidth; // restart the pop animation
-        soulSlot.classList.add('pop');
-        await pause(SOUL_MS);
-      }
-    })
-    .then(finishLoader);
-} else {
-  loaderEnded = true;
+  const soulSlot = loader.querySelector<HTMLElement>('.loader-souls span')!;
+  if (!late) {
+    Promise.all([Promise.all(tracked), pause(700)])
+      .then(async () => {
+        loader.classList.add('is-souls');
+        for (const soul of souls) {
+          if (loaderEnded) return;
+          soulSlot.textContent = soul;
+          soulSlot.classList.remove('pop');
+          void soulSlot.offsetWidth; // restart the pop animation
+          soulSlot.classList.add('pop');
+          await pause(SOUL_MS);
+        }
+      })
+      .then(finishLoader);
+  }
 }
 
 /* Reveal on scroll */

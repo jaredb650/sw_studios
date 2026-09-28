@@ -193,7 +193,10 @@ const es = {
     label: 'Reglas del espacio',
     heading: ['Antes de asistir,', 'lee nuestras reglas.'],
     accept: 'He leído y entiendo las reglas',
-    noteInline: 'Solo te lo pedimos una vez por visita. Puedes volver a leerlas al final de la página.',
+    // When the visitor was heading to a locked section, the button says where accepting leads.
+    acceptTo: 'Entiendo las reglas: ver {place}',
+    places: { agenda: 'la agenda', evento: 'el evento', artistas: 'los artistas', galeria: 'la galería', participa: 'cómo participar', reglas: 'las reglas', visita: 'cómo llegar' },
+    noteInline: 'Acepta para ver la agenda, los artistas y cómo llegar. Solo te lo pedimos una vez por visita.',
     noteDialog: 'Solo te lo pedimos una vez por visita. Siempre están al final de la página de inicio.',
   },
 
@@ -319,6 +322,8 @@ const es = {
     archive: 'Archivo',
     directions: 'Cómo llegar',
   },
+
+  preloader: { place: 'SAN JUAN, PUERTO RICO', loading: 'Cargando', ready: 'Listo', skip: 'Saltar intro' },
 };
 
 export type UI = typeof es;

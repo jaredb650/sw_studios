@@ -9,6 +9,7 @@ import { site } from '../data/site';
 import { absolute, href } from '../lib/urls';
 import { getPlaceholders } from '../lib/placeholders';
 import RulesGate from '../components/RulesGate.astro';
+import Preloader from '../components/Preloader.astro';
 import { getRules, rulesVersion } from '../lib/rules';
 import { useLang } from '../i18n';
 
@@ -34,12 +35,13 @@ const isSample = placeholders.length > 0;
 const structured = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
 // The home page places its own inline rules checkpoint; other pages use the dialog.
 const rules = await getRules();
-// The El espacio page (like the home page's El espacio section) is readable before accepting.
-const gate = rules && page !== 'not-found' && page !== 'space' ? (page === 'home' ? 'inline' : 'dialog') : undefined;
+// The El espacio page (like the home page's El espacio section) and the visit page
+// (address and contact) are readable before accepting.
+const gate = rules && !['not-found', 'space', 'visit'].includes(page) ? (page === 'home' ? 'inline' : 'dialog') : undefined;
 ---
 
 <!doctype html>
-<html lang="es" data-rules-version={gate ? rulesVersion(rules!.data.items) : undefined}>
+<html lang="es" data-rules-version={gate ? rulesVersion(rules!.data.items) : undefined} data-intro={page === 'home' ? '' : undefined}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -106,6 +108,18 @@ const gate = rules && page !== 'not-found' && page !== 'space' ? (page === 'home
         try {
           localStorage.removeItem('shipwreck-rules'); // Earlier builds kept acceptance permanently.
         } catch (e) {}
+        // Home intro (the preloader in Preloader.astro): once per visit, not when
+        // returning with Back or arriving at a section link, and never with
+        // reduced motion or animations paused.
+        if (root.hasAttribute('data-intro') && type !== 'back_forward' && !location.hash) {
+          var still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+          var seenIntro = true;
+          try {
+            seenIntro = sessionStorage.getItem('shipwreck-intro') === 'seen';
+            still = still || sessionStorage.getItem('shipwreck-motion') === 'paused';
+          } catch (e) {}
+          if (!seenIntro && !still) root.classList.add('intro');
+        }
         // Lock the site before first paint until the rules are accepted in this visit.
         var version = root.getAttribute('data-rules-version');
         if (!version) return;
@@ -121,6 +135,7 @@ const gate = rules && page !== 'not-found' && page !== 'space' ? (page === 'home
     {structured.map((data) => <script type="application/ld+json" set:html={JSON.stringify(data)} />)}
   </head>
   <body data-page={page}>
+    {page === 'home' && <Preloader />}
     <div class="reading-progress" aria-hidden="true"></div>
     <a class="skip" href="#contenido">{t.nav.skip}</a>
     {

@@ -80,6 +80,9 @@ const rulesBg = await getImage({ src: rulesPhoto, width: 1600, format: 'webp' })
     </div>
     <div class="mast-bottom">
       <p>{ui.site.intro}</p>
+      <button class="motion-toggle hero-motion" type="button" hidden data-pause-label={ui.footer.pauseMotion} data-play-label={ui.footer.playMotion}>
+        <i class="icon-pause" aria-hidden="true"></i><span data-label>{ui.footer.pauseMotion}</span>
+      </button>
       <a class="agenda-jump" href="#espacio" aria-label={t.exploreAgenda}>
         <span>{t.exploreAgenda}</span>
         <span class="round-arrow" aria-hidden="true"><i class="icon icon-arrow icon-down"></i></span>
@@ -243,5 +246,9 @@ const rulesBg = await getImage({ src: rulesPhoto, width: 1600, format: 'webp' })
 
     <VisitBlock />
   </div>
+  <script is:inline>
+    // Lock the gated sections right away instead of waiting for the site script.
+    if (document.documentElement.classList.contains('rules-pending')) document.querySelector('[data-gated]').inert = true;
+  </script>
   <Lightbox />
 </Base>

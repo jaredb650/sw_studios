@@ -34,6 +34,7 @@
 }
 
 *, *::before, *::after { box-sizing: border-box; }
+dialog:not([open]) { display: none; }
 [hidden] { display: none !important; }
 html { scroll-behavior: smooth; scroll-padding-top: var(--header-h); }
 body {
@@ -221,8 +222,8 @@ ul, ol { margin: 0; padding: 0; }
 .site-header::before {
   content: ""; position: absolute; inset: 0; z-index: -2;
   background: rgba(17, 18, 17, .93);
-  backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(18px);
 }
 .site-header.is-scrolled { border-color: var(--line-strong); }
 .header-inner {
@@ -283,6 +284,9 @@ ul, ol { margin: 0; padding: 0; }
 
 @media (max-width: 1180px) {
   .header-social { display: none; }
+}
+/* Tablets and phones: the nav becomes a full-screen menu. */
+@media (max-width: 960px) {
   .header-end { order: 2; margin-left: auto; }
   .menu-button { order: 3; }
   .js .menu-button { display: inline-flex; }
@@ -302,7 +306,8 @@ ul, ol { margin: 0; padding: 0; }
     display: flex; justify-content: space-between; align-items: baseline;
     padding: 12px 0;
     font-family: var(--display); font-weight: 700; text-transform: uppercase;
-    font-size: clamp(40px, 9vw, 72px); line-height: 1;
+    /* Sized by height too, so all eight items fit on a landscape tablet. */
+    font-size: clamp(28px, min(9vw, 6.2svh), 72px); line-height: 1;
   }
   .js .site-nav li a::after { display: none; }
   .js .site-nav li a .nav-index { font-family: var(--mono); font-size: 12px; color: var(--muted); font-weight: 400; letter-spacing: 1px; }
@@ -312,7 +317,7 @@ ul, ol { margin: 0; padding: 0; }
   html:not(.js) .site-nav { order: 3; width: 100%; overflow-x: auto; }
   html:not(.js) .site-nav ul { gap: 22px; white-space: nowrap; }
 }
-@media (min-width: 1181px) {
+@media (min-width: 961px) {
   .site-nav .nav-index, .site-nav .menu-footer { display: none; }
 }
 .site-nav .menu-footer {

@@ -42,6 +42,7 @@ const { t } = useLang();
     let items: HTMLAnchorElement[] = [];
     let index = 0;
     let opener: HTMLElement | null = null;
+    let inHistory = false;
 
     const show = (i: number) => {
       index = (i + items.length) % items.length;
@@ -62,12 +63,22 @@ const { t } = useLang();
       opener = link;
       show(items.indexOf(link));
       dialog.showModal();
+      // An extra history entry so the Back button (or gesture) closes the viewer
+      // instead of leaving the page.
+      history.pushState({ lightbox: true }, '');
+      inHistory = true;
+    });
+    window.addEventListener('popstate', () => {
+      if (!dialog.open) return;
+      inHistory = false;
+      dialog.close();
     });
 
     prev.addEventListener('click', () => show(index - 1));
     next.addEventListener('click', () => show(index + 1));
     dialog.querySelector('[data-lb-close]')!.addEventListener('click', () => dialog.close());
     dialog.addEventListener('click', (event) => {
+      if (swiped) return; // The end of a swipe, not a click on the background.
       if (event.target === dialog || event.target === dialog.querySelector('.lightbox-stage')) dialog.close();
     });
     dialog.addEventListener('keydown', (event) => {
@@ -77,13 +88,24 @@ const { t } = useLang();
     dialog.addEventListener('close', () => {
       image.removeAttribute('src');
       opener?.focus();
+      if (inHistory) {
+        inHistory = false;
+        history.back();
+      }
     });
 
     let startX = 0;
-    dialog.addEventListener('pointerdown', (event) => (startX = event.clientX));
+    let startY = 0;
+    let swiped = false;
+    dialog.addEventListener('pointerdown', (event) => {
+      startX = event.clientX;
+      startY = event.clientY;
+      swiped = false;
+    });
     dialog.addEventListener('pointerup', (event) => {
       const dx = event.clientX - startX;
-      if (Math.abs(dx) > 60 && items.length > 1) show(index + (dx < 0 ? 1 : -1));
+      swiped = Math.hypot(dx, event.clientY - startY) > 10;
+      if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(event.clientY - startY) && items.length > 1) show(index + (dx < 0 ? 1 : -1));
     });
   }
 </script>

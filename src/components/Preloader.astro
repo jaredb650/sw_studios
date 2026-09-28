@@ -1,0 +1,20 @@
+---
+// Home intro: the logo fills while the page loads, then the seven souls pop in
+// and out under it, then the page is revealed. It is rendered here, and the
+// <head> script in Base.astro turns it on (class "intro" on <html>) before the
+// first paint on a first visit, so it covers the page from the very start.
+// Behavior: src/scripts/site.ts. Hidden without JavaScript and with reduced motion.
+import { useLang } from '../i18n';
+const { t } = useLang();
+---
+
+<div class="preloader" data-preloader>
+  <div class="preloader-logo" aria-hidden="true"><span class="brand-mark"></span><span class="brand-mark loader-fill"></span></div>
+  <p class="loader-wordmark" aria-hidden="true">SHIPWRECK STUDIOS_</p>
+  <p class="loader-souls" aria-hidden="true"><span></span></p>
+  <div class="loader-bottom">
+    <span class="loader-place">{t.preloader.place}</span>
+    <span class="loader-state" role="status" data-ready={t.preloader.ready}>{t.preloader.loading}</span>
+    <button class="loader-skip" type="button">{t.preloader.skip} <i class="icon icon-arrow" aria-hidden="true"></i></button>
+  </div>
+</div>
