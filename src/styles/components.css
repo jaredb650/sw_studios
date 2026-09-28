@@ -1017,9 +1017,6 @@ html:has(.rules-dialog[open]) { overflow: hidden; }
 /* Countdown bar: fills over --spot-duration, then the next artist loads. */
 .spot-progress { position: absolute; left: 0; right: 0; bottom: 0; height: 4px; background: #ffffff14; pointer-events: none; }
 .spot-bar { display: block; height: 100%; background: var(--accent); transform-origin: left; transform: scaleX(0); }
-.spot-bar.is-counting { animation: spot-fill var(--spot-duration, 7s) linear forwards; animation-play-state: paused; }
-.spotlight.is-running .spot-bar.is-counting { animation-play-state: running; }
-@keyframes spot-fill { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 .spotlight:not(.is-live) .spot-progress { display: none; }
 .spot-toggle {
   position: absolute; right: 14px; bottom: 16px; width: 38px; height: 38px; border-radius: 50%;
@@ -1052,8 +1049,6 @@ html:has(.rules-dialog[open]) { overflow: hidden; }
 .spot-thumb[aria-current] { color: var(--accent); }
 .spot-thumb-name { font-family: var(--mono); font-size: 11px; letter-spacing: 1px; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .spot-thumb-bar { position: absolute; left: 0; right: 0; bottom: 0; height: 3px; background: var(--accent); transform-origin: left; transform: scaleX(0); }
-.spot-thumb.is-counting .spot-thumb-bar { animation: spot-fill var(--spot-duration, 7s) linear forwards; animation-play-state: paused; }
-.spotlight.is-running .spot-thumb.is-counting .spot-thumb-bar { animation-play-state: running; }
 .spot-arrow {
   width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; cursor: pointer;
   background: none; border: 1px solid var(--line-strong); color: var(--fg); font-size: 16px;
@@ -1062,14 +1057,9 @@ html:has(.rules-dialog[open]) { overflow: hidden; }
 .spot-arrow:hover { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
 .spot-strip .spot-arrow { margin-bottom: 26px; }
 
-/* The countdown keeps working when animations are switched off site-wide; the
-   carousel itself starts paused in that case, and the visitor can press play. */
-html.motion-paused .spotlight .spot-bar.is-counting,
-html.motion-paused .spotlight .spot-thumb.is-counting .spot-thumb-bar { animation: spot-fill var(--spot-duration, 7s) linear forwards !important; }
-@media (prefers-reduced-motion: reduce) {
-  html .spotlight .spot-bar.is-counting,
-  html .spotlight .spot-thumb.is-counting .spot-thumb-bar { animation: spot-fill var(--spot-duration, 7s) linear forwards !important; }
-}
+/* The countdown bars are sized from JavaScript (transform: scaleX), so they work the same
+   with animations switched off. */
+.spot-bar, .spot-thumb-bar { transition: none !important; will-change: transform; }
 
 @media (max-width: 1100px) {
   .spot-thumbs { --per-page: 4; }
