@@ -3,3 +3,6 @@ dist/
 .astro/
 .DS_Store
 .lavish/
+
+# Private client notes (the repo is public)
+CLIENT-VISION.md

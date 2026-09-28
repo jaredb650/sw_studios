@@ -20,7 +20,8 @@ npm run brand        # regenerate favicon, share image, logo mask from the maste
 ## How the site is organized
 
 The home page is an overview with one section per header nav item:
-Inicio, Agenda, El espacio, Artistas, Galería, Membresías, Reglas and Visítanos.
+Inicio, El espacio, Agenda, Artistas, Galería, Membresías, Reglas and Visítanos.
+Order: hero → scrolling ribbon → El espacio (the manifesto in brief, open to everyone) → rules checkpoint → everything else.
 The nav only scrolls between these sections; from other pages it returns to the matching section.
 Each section ends in a "Ver…" link to its full page. The agenda goes one level deeper:
 home preview → **Ver toda la agenda** (`/agenda/`) → **Ver eventos anteriores** (`/archivo/`).
@@ -33,7 +34,7 @@ The footer links to every full page.
 | Archive of past events with recaps | `/archivo/` | same events, once they end |
 | Resident artists + profile pages | `/artistas/`, `/artistas/<id>/` | `src/content/artists/*.md` |
 | Gallery: on the walls now / archived work | `/galeria/` | `src/content/artworks/*.md` |
-| Mission, story, venue photos, tour video, founder | `/espacio/` | `src/content/pages/espacio.md`, `fundador.md` |
+| Intro, virtual tour, manifesto + the SEVENS, venue photos, founder, links to the rest of the venue | `/espacio/` | `src/content/pages/espacio.md`, `manifiesto.md`, `fundador.md` |
 | Patreon memberships + Artist Program | `/membresias/` | `src/data/site.ts` (Patreon), `src/content/pages/programa-de-artistas.md` |
 | Club rules (home section `#reglas`, plus the checkpoint) | `/#reglas` | `src/content/pages/reglas.md` |
 | Address, directions, contact | `/visita/` | `src/data/site.ts` |
@@ -76,11 +77,24 @@ One file per event: `src/content/events/YYYY-MM-DD-name.md`. Copy `_plantilla.md
 
 Visitors confirm the club rules once before exploring:
 
-- **Home page:** the rules appear between the hero and the agenda. Everything below is locked and faded, and can't be scrolled to, clicked or tabbed into, until the visitor presses "He leído y entiendo las reglas". The page then opens at the agenda, or at the section the visitor was trying to reach.
+- **Home page:** the hero and the El espacio section are open. The rules appear after El espacio, and everything below (events included) is locked and faded, and can't be scrolled to, clicked or tabbed into, until the visitor presses "He leído y entiendo las reglas". The page then opens at the agenda, or at the section the visitor was trying to reach.
+- **El espacio page:** readable without accepting, like its home section.
 - **Other pages** (for example a shared event link): the same rules open as a dialog on arrival.
 - **Remembering:** acceptance lasts for the visit (`sessionStorage`), so moving between pages doesn't ask again. A reload (normal or hard) or a new visit asks again. The rules stay available in the home page's "Reglas" section.
 - **Without JavaScript**, nothing is locked.
 - **Code:** `src/components/RulesGate.astro` and `src/scripts/rules.ts`. To turn the dialog off on inner pages, remove the `gate === 'dialog'` line in `src/layouts/Base.astro`.
+
+### Artists on the home page (carousel)
+
+`src/components/ArtistSpotlight.astro` runs the home carousel:
+- **Spotlight:** a large card shows one artist (photo, tags, bio preview, next event at Shipwreck), and a lime bar counts down `SECONDS` (7) before the next artist. Clicking the card opens the profile.
+- **Strip:** thumbnails of every artist below the card, paged with the < > arrows (swipe on phones). Clicking a thumbnail shows that artist and restarts the countdown. Rotation moves the strip to the next row automatically and loops after the last artist.
+- **Pausing:** the carousel pauses while the card is hovered or focused, while it's off screen or the tab is hidden, and while the visitor browses another row with the arrows. It has a pause button and starts paused when animations are switched off.
+- **Order:** follows each artist's `order`.
+
+### Artist filters
+
+The Artistas page shows a filter for every tag the artists use (`disciplines`, genres included), plus two shortcuts, Música and Arte visual. `src/data/artist-tags.ts` decides which roles count toward each shortcut. Any number of filters can be on at once; the grid shows artists with any of the selected tags, and **Todos** clears them. The selection is kept in the address (e.g. `/artistas/?tag=dj,pintura`), so filtered views can be shared.
 
 ### Artists and gallery
 

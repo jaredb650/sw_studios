@@ -1,21 +1,27 @@
 ---
+// El espacio: intro, virtual tour, manifesto (with the SEVENS), venue photos,
+// founder, and links to everything else about the venue. Readable before
+// accepting the rules; the events pages are the ones behind them.
 import { Image, getImage } from 'astro:assets';
-import spacePhoto from '../assets/venue/the-space-bg.jpg';
 import { getEntry } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import PageHero from '../components/PageHero.astro';
 import SampleChip from '../components/SampleChip.astro';
 import YouTube from '../components/YouTube.astro';
 import EntryBody from '../components/EntryBody.astro';
+import Sevens from '../components/Sevens.astro';
 import Lightbox from '../components/Lightbox.astro';
+import spacePhoto from '../assets/venue/the-space-bg.jpg';
 import { href } from '../lib/urls';
-import { pick, routePath, useLang } from '../i18n';
+import { markdown, pick, routePath, useLang } from '../i18n';
 
 const { lang, t: ui, path } = useLang(Astro.url);
 const t = ui.spacePage;
 const espacio = (await getEntry('pages', 'espacio'))!;
+const manifesto = await getEntry('pages', 'manifiesto');
 const founder = await getEntry('pages', 'fundador');
 const lead = pick(espacio.data, 'lead', lang);
+const outro = manifesto ? pick(manifesto.data, 'outro', lang) : undefined;
 const spaceBg = await getImage({ src: spacePhoto, width: 1600, format: 'webp' });
 const photos = await Promise.all(
   espacio.data.photos.map(async (photo) => ({ ...photo, large: await getImage({ src: photo.src, width: 2000 }) })),
@@ -29,17 +35,71 @@ const spanFor = (i: number) => {
   const spans = { 1: [4], 2: [2, 2], 3: [2, 1, 1] }[trailing] ?? [];
   return `--span: ${spans[position]}`;
 };
+// Everything venue-related, except events.
+const explore = [
+  { label: t.exploreLinks.artists, href: path('artists') },
+  { label: t.exploreLinks.gallery, href: path('gallery') },
+  { label: t.exploreLinks.memberships, href: path('memberships') },
+  { label: t.exploreLinks.rules, href: `${path('home')}#reglas` },
+  { label: t.exploreLinks.visit, href: path('visit') },
+];
 ---
 
 <Base title={t.label} description={lead ?? t.description} page="space" alternates={{ es: routePath('space', 'es'), en: routePath('space', 'en') }}>
-  <PageHero index={t.index} label={t.label} title={t.heading} accent={t.accent} bg={spaceBg.src}>
-    {lead && <p class="mission" style="margin-top: 44px">{lead}</p>}
-    <div style="margin-top: 18px"><SampleChip show={espacio.data.placeholder} /></div>
+  <PageHero index={t.index} label={t.label} title={t.heading} accent={t.accent} bg={spaceBg.src} split>
+    {lead && <p class="mission">{lead}</p>}
   </PageHero>
 
   {
+    espacio.data.videos.length > 0 && (
+      <section class="section" aria-labelledby="tour-title">
+        <div class="section-heading">
+          <h2 id="tour-title">
+            <span class="section-index">01 /</span>
+            {t.tour}
+          </h2>
+          <SampleChip show={espacio.data.placeholder} />
+        </div>
+        <div class={espacio.data.videos.length > 1 ? 'video-grid' : 'tour-player'}>
+          {espacio.data.videos.map((video) => (
+            <YouTube id={video.youtube} title={pick(video, 'title', lang)} />
+          ))}
+        </div>
+      </section>
+    )
+  }
+
+  {
+    manifesto && (
+      <section class="section manifesto" aria-labelledby="manifesto-title">
+        <div class="section-heading">
+          <h2 id="manifesto-title">
+            <span class="section-index">02 /</span>
+            {pick(manifesto.data, 'title', lang)}
+          </h2>
+        </div>
+        <div class="manifesto-body">
+          <p class="manifesto-lead">{pick(manifesto.data, 'lead', lang)}</p>
+          <div class="prose">
+            <EntryBody entry={manifesto} />
+          </div>
+          <Sevens variant="full" label={ui.home.sevens} />
+          {outro && <div class="prose manifesto-outro" set:html={markdown(outro)} />}
+        </div>
+      </section>
+    )
+  }
+
+  {
     photos.length > 0 && (
-      <section class="section" aria-label={t.photos}>
+      <section class="section" aria-labelledby="photos-title">
+        <div class="section-heading">
+          <h2 id="photos-title">
+            <span class="section-index">03 /</span>
+            {t.photos}
+          </h2>
+          <SampleChip show={espacio.data.placeholder} />
+        </div>
         <div class="mosaic">
           {photos.map((photo, i) => (
             <a href={photo.large.src} data-lightbox="espacio" data-title="Shipwreck Studios" data-meta={pick(photo, 'caption', lang) ?? ''} style={spanFor(i)}>
@@ -51,39 +111,12 @@ const spanFor = (i: number) => {
     )
   }
 
-  <section class="section" aria-labelledby="story-title">
-    <div class="split">
-      <div class="section-heading" style="display: block">
-        <h2 id="story-title"><span class="section-index">01 /</span>{t.story}</h2>
-      </div>
-      <div class="prose"><EntryBody entry={espacio} /></div>
-    </div>
-  </section>
-
-  {
-    espacio.data.videos.length > 0 && (
-      <section class="section" aria-labelledby="tour-title">
-        <div class="section-heading">
-          <h2 id="tour-title">
-            <span class="section-index">02 /</span>
-            {t.tour}
-          </h2>
-        </div>
-        <div class={espacio.data.videos.length > 1 ? 'video-grid' : ''}>
-          {espacio.data.videos.map((video) => (
-            <YouTube id={video.youtube} title={pick(video, 'title', lang)} />
-          ))}
-        </div>
-      </section>
-    )
-  }
-
   {
     founder && (
       <section class="section founder" aria-labelledby="founder-title">
         <div class="section-heading">
           <h2 id="founder-title">
-            <span class="section-index">03 /</span>
+            <span class="section-index">04 /</span>
             {pick(founder.data, 'title', lang)}
           </h2>
         </div>
@@ -106,20 +139,24 @@ const spanFor = (i: number) => {
     )
   }
 
-  <section class="section">
-    <div class="club-band">
-      <div>
-        <span class="label muted">{t.beforeYouCome}</span>
-        <h2 style="margin-top: 16px">{t.readRules[0]}<br />{t.readRules[1]}</h2>
-        <p>{t.rulesText}</p>
-      </div>
-      <div>
-        <a class="button block" href={href(`${path('home')}#reglas`)}>
-          <span>{t.seeRules}</span>
-          <i class="icon icon-arrow" aria-hidden="true"></i>
-        </a>
-      </div>
+  <section class="section" aria-labelledby="explore-title">
+    <div class="section-heading">
+      <h2 id="explore-title">{t.explore}</h2>
     </div>
+    <ul class="explore-links">
+      {
+        explore.map((item) => (
+          <li>
+            <a href={href(item.href)}>
+              <span>{item.label}</span>
+              <span class="round-arrow" aria-hidden="true">
+                <i class="icon icon-arrow" />
+              </span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
   </section>
   <Lightbox />
 </Base>

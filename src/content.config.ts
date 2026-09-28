@@ -193,6 +193,9 @@ const pages = defineCollection({
         .array(z.object({ title: z.string(), titleEn: en, text: z.string(), textEn: en }))
         .default([]),
       bodyEn: en,
+      // Text after the item list (Markdown), e.g. the manifesto's closing after the SEVENS.
+      outro: z.string().optional(),
+      outroEn: en,
       placeholder: z.boolean().default(false),
     }),
 });

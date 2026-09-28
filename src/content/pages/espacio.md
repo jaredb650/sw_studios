@@ -40,25 +40,5 @@ photos:
 videos:
   - title: "Recorrido por Shipwreck Studios"
     titleEn: "A tour of Shipwreck Studios"
-bodyEn: |
-  Shipwreck Studios was born from a simple idea: that music and art should meet in the same place, with nothing keeping them apart. Here the dance floor and the gallery share walls, and people who come to hear a set stay to look at what was painted that week.
-
-  The walls here are never still. Murals are painted, shown, and in time repainted to make way for new work. That's why we document every piece in our gallery: what's no longer on the wall is still part of the story of this place.
-
-  The program ranges from long nights of house and techno to vinyl afternoons, live-drawing sessions, art markets, and group exhibitions. We work with resident artists, independent promoters, and collectives from across the island, all with the same intention: to create a place that is safe, open, and uncompromising about the quality of what it presents.
-
-  More than a stage, the space works as an open studio. By day, people paint, rehearse, and build installations; by night, those same walls welcome the public. Many of the works you see at a party were finished just hours before, and some change while the music plays. We want every visit to be different, and for those who come back to always find something new to see, hear, or discover.
-
-  We're a creative hub in the heart of Puerto Rico, on Calle San Agustín. Music, art, and community: that's what keeps us afloat.
 placeholder: true
 ---
-
-Shipwreck Studios nació de una idea sencilla: que la música y el arte se encuentren en el mismo lugar, sin separaciones. Aquí la música y la galería comparten paredes, y quienes vienen a un evento también se quedan mirando lo que se pintó esa semana.
-
-Las paredes del espacio nunca están quietas. Los murales se pintan, se exhiben y, con el tiempo, se repintan para dar paso a obra nueva. Por eso documentamos cada pieza en nuestra galería: lo que ya no está en la pared sigue formando parte de la historia del lugar.
-
-La programación reúne eventos de música, talleres, tardes de vinilo, sesiones de dibujo en vivo, mercados de arte y exposiciones colectivas. Trabajamos con artistas residentes, promotores independientes y colectivos de toda la isla, con una misma intención: crear un lugar seguro, abierto y exigente con la calidad de lo que presenta.
-
-Más que un escenario, el espacio funciona como un taller abierto. Durante el día se pinta, se ensaya y se preparan las instalaciones; luego, esas mismas paredes reciben al público. Muchas de las obras que ves en un evento se terminaron pocas horas antes, y algunas cambian mientras sucede. Nos interesa que cada visita sea distinta y que quienes vuelven encuentren siempre algo nuevo que mirar, escuchar o descubrir.
-
-Somos un creative hub en el corazón de Puerto Rico, en Calle San Agustín. Música, arte y comunidad: eso es lo que nos mantiene a flote.

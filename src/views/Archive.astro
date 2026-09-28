@@ -19,7 +19,7 @@ for (const event of past) {
 const recaps = past.filter(hasRecap).length;
 ---
 
-<Base title={t.title} description={t.description} page="archive" alternates={{ es: routePath('archive', 'es'), en: routePath('archive', 'en') }}>
+<Base title={t.title} description={t.description} page="archive" alternates={{ es: routePath('archive', 'es'), en: routePath('archive', 'en') }} crumbs={[{ label: ui.nav.sections.agenda, href: path('agenda') }]}>
   <section class="section" aria-labelledby="archive-title">
     <div class="section-heading page-heading">
       <div>

@@ -2,8 +2,8 @@
 title: "Programa de Artistas"
 titleEn: "Artist Program"
 status: coming-soon
-lead: "El Programa de Artistas reconoce a quienes participan o aportan con su trabajo artístico al espacio. Es distinto de las membresías de Patreon."
-leadEn: "The Artist Program recognizes those who take part in the space or contribute their artistic work to it. It's separate from the Patreon memberships."
+lead: "Aplica para ser artista residente patrocinado por Shipwreck: acceso al espacio fuera de horario, estudios y materiales, paredes para pintar y oportunidades de exhibición. Es distinto de las membresías de Patreon."
+leadEn: "Apply to become a Shipwreck-sponsored resident artist: off-hours access to the space, studios and supplies, walls to paint, and exhibition opportunities. It's separate from the Patreon memberships."
 bodyEn: |
   Draft structure, pending Alacran's approved text:
 

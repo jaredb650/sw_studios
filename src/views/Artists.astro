@@ -1,21 +1,109 @@
 ---
 import Base from '../layouts/Base.astro';
-import PageHero from '../components/PageHero.astro';
 import ArtistCard from '../components/ArtistCard.astro';
-import { getArtists } from '../lib/artists';
+import { artistFilterSlugs, artistFilterTags, getArtists } from '../lib/artists';
 import { routePath, useLang } from '../i18n';
 
-const { t: ui } = useLang(Astro.url);
+const { lang, t: ui } = useLang(Astro.url);
 const t = ui.artistsPage;
 const artists = await getArtists();
+// Every tag the artists use is a filter (src/lib/artists.ts → artistFilterTags).
+const tags = artistFilterTags(artists, t.categories);
 ---
 
 <Base title={t.title} description={t.description} page="artists" alternates={{ es: routePath('artists', 'es'), en: routePath('artists', 'en') }}>
-  <PageHero index={t.index} label={t.label} title={t.heading} accent={t.accent} lead={t.lead} />
-  <section class="section" aria-labelledby="artist-list-title">
-    <h2 id="artist-list-title" class="visually-hidden">{t.list}</h2>
-    <div class="artist-grid">
-      {artists.map((artist) => <ArtistCard artist={artist} sizes="(max-width: 680px) 45vw, (max-width: 1100px) 30vw, 22vw" />)}
+  <section class="section artists-page" aria-labelledby="artist-list-title">
+    <div class="section-heading page-heading compact-heading">
+      <div>
+        <h1 id="artist-list-title"><span class="section-index">{t.index} / {t.label}</span>{t.title}</h1>
+        <p class="page-sub">{t.lead}</p>
+      </div>
+    </div>
+    {
+      tags.length > 0 && (
+        <div class="tag-filter" role="group" aria-label={t.filterLabel} data-tag-filter>
+          <a class="tag-chip" href="?" data-tag="" aria-pressed="true">
+            {t.filterAll} <span class="tag-count">{artists.length}</span>
+          </a>
+          {tags.map((tag, i) => (
+            <>
+              {tag.kind === 'role' && tags[i - 1]?.kind === 'category' && <span class="tag-sep" aria-hidden="true" />}
+              <a class:list={['tag-chip', { 'is-category': tag.kind === 'category' }]} href={`?tag=${tag.slug}`} data-tag={tag.slug} aria-pressed="false">
+                {lang === 'en' ? tag.labelEn : tag.label} <span class="tag-count">{tag.count}</span>
+              </a>
+            </>
+          ))}
+        </div>
+      )
+    }
+    <p class="tag-status" role="status" data-tag-status data-template-all={t.showing(artists.length, artists.length)}>{t.showing(artists.length, artists.length)}</p>
+    <div class="artist-grid" data-artist-grid>
+      {
+        artists.map((artist) => (
+          <div class="artist-grid-item" data-tags={artistFilterSlugs(artist).join(' ')}>
+            <ArtistCard artist={artist} sizes="(max-width: 680px) 45vw, (max-width: 1100px) 30vw, 22vw" />
+          </div>
+        ))
+      }
     </div>
   </section>
 </Base>
+
+<script>
+  // Multi-select filter: any number of tags can be on at once, and the grid
+  // shows artists that have any of them. "Todos" clears the selection. The
+  // selection is kept in the address (?tag=dj,pintura) so it can be shared.
+  // Without JavaScript the full grid shows.
+  const filter = document.querySelector<HTMLElement>('[data-tag-filter]');
+  const grid = document.querySelector<HTMLElement>('[data-artist-grid]');
+  const status = document.querySelector<HTMLElement>('[data-tag-status]');
+  if (filter && grid && status) {
+    const allChip = filter.querySelector<HTMLAnchorElement>('[data-tag=""]')!;
+    const chips = [...filter.querySelectorAll<HTMLAnchorElement>('[data-tag]:not([data-tag=""])')];
+    const known = new Set(chips.map((chip) => chip.dataset.tag!));
+    const items = [...grid.querySelectorAll<HTMLElement>('[data-tags]')];
+    const lang = document.documentElement.lang;
+    let selected = new Set<string>();
+
+    const apply = (updateUrl = false) => {
+      allChip.setAttribute('aria-pressed', String(selected.size === 0));
+      chips.forEach((chip) => chip.setAttribute('aria-pressed', String(selected.has(chip.dataset.tag!))));
+      let shown = 0;
+      items.forEach((item) => {
+        const match = selected.size === 0 || item.dataset.tags!.split(' ').some((tag) => selected.has(tag));
+        item.hidden = !match;
+        if (match) shown++;
+      });
+      status.textContent =
+        shown === items.length
+          ? status.dataset.templateAll!
+          : lang === 'en'
+            ? `Showing ${shown} of ${items.length} artists`
+            : `Mostrando ${shown} de ${items.length} artistas`;
+      if (updateUrl) {
+        // Tags are plain slugs, so the commas can stay readable (?tag=dj,pintura).
+        const query = selected.size ? `?tag=${[...selected].join(',')}` : '';
+        history.replaceState(null, '', location.pathname + query + location.hash);
+      }
+    };
+
+    allChip.addEventListener('click', (event) => {
+      event.preventDefault();
+      selected = new Set();
+      apply(true);
+    });
+    chips.forEach((chip) =>
+      chip.addEventListener('click', (event) => {
+        event.preventDefault();
+        const tag = chip.dataset.tag!;
+        if (selected.has(tag)) selected.delete(tag);
+        else selected.add(tag);
+        apply(true);
+      }),
+    );
+
+    const fromUrl = (new URLSearchParams(location.search).get('tag') ?? '').split(',').filter((tag) => known.has(tag));
+    selected = new Set(fromUrl);
+    apply();
+  }
+</script>

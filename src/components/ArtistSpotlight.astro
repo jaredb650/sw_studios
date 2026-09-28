@@ -1,0 +1,225 @@
+---
+// Home "Artistas residentes": a big spotlight card that rotates through every
+// artist (a loading bar counts down about 7 seconds each), and a strip of all
+// artists below it, paged with < > arrows. Clicking the spotlight opens the
+// profile; clicking a thumbnail shows that artist in the spotlight. The strip
+// follows the rotation, and after the last artist it starts over.
+// Without JavaScript: the first artist shows and the strip is a row of links.
+import { Image } from 'astro:assets';
+import SampleChip from './SampleChip.astro';
+import { artistIndex, bioPreview, eventsForArtist, getArtists } from '../lib/artists';
+import { getAgenda } from '../lib/events';
+import { dayNumber, monthShort, weekdayShort } from '../lib/dates';
+import { href } from '../lib/urls';
+import { pick, useLang } from '../i18n';
+
+/** Seconds each artist stays in the spotlight. */
+const SECONDS = 7;
+
+const { lang, t: ui, artist: artistPath } = useLang(Astro.url);
+const t = ui.home;
+const artists = await getArtists();
+const index = artistIndex(artists);
+const { upcoming } = await getAgenda();
+const slides = artists.map((artist) => {
+  const next = eventsForArtist(artist, upcoming, index)[0];
+  return {
+    artist,
+    url: href(artistPath(artist.id)),
+    tags: pick(artist.data, 'disciplines', lang) ?? artist.data.disciplines,
+    bio: bioPreview(lang === 'en' ? (artist.data.bodyEn ?? artist.body) : artist.body),
+    next: next ? `${next.data.title} · ${weekdayShort(next.startsAt, lang)} ${Number(dayNumber(next.startsAt))} ${monthShort(next.startsAt, lang)}` : undefined,
+  };
+});
+const pad = (n: number) => String(n).padStart(2, '0');
+---
+
+{
+  slides.length > 0 && (
+    <div class="spotlight" role="region" aria-roledescription="carrusel" aria-label={t.artists} data-spotlight style={`--spot-duration: ${SECONDS}s`}>
+      <div class="spot-stage" aria-live="off" data-spot-stage>
+        {slides.map((slide, i) => (
+          <a class="spot-card" href={slide.url} hidden={i > 0 ? true : undefined} data-spot-card aria-label={`${slide.artist.data.name} — ${t.viewProfile}`}>
+            <div class="spot-photo">
+              <Image src={slide.artist.data.photo} alt={pick(slide.artist.data, 'photoAlt', lang)} width={900} sizes="(max-width: 680px) 90vw, 40vw" loading={i === 0 ? 'eager' : 'lazy'} />
+            </div>
+            <div class="spot-body">
+              <p class="label spot-label">
+                <span class="muted">{t.spotlight}</span>
+                <span class="spot-count" aria-hidden="true">
+                  {pad(i + 1)} / {pad(slides.length)}
+                </span>
+              </p>
+              <div class="spot-tags">
+                {slide.tags.map((tag) => (
+                  <span class="chip accent">{tag}</span>
+                ))}
+                <SampleChip show={slide.artist.data.placeholder} />
+              </div>
+              <h3 class="spot-name">{slide.artist.data.name}</h3>
+              {slide.bio && <p class="spot-bio">{slide.bio}</p>}
+              {slide.next && (
+                <p class="spot-next">
+                  <span>{t.nextAt}</span> {slide.next}
+                </p>
+              )}
+              <span class="spot-cta">
+                {t.viewProfile} <i class="icon icon-arrow" aria-hidden="true" />
+              </span>
+            </div>
+          </a>
+        ))}
+        <div class="spot-progress">
+          <span class="spot-bar" data-spot-bar></span>
+        </div>
+        <button class="spot-toggle" type="button" data-spot-toggle aria-pressed="false" data-pause-label={t.pauseRotation} data-play-label={t.playRotation} aria-label={t.pauseRotation} hidden>
+          <span class="spot-toggle-icon" aria-hidden="true"></span>
+        </button>
+      </div>
+
+      <div class="spot-strip">
+        <button class="spot-arrow" type="button" data-spot-prev aria-label={t.prevRow} hidden>
+          <i class="icon icon-arrow icon-left" aria-hidden="true" />
+        </button>
+        <ul class="spot-thumbs" aria-label={t.artistList} data-spot-thumbs>
+          {slides.map((slide, i) => (
+            <li>
+              <a class="spot-thumb" href={slide.url} data-spot-thumb={i} aria-current={i === 0 ? 'true' : undefined}>
+                <span class="spot-thumb-img">
+                  <Image src={slide.artist.data.photo} alt="" width={320} sizes="(max-width: 680px) 30vw, 14vw" />
+                  <span class="spot-thumb-bar" aria-hidden="true" />
+                </span>
+                <span class="spot-thumb-name">{slide.artist.data.name}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+        <button class="spot-arrow" type="button" data-spot-next aria-label={t.nextRow} hidden>
+          <i class="icon icon-arrow icon-right" aria-hidden="true" />
+        </button>
+      </div>
+    </div>
+  )
+}
+
+<script>
+  const root = document.documentElement;
+  document.querySelectorAll<HTMLElement>('[data-spotlight]').forEach((carousel) => {
+    const stage = carousel.querySelector<HTMLElement>('[data-spot-stage]')!;
+    const cards = [...carousel.querySelectorAll<HTMLAnchorElement>('[data-spot-card]')];
+    const thumbs = [...carousel.querySelectorAll<HTMLAnchorElement>('[data-spot-thumb]')];
+    const list = carousel.querySelector<HTMLElement>('[data-spot-thumbs]')!;
+    const bar = carousel.querySelector<HTMLElement>('[data-spot-bar]')!;
+    const toggle = carousel.querySelector<HTMLButtonElement>('[data-spot-toggle]')!;
+    const prev = carousel.querySelector<HTMLButtonElement>('[data-spot-prev]')!;
+    const next = carousel.querySelector<HTMLButtonElement>('[data-spot-next]')!;
+    if (cards.length < 2) return;
+    carousel.classList.add('is-live');
+    prev.hidden = next.hidden = toggle.hidden = false;
+
+    let current = 0;
+    // Stopped by the visitor (pause button) or by the site-wide motion setting.
+    let stopped = root.classList.contains('motion-paused');
+    let hovering = false;
+    let visible = false;
+    // Browsing another row with the arrows (or a swipe) holds the spotlight on
+    // the current artist until they click one or page back to its row.
+    let browsing = false;
+
+    const perPage = () => Number(getComputedStyle(list).getPropertyValue('--per-page')) || 5;
+    const pageOf = (i: number) => Math.floor(i / perPage());
+    const pages = () => Math.ceil(thumbs.length / perPage());
+    const gap = () => parseFloat(getComputedStyle(list).columnGap) || 0;
+    const showPage = (page: number, smooth = true) => {
+      const target = (((page % pages()) + pages()) % pages()) * (list.clientWidth + gap());
+      list.scrollTo({ left: target, behavior: smooth && !root.classList.contains('motion-paused') ? 'smooth' : 'instant' });
+    };
+    const currentPage = () => {
+      // A partial last row can't scroll a full page, so "scrolled to the end" counts as the last page.
+      const atEnd = list.scrollLeft > 0 && list.scrollLeft >= list.scrollWidth - list.clientWidth - 2;
+      return atEnd ? pages() - 1 : Math.round(list.scrollLeft / (list.clientWidth + gap()));
+    };
+
+    const running = () => !stopped && !hovering && !browsing && visible && !document.hidden && !root.classList.contains('rules-pending');
+    const updatePlayState = () => carousel.classList.toggle('is-running', running());
+
+    const restartBar = () => {
+      bar.classList.remove('is-counting');
+      void bar.offsetWidth; // restart the CSS animation
+      bar.classList.add('is-counting');
+      thumbs.forEach((thumb, i) => thumb.classList.toggle('is-counting', i === current));
+    };
+
+    const show = (i: number, { manual = false } = {}) => {
+      current = (i + cards.length) % cards.length;
+      cards.forEach((card, n) => (card.hidden = n !== current));
+      thumbs.forEach((thumb, n) => (n === current ? thumb.setAttribute('aria-current', 'true') : thumb.removeAttribute('aria-current')));
+      // Warm up the next photo so it's ready when the bar fills.
+      const upcoming = cards[(current + 1) % cards.length].querySelector('img');
+      if (upcoming) upcoming.loading = 'eager';
+      stage.setAttribute('aria-live', manual || stopped ? 'polite' : 'off');
+      browsing = false;
+      if (pageOf(current) !== currentPage()) showPage(pageOf(current));
+      restartBar();
+      updatePlayState();
+    };
+
+    bar.addEventListener('animationend', () => show(current + 1));
+
+    thumbs.forEach((thumb, i) =>
+      thumb.addEventListener('click', (event) => {
+        if (event.metaKey || event.ctrlKey || event.shiftKey) return;
+        event.preventDefault();
+        show(i, { manual: true });
+      }),
+    );
+    const page = (delta: number) => {
+      const target = (((currentPage() + delta) % pages()) + pages()) % pages();
+      browsing = target !== pageOf(current);
+      updatePlayState();
+      showPage(target);
+    };
+    prev.addEventListener('click', () => page(-1));
+    next.addEventListener('click', () => page(1));
+    // Once the strip settles, it's "browsing" if it shows a row other than the current artist's.
+    let settle = 0;
+    list.addEventListener('scroll', () => {
+      clearTimeout(settle);
+      settle = window.setTimeout(() => {
+        browsing = currentPage() !== pageOf(current);
+        updatePlayState();
+      }, 160);
+    }, { passive: true });
+
+    const setStopped = (value: boolean) => {
+      stopped = value;
+      toggle.setAttribute('aria-pressed', String(stopped));
+      toggle.setAttribute('aria-label', (stopped ? toggle.dataset.playLabel : toggle.dataset.pauseLabel) ?? '');
+      carousel.classList.toggle('is-stopped', stopped);
+      stage.setAttribute('aria-live', stopped ? 'polite' : 'off');
+      updatePlayState();
+    };
+    toggle.addEventListener('click', () => setStopped(!stopped));
+
+    // Pause while someone is reading the spotlight card (not while using the pause button).
+    cards.forEach((card) => {
+      card.addEventListener('pointerenter', () => { hovering = true; updatePlayState(); });
+      card.addEventListener('pointerleave', () => { hovering = false; updatePlayState(); });
+      card.addEventListener('focus', () => { hovering = true; updatePlayState(); });
+      card.addEventListener('blur', () => { hovering = false; updatePlayState(); });
+    });
+    // Only count down while the section is on screen and the tab is visible.
+    new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; updatePlayState(); }, { threshold: 0.35 }).observe(stage);
+    document.addEventListener('visibilitychange', updatePlayState);
+    // Follow the site-wide motion toggle and the rules checkpoint.
+    new MutationObserver(() => {
+      const motionOff = root.classList.contains('motion-paused');
+      if (motionOff && !stopped) setStopped(true);
+      updatePlayState();
+    }).observe(root, { attributes: true, attributeFilter: ['class'] });
+    window.addEventListener('resize', () => showPage(pageOf(current), false));
+
+    setStopped(stopped);
+    show(0);
+  });
+</script>

@@ -66,8 +66,8 @@ export const site = {
         price: 5,
         summary: 'Para quienes quieren apoyar el espacio y enterarse primero.',
         summaryEn: 'For those who want to support the space and hear first.',
-        benefits: ['Acceso anticipado a anuncios de eventos', 'Mención en el muro de la tripulación', 'Contenido detrás de escena'],
-        benefitsEn: ['Early access to event announcements', 'A shout-out on the crew wall', 'Behind-the-scenes content'],
+        benefits: ['Contenido exclusivo y anuncios antes que nadie', 'Descuento en boletos de eventos y talleres', 'Tu nombre en el muro de la tripulación'],
+        benefitsEn: ['Exclusive content and announcements before anyone else', 'Discounted tickets to events and workshops', 'Your name on the crew wall'],
       },
       {
         name: 'Cubierta',
@@ -76,10 +76,10 @@ export const site = {
         summaryEn: 'For those who come to almost everything.',
         benefits: [
           'Todo lo de Tripulación',
-          'Preventa de boletos para eventos seleccionados',
-          'Una entrada de cortesía al mes en eventos seleccionados',
+          'Entrada prioritaria y espacios en guest list',
+          'Boletos de bebida en eventos seleccionados',
         ],
-        benefitsEn: ['Everything in Tripulación', 'Ticket presales for select events', 'One complimentary entry a month to select events'],
+        benefitsEn: ['Everything in Tripulación', 'Priority entry and guest list spots', 'Drink tickets at select events'],
         highlight: true,
       },
       {
@@ -89,10 +89,10 @@ export const site = {
         summaryEn: 'For those who keep the ship afloat.',
         benefits: [
           'Todo lo de Cubierta',
+          'Entrada gratuita a eventos y talleres seleccionados',
           'Invitación a la noche anual de la comunidad',
-          'Edición limitada de mercancía cada temporada',
         ],
-        benefitsEn: ['Everything in Cubierta', 'An invitation to the annual community night', 'Limited-edition merch every season'],
+        benefitsEn: ['Everything in Cubierta', 'Free entry to select events and workshops', 'An invitation to the annual community night'],
       },
     ] as PatreonTier[],
   },
@@ -103,8 +103,8 @@ export const site = {
 // to that section, so the item stays highlighted while visiting them.
 export const nav: { section: 'inicio' | 'agenda' | 'espacio' | 'artistas' | 'galeria' | 'membresias' | 'reglas' | 'visita'; pages: Route[] }[] = [
   { section: 'inicio', pages: [] },
-  { section: 'agenda', pages: ['agenda', 'archive'] },
   { section: 'espacio', pages: ['space'] },
+  { section: 'agenda', pages: ['agenda', 'archive'] },
   { section: 'artistas', pages: ['artists'] },
   { section: 'galeria', pages: ['gallery'] },
   { section: 'membresias', pages: ['memberships'] },
@@ -113,4 +113,4 @@ export const nav: { section: 'inicio' | 'agenda' | 'espacio' | 'artistas' | 'gal
 ];
 
 // Full pages, listed in the footer (labels in src/i18n/ui.ts → footer.pages).
-export const pages: Exclude<Route, 'home'>[] = ['agenda', 'archive', 'artists', 'gallery', 'space', 'memberships', 'visit'];
+export const pages: Exclude<Route, 'home'>[] = ['space', 'agenda', 'archive', 'artists', 'gallery', 'memberships', 'visit'];

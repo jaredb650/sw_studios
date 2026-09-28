@@ -68,10 +68,10 @@ const jsonLd = {
   page="artist"
   jsonLd={data.placeholder ? undefined : jsonLd}
   alternates={{ es: artistPath(artist.id, 'es'), en: artistPath(artist.id, 'en') }}
+  crumbs={[{ label: t.back, href: path('artists') }]}
 >
   <section class="section">
-    <a class="back-link" href={href(path('artists'))}><i class="icon icon-arrow icon-left" aria-hidden="true"></i> {t.back}</a>
-    <div class="profile" style="margin-top: 34px">
+    <div class="profile">
       <div class="profile-photo">
         <Image src={data.photo} alt={photoAlt} width={900} sizes="(max-width: 1000px) 90vw, 40vw" loading="eager" />
         <SampleChip show={data.placeholder} />

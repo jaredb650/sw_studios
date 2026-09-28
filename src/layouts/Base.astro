@@ -22,10 +22,12 @@ interface Props {
   jsonLd?: Record<string, unknown> | Record<string, unknown>[];
   /** This page in each language (paths without the deploy base), for the ES/EN switch and hreflang. */
   alternates?: Record<Lang, string>;
+  /** Extra breadcrumb links after "← Inicio", e.g. the artists index on a profile. */
+  crumbs?: { label: string; href: string }[];
 }
 
-const { lang, t } = useLang(Astro.url);
-const { title, description = t.site.description, image, imageAlt, page = 'page', jsonLd, alternates } = Astro.props;
+const { lang, t, path } = useLang(Astro.url);
+const { title, description = t.site.description, image, imageAlt, page = 'page', jsonLd, alternates, crumbs = [] } = Astro.props;
 const fullTitle = title ? `${title} — ${site.name}` : `${site.name} — ${t.site.tagline}`;
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
 const shareImage = image ? new URL(image, Astro.site).href : absolute('/og-default.jpg');
@@ -34,7 +36,8 @@ const isSample = placeholders.length > 0;
 const structured = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
 // The home page places its own inline rules checkpoint; other pages use the dialog.
 const rules = await getRules();
-const gate = rules && page !== 'not-found' ? (page === 'home' ? 'inline' : 'dialog') : undefined;
+// The El espacio page (like the home page's El espacio section) is readable before accepting.
+const gate = rules && page !== 'not-found' && page !== 'space' ? (page === 'home' ? 'inline' : 'dialog') : undefined;
 ---
 
 <!doctype html>
@@ -134,6 +137,21 @@ const gate = rules && page !== 'not-found' ? (page === 'home' ? 'inline' : 'dial
     }
     <Header alternates={alternates} />
     <main id="contenido">
+      {
+        page !== 'home' && (
+          <nav class="crumbs" aria-label={t.nav.crumbs}>
+            <a href={href(path('home'))}>
+              <i class="icon icon-arrow icon-left" aria-hidden="true" /> {t.nav.homeLink}
+            </a>
+            {crumbs.map((crumb) => (
+              <>
+                <span aria-hidden="true">/</span>
+                <a href={href(crumb.href)}>{crumb.label}</a>
+              </>
+            ))}
+          </nav>
+        )
+      }
       <slot />
     </main>
     <Footer />

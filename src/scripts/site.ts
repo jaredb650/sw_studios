@@ -84,15 +84,13 @@ const spySections = spyLinks
   .filter((section): section is HTMLElement => Boolean(section));
 function spy() {
   if (!spySections.length) return;
-  // While the rules checkpoint is up, the visitor is still at the start of the page.
-  if (root.classList.contains('rules-pending')) {
-    spyLinks.forEach((link) => (link.dataset.section === 'inicio' ? link.setAttribute('aria-current', 'location') : link.removeAttribute('aria-current')));
-    return;
-  }
+  // While the rules checkpoint is up, only the sections above it (hero, El espacio) count.
+  const locked = root.classList.contains('rules-pending') ? document.querySelector('[data-gated]') : null;
+  const visible = locked ? spySections.filter((section) => !locked.contains(section)) : spySections;
   const line = (header?.getBoundingClientRect().bottom ?? 0) + window.innerHeight * 0.25;
-  let current = spySections[0].id;
-  for (const section of spySections) if (section.getBoundingClientRect().top <= line) current = section.id;
-  if (window.innerHeight + window.scrollY >= root.scrollHeight - 4) current = spySections.at(-1)!.id;
+  let current = visible[0].id;
+  for (const section of visible) if (section.getBoundingClientRect().top <= line) current = section.id;
+  if (!locked && window.innerHeight + window.scrollY >= root.scrollHeight - 4) current = visible.at(-1)!.id;
   for (const link of spyLinks) {
     if (link.dataset.section === current) link.setAttribute('aria-current', 'location');
     else link.removeAttribute('aria-current');
@@ -255,6 +253,19 @@ document.addEventListener('click', async (event) => {
 });
 
 initAgenda();
+
+/* Seven values on the home page: when the two groups (4 + 3) wrap onto
+   separate lines, hide the star between them so each line stands alone. */
+document.querySelectorAll<HTMLElement>('[data-sevens]').forEach((row) => {
+  const [first, second] = row.querySelectorAll<HTMLElement>('.sevens-group');
+  if (!first || !second) return;
+  const measure = () => {
+    row.classList.remove('is-wrapped');
+    if (second.offsetTop > first.offsetTop) row.classList.add('is-wrapped');
+  };
+  new ResizeObserver(measure).observe(row);
+  document.fonts?.ready.then(measure);
+});
 
 window.addEventListener('scroll', requestUpdate, { passive: true });
 window.addEventListener('resize', requestUpdate, { passive: true });
