@@ -24,6 +24,9 @@ const link = z.url({ protocol: /^https?$/, error: 'Usa un enlace completo que em
 // instead of being silently ignored.
 const video = z.object({
   youtube: z.string().regex(/^[\w-]{11}$/, { error: 'Usa solo el id de 11 caracteres del video.' }).optional(),
+  // Or a video served from this site: an MP4 in public/, e.g. /media/recorrido.mp4.
+  file: z.string().regex(/^\/.+\.mp4$/, { error: 'Usa la ruta del MP4 dentro de public/, por ejemplo /media/recorrido.mp4.' }).optional(),
+  poster: z.string().optional(),
   title: z.string(),
 }).strict();
 
@@ -177,6 +180,16 @@ const pages = defineCollection({
       photoAlt: z.string().optional(),
       photos: z
         .array(z.object({ src: image(), alt: z.string(), caption: z.string().optional() }))
+        .default([]),
+      // El espacio: venue photos grouped by room, in the order they appear.
+      rooms: z
+        .array(
+          z.object({
+            name: z.string(),
+            kind: z.string().optional(),
+            photos: z.array(z.object({ src: image(), alt: z.string() })).min(1),
+          }),
+        )
         .default([]),
       videos: z.array(video).default([]),
       items: z

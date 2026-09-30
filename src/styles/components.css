@@ -439,7 +439,7 @@ html:has(.lightbox[open]) { overflow: hidden; }
 .video-trigger:hover img { opacity: .9; }
 .video-play { position: relative; width: 86px; height: 86px; border-radius: 50%; background: var(--accent); color: var(--accent-ink); display: grid; place-items: center; font-size: 28px; padding-left: 8px; transition: transform .4s var(--ease); }
 .video-trigger:hover .video-play { transform: scale(1.08); }
-.video iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.video :is(iframe, video) { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
 .video.pending {
   display: grid; place-items: center; text-align: center;
   background: var(--bg-raised);
@@ -458,6 +458,14 @@ html:has(.lightbox[open]) { overflow: hidden; }
 .mosaic a { display: block; overflow: hidden; background: var(--bg-raised); position: relative; grid-column: span var(--span, 1); grid-row: span var(--rows, 1); }
 .mosaic a:first-child { grid-column: span var(--span, 2); grid-row: span 2; }
 .mosaic img { width: 100%; height: 100%; object-fit: cover; transition: transform .9s var(--ease); }
+/* El espacio: the photos, one mosaic per room, with a row of links to each room. */
+.room-index { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
+.room-index .chip { padding: 7px 11px; }
+.room-index .chip:hover { border-color: var(--accent); color: var(--accent); }
+.room { padding-top: 48px; scroll-margin-top: calc(var(--header-h) + 12px); }
+.room-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 16px; margin-bottom: 18px; }
+.room-head .section-index { margin: 0; }
+.room-head h3 { font-family: var(--display); font-weight: 600; text-transform: uppercase; font-size: clamp(28px, 3.2vw, 44px); line-height: 1; letter-spacing: -.01em; }
 .split { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 7fr); gap: 6%; }
 .split > :first-child { align-self: start; }
 .founder-photo img { width: 100%; height: auto; }

@@ -254,6 +254,7 @@ const es = {
     accent: 'espacio.',
     tour: 'Recorrido virtual',
     photos: 'Fotos del espacio',
+    rooms: 'Salas',
     explore: 'Sigue explorando',
     story: 'Nuestra historia',
     exploreLinks: { artists: 'Nuestros artistas', gallery: 'Galería', participate: 'Participa', rules: 'Reglas', visit: 'Visítanos' },

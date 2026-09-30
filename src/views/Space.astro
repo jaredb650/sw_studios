@@ -1,6 +1,6 @@
 ---
 import { markdown } from '../lib/markdown';
-// El espacio: intro, virtual tour, manifesto (with the SEVENS), venue photos,
+// El espacio: intro, virtual tour, manifesto (with the SEVENS), venue photos by room,
 // founder, and links to everything else about the venue. Readable before
 // accepting the rules; the events pages are the ones behind them.
 import { Image, getImage } from 'astro:assets';
@@ -24,19 +24,24 @@ const founder = await getEntry('pages', 'fundador');
 const lead = espacio.data.lead;
 const outro = manifesto ? manifesto.data.outro : undefined;
 const spaceBg = await getImage({ src: spacePhoto, width: 1600, format: 'webp' });
-const photos = await Promise.all(
-  espacio.data.photos.map(async (photo) => ({ ...photo, large: await getImage({ src: photo.src, width: 2000 }) })),
+const rooms = await Promise.all(
+  espacio.data.rooms.map(async (room, r) => ({
+    ...room,
+    id: `sala-${r + 1}`,
+    photos: await Promise.all(room.photos.map(async (photo) => ({ ...photo, large: await getImage({ src: photo.src, width: 2000 }) }))),
+  })),
 );
-// Desktop mosaic: one large photo beside four small ones, then rows of four.
-// Items in an incomplete last row widen so the grid never ends with a gap, and
-// with fewer than five photos the ones beside the large photo grow to fill it.
-const trailing = Math.max(0, photos.length - 5) % 4;
+// Each room is a mosaic: one large photo beside four small ones, then rows of
+// four. Items in an incomplete last row widen so the grid never ends with a
+// gap, and with fewer than five photos the ones beside the large photo grow to
+// fill it.
 const few: Record<number, [number, number][]> = { 2: [[2, 2]], 3: [[2, 1], [2, 1]], 4: [[2, 1], [1, 1], [1, 1]] };
-const spanFor = (i: number) => {
-  if (photos.length === 1) return '--span: 4';
-  if (photos.length < 5) return i === 0 ? undefined : `--span: ${few[photos.length][i - 1][0]}; --rows: ${few[photos.length][i - 1][1]}`;
-  if (i === 0 || !trailing || i < photos.length - trailing) return undefined;
-  const position = i - (photos.length - trailing);
+const spanFor = (i: number, count: number) => {
+  if (count === 1) return '--span: 4';
+  if (count < 5) return i === 0 ? undefined : `--span: ${few[count][i - 1][0]}; --rows: ${few[count][i - 1][1]}`;
+  const trailing = (count - 5) % 4;
+  if (i === 0 || !trailing || i < count - trailing) return undefined;
+  const position = i - (count - trailing);
   const spans = { 1: [4], 2: [2, 2], 3: [2, 1, 1] }[trailing] ?? [];
   return `--span: ${spans[position]}`;
 };
@@ -66,7 +71,7 @@ const explore = [
         </div>
         <div class={espacio.data.videos.length > 1 ? 'video-grid' : 'tour-player'}>
           {espacio.data.videos.map((video) => (
-            <YouTube id={video.youtube} title={video.title} />
+            <YouTube id={video.youtube} file={video.file} poster={video.poster} title={video.title} />
           ))}
         </div>
       </section>
@@ -110,21 +115,34 @@ const explore = [
   }
 
   {
-    photos.length > 0 && (
+    rooms.length > 0 && (
       <section class="section" aria-labelledby="photos-title">
         <div class="section-heading">
-          <h2 id="photos-title">
-            {t.photos}
-          </h2>
-          <SampleChip show={espacio.data.placeholder} />
+          <h2 id="photos-title">{t.photos}</h2>
         </div>
-        <div class="mosaic">
-          {photos.map((photo, i) => (
-            <a href={photo.large.src} data-lightbox="espacio" data-title="Shipwreck Studios" data-meta={photo.caption ?? ''} style={spanFor(i)}>
-              <Image src={photo.src} alt={photo.alt} width={i === 0 ? 1400 : 700} sizes={i === 0 ? '(max-width: 680px) 100vw, 50vw' : '(max-width: 680px) 50vw, 25vw'} />
+        <nav class="room-index" aria-label={t.rooms}>
+          {rooms.map((room) => (
+            <a class="chip" href={`#${room.id}`}>
+              {room.name}
             </a>
           ))}
-        </div>
+        </nav>
+        {rooms.map((room, r) => (
+          <div class="room" id={room.id} aria-labelledby={`${room.id}-title`}>
+            <div class="room-head">
+              <span class="section-index">{String(r + 1).padStart(2, '0')}</span>
+              <h3 id={`${room.id}-title`}>{room.name}</h3>
+              {room.kind && <span class="label muted">{room.kind}</span>}
+            </div>
+            <div class="mosaic">
+              {room.photos.map((photo, i) => (
+                <a href={photo.large.src} data-lightbox="espacio" data-title={room.name} data-meta="Shipwreck Studios" style={spanFor(i, room.photos.length)}>
+                  <Image src={photo.src} alt={photo.alt} width={i === 0 ? 1400 : 700} sizes={i === 0 ? '(max-width: 680px) 100vw, 50vw' : '(max-width: 680px) 50vw, 25vw'} />
+                </a>
+              ))}
+            </div>
+          </div>
+        ))}
       </section>
     )
   }

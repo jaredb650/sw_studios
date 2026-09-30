@@ -1,22 +1,32 @@
 ---
 // Click-to-load YouTube player: the thumbnail is downloaded at build time and
 // served from this site, so YouTube receives no requests until the visitor
-// presses play. Without an id it shows a "video coming soon" frame.
+// presses play. A `file` (an MP4 in public/) plays from this site instead,
+// loading only when pressed. With neither it shows a "video coming soon" frame.
 import { Image } from 'astro:assets';
 import { useLang } from '../i18n';
+import { href } from '../lib/urls';
 
 interface Props {
   id?: string;
+  file?: string;
+  poster?: string;
   title: string;
   caption?: string;
 }
-const { id, title, caption } = Astro.props;
+const { id, file, poster, title, caption } = Astro.props;
 const { t } = useLang();
 ---
 
 <figure style="margin: 0">
   {
-    id ? (
+    file ? (
+      <div class="video">
+        <video controls playsinline preload="none" poster={poster && href(poster)} aria-label={title}>
+          <source src={href(file)} type="video/mp4" />
+        </video>
+      </div>
+    ) : id ? (
       <div class="video" data-youtube={id}>
         <a class="video-trigger" href={`https://www.youtube.com/watch?v=${id}`} target="_blank" rel="noopener">
           <Image src={`https://i.ytimg.com/vi/${id}/hqdefault.jpg`} alt="" width={480} height={360} />
